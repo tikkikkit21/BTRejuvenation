@@ -1,11 +1,9 @@
-import * as React from 'react';
+import { View, Text } from 'react-native';
 
 function HomeTab() {
     return (
-        <View>
-            <Text>This is the Home Tab</Text>
-        </View>
+        <Text>This is the Home Tab</Text>
     )
 }
 
-export default HomeTab
+export default HomeTab;
