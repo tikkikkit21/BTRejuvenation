@@ -15,6 +15,7 @@ function HomeTab() {
                     latitudeDelta: 0.0122,
                     longitudeDelta: 0.0121,
                 }}
+                showsUserLocation={true}
             />
         </View>
     )
