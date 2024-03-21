@@ -1,12 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeTab from './components/HomeTab';
+import AlertsTab from './components/AlertsTab';
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
     return (
-        <View style={styles.container}>
-            <HomeTab />
-        </View>
+        <NavigationContainer>
+            <Tab.Navigator>
+                <Tab.Screen name="Home" component={HomeTab} />
+                <Tab.Screen name="Alerts" component={AlertsTab} />
+            </Tab.Navigator>
+        </NavigationContainer>
     );
 }
 
