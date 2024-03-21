@@ -7,6 +7,6 @@ Capstone project to improve the current iOS version of the BT app
 3. (for Windows) Make sure you have a private network profile
     - Settings > search "*Network status*" > Properties > Network Profile >
       select "*Private*"
-4. Run `npx expo start --tunnel`
+4. Run `npx expo start --tunnel` (or `npm start`)
 5. Scan the QR code with Camera app
 6. It should open up the *Expo Go* app and run your code
