@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
     container: {
@@ -6,8 +6,5 @@ export default StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject,
     }
 });
