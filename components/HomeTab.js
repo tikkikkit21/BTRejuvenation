@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
 import { getAllBuses } from '../backend/busController';
@@ -10,6 +10,7 @@ import styles from '../styles/HomeTab.style';
 
 function HomeTab() {
     const [buses, setBuses] = useState([]);
+    const [isOnCooldown, setIsOnCooldown] = useState(false);
 
     useEffect(() => {
         loadBuses();
@@ -17,10 +18,18 @@ function HomeTab() {
     }, []);
 
     const handleButtonClick = () => {
-        loadBuses();
+        if (!isOnCooldown) {
+            loadBuses();
+
+            setIsOnCooldown(true);
+            setTimeout(() => {
+                setIsOnCooldown(false);
+            }, 5000);
+        }
     }
 
     async function loadBuses() {
+        console.log("loading buses")
         const buses = await getAllBuses();
         setBuses(buses);
     }
