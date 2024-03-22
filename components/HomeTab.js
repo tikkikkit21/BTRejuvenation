@@ -23,13 +23,11 @@ function HomeTab() {
 
     const handleButtonClick = () => {
         // fetchData()
+        console.log("button clicked")
     }
 
     return (
         <View style={appStyles.container}>
-            <TouchableOpacity onPress={handleButtonClick}>
-                <Text style={localStyles.buttonText}>Button</Text>
-            </TouchableOpacity>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -42,6 +40,9 @@ function HomeTab() {
             >
                 {getMarkers(buses)}
             </MapView>
+            <TouchableOpacity onPress={handleButtonClick}>
+                <Text style={styles.buttonText}>Button</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -65,19 +66,5 @@ function getMarkers(buses) {
         )
     });
 }
-
-const localStyles = StyleSheet.create({
-    buttonContainer: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-    },
-    buttonText: {
-        backgroundColor: '#A40046', // Color code
-        color: 'white',
-        padding: 15, // Increase button padding
-        fontSize: 18, // Increase font size
-    },
-});
 
 export default HomeTab;
