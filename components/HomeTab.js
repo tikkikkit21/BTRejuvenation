@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
+
 import MapView, { Marker } from 'react-native-maps';
+import { getAllBuses } from '../backend/busController';
+import { FontAwesome6 } from '@expo/vector-icons';
+
 import appStyles from '../styles/App.style';
 import styles from '../styles/HomeTab.style';
-import { getAllBuses } from '../backend/busController';
 
 function HomeTab() {
     const [buses, setBuses] = useState([]);
@@ -46,7 +49,11 @@ function getMarkers(buses) {
                 }}
                 title={busObj.RouteShortName}
                 description={`Last stop: ${busObj.LastStopName}`}
-            />
+            >
+                <View>
+                    <FontAwesome6 name="bus-simple" size={30} color="black" />
+                </View>
+            </Marker>
         )
     });
 }
