@@ -11,3 +11,13 @@ export async function getAllBuses() {
     console.log(json);
     return json;
 }
+
+export async function getBus(shortName) {
+    const { data } = await axios.get(`${ROOT}/GetCurrentBusInfo`);
+    json = xml2js(data, { compact: true });
+    json = json.DocumentElement.LatestInfoTable;
+    bus = json.find(bus => bus.RouteShortName._text == shortName);
+
+    console.log(bus);
+    return bus;
+}
