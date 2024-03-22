@@ -6,6 +6,7 @@ import styles from '../styles/Route.style';
 import { getAllStops } from '../backend/routeController';
 
 function RouteTab() {
+    const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [selectedStop, selectStop] = useState("--Filter By Stop--");
     useEffect(() => {
@@ -43,6 +44,8 @@ function RouteTab() {
                 dropDownStyle={{ backgroundColor: '#fafafa' }}
                 onChange={handleStopChange}
                 search={true}
+                open={open}
+                setOpen={setOpen}
             />
             {/* <Picker.Item label="--Filter By Stop--" value="code" />
                 {pickerItems} */}
