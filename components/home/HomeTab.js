@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
-import { getAllBuses } from '../backend/busController';
+import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 
-import appStyles from '../styles/App.style';
-import styles from '../styles/HomeTab.style';
+import appStyles from '../../styles/App.style';
+import styles from '../../styles/HomeTab.style';
 
 function HomeTab() {
     const [buses, setBuses] = useState([]);

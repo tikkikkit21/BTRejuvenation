@@ -4,7 +4,7 @@ import { Ionicons, FontAwesome5, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import HomeTab from './components/HomeTab';
+import HomeTab from './components/home/HomeTab';
 import AlertsTab from './components/AlertsTab';
 import PlanTrip from './components/PlanTrip';
 import RoutesTab from './components/RoutesTab';
