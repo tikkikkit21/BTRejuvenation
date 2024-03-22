@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
@@ -11,14 +11,24 @@ import styles from '../styles/HomeTab.style';
 function HomeTab() {
     const [buses, setBuses] = useState([]);
     const [isOnCooldown, setIsOnCooldown] = useState(false);
+    const refreshTimer = useRef(null);
 
     useEffect(() => {
         loadBuses();
-        setInterval(loadBuses, 10000);
+        refreshTimer.current = setInterval(() => {
+            loadBuses();
+        }, 10000);
+
+        return () => {
+            clearInterval(refreshTimer.current);
+        };
     }, []);
 
     const handleButtonClick = () => {
         if (!isOnCooldown) {
+            clearInterval(refreshTimer.current);
+            refreshTimer.current = setInterval(loadBuses, 10000);
+
             loadBuses();
 
             setIsOnCooldown(true);
@@ -29,7 +39,6 @@ function HomeTab() {
     }
 
     async function loadBuses() {
-        console.log("loading buses")
         const buses = await getAllBuses();
         setBuses(buses);
     }
