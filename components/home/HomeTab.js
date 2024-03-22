@@ -7,18 +7,17 @@ const Stack = createStackNavigator();
 
 function HomeTab({ navigation }) {
     function goToFeedback() {
-        navigation.navigate("FeedbackForm");
+        navigation.navigate("Feedback");
     }
 
     return (
         <Stack.Navigator
             screenOptions={{
-                headerShown: false
             }}
             initialRouteName="Map"
         >
-            <Stack.Screen name="Map" component={Map} initialParams={{ handleFeedbackButtonClick: goToFeedback }} />
-            <Stack.Screen name="FeedbackForm" component={FeedbackForm} />
+            <Stack.Screen name="Blacksburg Transit" component={Map} initialParams={{ handleFeedbackButtonClick: goToFeedback }} />
+            <Stack.Screen name="Feedback" component={FeedbackForm} />
         </Stack.Navigator>
     );
 }

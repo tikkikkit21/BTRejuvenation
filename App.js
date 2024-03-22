@@ -42,9 +42,10 @@ export default function App() {
                     },
                     tabBarActiveTintColor: 'tomato',
                     tabBarInactiveTintColor: 'gray',
+                    headerShown: false
                 })}
             >
-                <Tab.Screen name="Blacksburg Transit" component={HomeTab} />
+                <Tab.Screen name="Home" component={HomeTab} />
                 <Tab.Screen name="Alerts" component={AlertsTab} />
                 <Tab.Screen name="Plan a Trip" component={PlanTrip} />
                 <Tab.Screen name="Routes" component={RoutesTab} />
