@@ -9,6 +9,7 @@ export async function getAllBuses() {
     json = xml2js(data, { compact: true });
     json = json.DocumentElement.LatestInfoTable;
 
+    json.map(bus => formatBus(bus));
     return json;
 }
 
@@ -16,11 +17,16 @@ export async function getBus(shortName) {
     const { data } = await axios.get(`${ROOT}/GetCurrentBusInfo`);
     json = xml2js(data, { compact: true });
     json = json.DocumentElement.LatestInfoTable;
-    bus = json.find(bus => bus.RouteShortName._text == shortName);
 
-    for (const key of Object.keys(bus)) {
-        bus[key] = bus[key]._text
+    bus = json.find(bus => bus.RouteShortName._text == shortName);
+    bus = formatBus(bus);
+    return bus;
+}
+
+function formatBus(busData) {
+    for (const key of Object.keys(busData)) {
+        busData[key] = busData[key]._text;
     }
 
-    return bus;
+    return busData;
 }
