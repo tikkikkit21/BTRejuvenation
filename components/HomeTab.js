@@ -2,9 +2,11 @@ import React from 'react';
 import { View } from 'react-native';
 import MapView from 'react-native-maps';
 import appStyles from '../styles/App.style';
-import styles from '../styles/HomeTab.style'
+import styles from '../styles/HomeTab.style';
+import { getAllBuses } from '../backend/busController';
 
 function HomeTab() {
+    getAllBuses();
     return (
         <View style={appStyles.container}>
             <MapView
