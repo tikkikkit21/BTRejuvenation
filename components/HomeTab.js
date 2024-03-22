@@ -14,7 +14,7 @@ function HomeTab() {
     useEffect(() => {
         loadBuses();
         setInterval(loadBuses, 10000);
-    });
+    }, []);
 
     async function loadBuses() {
         const buses = await getAllBuses();
