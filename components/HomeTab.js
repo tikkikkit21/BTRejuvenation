@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
 import { getAllBuses } from '../backend/busController';
-import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 
 import appStyles from '../styles/App.style';
 import styles from '../styles/HomeTab.style';
@@ -40,9 +40,11 @@ function HomeTab() {
             >
                 {getMarkers(buses)}
             </MapView>
-            <TouchableOpacity onPress={handleButtonClick}>
-                <Text style={styles.buttonText}>Button</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity onPress={handleButtonClick}>
+                    <FontAwesome name="refresh" size={24} color="white" />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
