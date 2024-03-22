@@ -11,14 +11,15 @@ import styles from '../styles/HomeTab.style';
 function HomeTab() {
     const [buses, setBuses] = useState([]);
 
-    async function getBuses() {
+    useEffect(() => {
+        loadBuses();
+        setInterval(loadBuses, 10000);
+    });
+
+    async function loadBuses() {
         const buses = await getAllBuses();
         setBuses(buses);
     }
-
-    useEffect(() => {
-        getBuses();
-    }, []);
 
     return (
         <View style={appStyles.container}>
