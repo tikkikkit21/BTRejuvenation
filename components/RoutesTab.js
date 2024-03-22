@@ -62,7 +62,7 @@ function RouteTab() {
 };
     return (
         <View style={styles.container}>
-             <DropDownPicker
+            <DropDownPicker
                 items={stops.map(stop => ({ label: stop[1], value: stop[0] }))}
                 defaultValue={selectedStop}
                 placeholder="--Filter By Stop--"
