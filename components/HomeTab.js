@@ -16,14 +16,13 @@ function HomeTab() {
         setInterval(loadBuses, 10000);
     }, []);
 
+    const handleButtonClick = () => {
+        loadBuses();
+    }
+
     async function loadBuses() {
         const buses = await getAllBuses();
         setBuses(buses);
-    }
-
-    const handleButtonClick = () => {
-        // fetchData()
-        console.log("button clicked")
     }
 
     return (
