@@ -39,6 +39,7 @@ function getMarkers(buses) {
     return buses.map(busObj => {
         return (
             <Marker
+                key={busObj.AgencyVehicleName}
                 coordinate={{
                     latitude: busObj.Latitude,
                     longitude: busObj.Longitude
