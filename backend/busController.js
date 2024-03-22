@@ -3,7 +3,6 @@ import { xml2js } from "xml-js";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
-// TODO: format output like in getBus()
 export async function getAllBuses() {
     const { data } = await axios.get(`${ROOT}/GetCurrentBusInfo`);
     json = xml2js(data, { compact: true });
@@ -14,12 +13,8 @@ export async function getAllBuses() {
 }
 
 export async function getBus(shortName) {
-    const { data } = await axios.get(`${ROOT}/GetCurrentBusInfo`);
-    json = xml2js(data, { compact: true });
-    json = json.DocumentElement.LatestInfoTable;
-
-    bus = json.find(bus => bus.RouteShortName._text == shortName);
-    bus = formatBus(bus);
+    const json = await getAllBuses();
+    bus = json.find(bus => bus.RouteShortName == shortName);
     return bus;
 }
 
