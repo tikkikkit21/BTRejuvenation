@@ -5,7 +5,11 @@ import FeedbackForm from './FeedbackForm';
 
 const Stack = createStackNavigator();
 
-function HomeTab() {
+function HomeTab({ navigation }) {
+    function goToFeedback() {
+        navigation.navigate("FeedbackForm");
+    }
+
     return (
         <Stack.Navigator
             screenOptions={{
@@ -13,7 +17,7 @@ function HomeTab() {
             }}
             initialRouteName="Map"
         >
-            <Stack.Screen name="Map" component={Map} />
+            <Stack.Screen name="Map" component={Map} initialParams={{ handleFeedbackButtonClick: goToFeedback }} />
             <Stack.Screen name="FeedbackForm" component={FeedbackForm} />
         </Stack.Navigator>
     );

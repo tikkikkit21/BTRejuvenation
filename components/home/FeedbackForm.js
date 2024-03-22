@@ -5,7 +5,7 @@ import styles from '../../styles/App.style';
 function FeedbackForm() {
     return (
         <View style={styles.container}>
-            <Text>This is the Alerts Tab</Text>
+            <Text>This is the Feedback form Tab</Text>
         </View>
     )
 }
