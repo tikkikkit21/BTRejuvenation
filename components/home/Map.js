@@ -68,8 +68,8 @@ function Map({ navigation }) {
                 }}
                 showsUserLocation={true}
             >
-                {getMarkers(buses, handleMarkerSelect, handleMarkerDeselect)}
-                {getStops(stops)}
+                {createMarkers(buses, handleMarkerSelect, handleMarkerDeselect)}
+                {createStops(stops)}
             </MapView>
             <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleRefreshClick}>
@@ -85,7 +85,7 @@ function Map({ navigation }) {
     )
 }
 
-function getMarkers(buses, handleSelect, handleDeselect) {
+function createMarkers(buses, handleSelect, handleDeselect) {
     return buses.map(busObj => {
         return (
             <Marker
@@ -107,7 +107,7 @@ function getMarkers(buses, handleSelect, handleDeselect) {
     });
 }
 
-function getStops(stops) {
+function createStops(stops) {
     return stops.map(stopObj =>
         <Marker
             key={stopObj.StopCode}
