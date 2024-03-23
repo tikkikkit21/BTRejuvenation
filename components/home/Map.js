@@ -7,6 +7,7 @@ import { FontAwesome, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 
 import appStyles from '../../styles/App.style';
 import styles from '../../styles/HomeTab.style';
+import { getStops } from '../../backend/stopController';
 
 function Map({ navigation }) {
     const [buses, setBuses] = useState([]);
@@ -24,7 +25,7 @@ function Map({ navigation }) {
         };
     }, []);
 
-    const handleButtonClick = () => {
+    function handleRefreshClick() {
         if (!isOnCooldown) {
             clearInterval(refreshTimer.current);
             refreshTimer.current = setInterval(loadBuses, 10000);
@@ -58,7 +59,7 @@ function Map({ navigation }) {
                 {getMarkers(buses)}
             </MapView>
             <View style={styles.refreshButton}>
-                <TouchableOpacity onPress={handleButtonClick}>
+                <TouchableOpacity onPress={handleRefreshClick}>
                     <FontAwesome name="refresh" size={24} color="white" />
                 </TouchableOpacity>
             </View>
@@ -82,6 +83,7 @@ function getMarkers(buses) {
                 }}
                 title={busObj.RouteShortName}
                 description={`Last stop: ${busObj.LastStopName}`}
+                onPress={() => {handleMarkerClick(busObj.RouteShortName)}}
             >
                 <View>
                     <FontAwesome6 name="bus-simple" size={30} color="black" />
@@ -89,6 +91,12 @@ function getMarkers(buses) {
             </Marker>
         )
     });
+}
+
+async function handleMarkerClick(busCode) {
+    const stops = await getStops(busCode);
+    console.log(stops);
+    console.log("marker pressed:", busCode);
 }
 
 export default Map;
