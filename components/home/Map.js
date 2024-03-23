@@ -96,8 +96,9 @@ function createMarkers(buses, handleSelect, handleDeselect) {
                 }}
                 title={busObj.RouteShortName}
                 description={`Last stop: ${busObj.LastStopName}`}
+                pointerEvents="auto"
                 onSelect={() => { handleSelect(busObj.RouteShortName) }}
-                onDeselect={handleDeselect}
+                // onDeselect={handleDeselect}
             >
                 <View>
                     <FontAwesome6 name="bus-simple" size={30} color="black" />
@@ -117,6 +118,7 @@ function createStops(stops) {
             }}
             title={stopObj.StopCode}
             description={stopObj.StopName}
+            pointerEvents="auto"
         >
             <View>
                 <Octicons name="dot-fill" size={30} color="red" />
