@@ -11,6 +11,7 @@ import { getStops } from '../../backend/stopController';
 
 function Map({ navigation }) {
     const [buses, setBuses] = useState([]);
+    const [stops, setStops] = useState([]);
     const [isOnCooldown, setIsOnCooldown] = useState(false);
     const refreshTimer = useRef(null);
 
@@ -44,6 +45,17 @@ function Map({ navigation }) {
         setBuses(buses);
     }
 
+    async function handleMarkerSelect(busCode) {
+        console.log("marker pressed:", busCode);
+        const stops = await getStops(busCode);
+        setStops(stops);
+    }
+
+    async function handleMarkerDeselect() {
+        console.log("marker unselected:");
+        setStops([]);
+    }
+
     return (
         <View style={appStyles.container}>
             <MapView
@@ -56,7 +68,8 @@ function Map({ navigation }) {
                 }}
                 showsUserLocation={true}
             >
-                {getMarkers(buses)}
+                {getMarkers(buses, handleMarkerSelect, handleMarkerDeselect)}
+                {getStops(stops)}
             </MapView>
             <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleRefreshClick}>
@@ -72,7 +85,7 @@ function Map({ navigation }) {
     )
 }
 
-function getMarkers(buses) {
+function getMarkers(buses, handleSelect, handleDeselect) {
     return buses.map(busObj => {
         return (
             <Marker
@@ -83,7 +96,8 @@ function getMarkers(buses) {
                 }}
                 title={busObj.RouteShortName}
                 description={`Last stop: ${busObj.LastStopName}`}
-                onPress={() => {handleMarkerClick(busObj.RouteShortName)}}
+                onSelect={() => { handleSelect(busObj.RouteShortName) }}
+                onDeselect={handleDeselect}
             >
                 <View>
                     <FontAwesome6 name="bus-simple" size={30} color="black" />
@@ -93,10 +107,22 @@ function getMarkers(buses) {
     });
 }
 
-async function handleMarkerClick(busCode) {
-    const stops = await getStops(busCode);
-    console.log(stops);
-    console.log("marker pressed:", busCode);
+function getStops(stops) {
+    return stops.map(stopObj =>
+        <Marker
+            key={stopObj.StopCode}
+            coordinate={{
+                latitude: stopObj.Latitude,
+                longitude: stopObj.Longitude
+            }}
+            title={stopObj.StopCode}
+            description={stopObj.StopName}
+        >
+            <View>
+                <FontAwesome6 name="bus-simple" size={30} color="black" />
+            </View>
+        </Marker>
+    )
 }
 
 export default Map;
