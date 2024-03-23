@@ -46,14 +46,8 @@ function Map({ navigation }) {
     }
 
     async function handleMarkerSelect(busCode) {
-        console.log("marker pressed:", busCode);
         const stops = await getStops(busCode);
         setStops(stops);
-    }
-
-    async function handleMarkerDeselect() {
-        console.log("marker unselected:");
-        setStops([]);
     }
 
     return (
@@ -68,7 +62,7 @@ function Map({ navigation }) {
                 }}
                 showsUserLocation={true}
             >
-                {createMarkers(buses, handleMarkerSelect, handleMarkerDeselect)}
+                {createMarkers(buses, handleMarkerSelect)}
                 {createStops(stops)}
             </MapView>
             <View style={styles.refreshButton}>
@@ -85,7 +79,7 @@ function Map({ navigation }) {
     )
 }
 
-function createMarkers(buses, handleSelect, handleDeselect) {
+function createMarkers(buses, handleSelect) {
     return buses.map(busObj => {
         return (
             <Marker
@@ -98,7 +92,6 @@ function createMarkers(buses, handleSelect, handleDeselect) {
                 description={`Last stop: ${busObj.LastStopName}`}
                 pointerEvents="auto"
                 onSelect={() => { handleSelect(busObj.RouteShortName) }}
-                // onDeselect={handleDeselect}
             >
                 <View>
                     <FontAwesome6 name="bus-simple" size={30} color="black" />
