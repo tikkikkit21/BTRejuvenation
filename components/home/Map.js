@@ -123,7 +123,7 @@ function createStops(stops) {
 }
 
 function createRoute(stops) {
-    coords = stops.map(stop => {
+    const coords = stops.map(stop => {
         return {
             latitude: stop.Latitude,
             longitude: stop.Longitude
@@ -136,7 +136,7 @@ function createRoute(stops) {
             destination={coords[0]}
             waypoints={coords.splice(1, coords.length - 1)}
             apikey={process.env.GOOGLE_MAPS_API_KEY}
-            strokeWidth={4}
+            strokeWidth={2}
             strokeColor="#ff0000"
         />
     )
