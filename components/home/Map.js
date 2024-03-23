@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome6, MaterialIcons, Octicons } from '@expo/vector-icons';
 
 import appStyles from '../../styles/App.style';
 import styles from '../../styles/HomeTab.style';
@@ -119,7 +119,7 @@ function createStops(stops) {
             description={stopObj.StopName}
         >
             <View>
-                <FontAwesome6 name="bus-simple" size={30} color="black" />
+                <Octicons name="dot-fill" size={30} color="black" />
             </View>
         </Marker>
     )
