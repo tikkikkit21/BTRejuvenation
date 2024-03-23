@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
 import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons } from '@expo/vector-icons';
 
@@ -64,6 +65,15 @@ function Map({ navigation }) {
             >
                 {createMarkers(buses, handleMarkerSelect)}
                 {createStops(stops)}
+                {stops.length != 0 &&
+                    <MapViewDirections
+                        origin={{ latitude: stops[0].Latitude, longitude: stops[0].Longitude }}
+                        destination={{ latitude: stops[1].Latitude, longitude: stops[1].Longitude }}
+                        apikey={process.env.GOOGLE_MAPS_API_KEY}
+                        strokeWidth={4}
+                        strokeColor="#ff0000"
+                    />
+                }
             </MapView>
             <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleRefreshClick}>
