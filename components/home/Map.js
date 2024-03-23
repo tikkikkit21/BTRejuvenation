@@ -65,15 +65,7 @@ function Map({ navigation }) {
             >
                 {createMarkers(buses, handleMarkerSelect)}
                 {createStops(stops)}
-                {stops.length != 0 &&
-                    <MapViewDirections
-                        origin={{ latitude: stops[0].Latitude, longitude: stops[0].Longitude }}
-                        destination={{ latitude: stops[1].Latitude, longitude: stops[1].Longitude }}
-                        apikey={process.env.GOOGLE_MAPS_API_KEY}
-                        strokeWidth={4}
-                        strokeColor="#ff0000"
-                    />
-                }
+                {stops.length != 0 && createRoute(stops)}
             </MapView>
             <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleRefreshClick}>
@@ -127,6 +119,26 @@ function createStops(stops) {
                 <Octicons name="dot-fill" size={30} color="red" />
             </View>
         </Marker>
+    )
+}
+
+function createRoute(stops) {
+    coords = stops.map(stop => {
+        return {
+            latitude: stop.Latitude,
+            longitude: stop.Longitude
+        }
+    });
+
+    return (
+        <MapViewDirections
+            origin={coords[0]}
+            destination={coords[0]}
+            waypoints={coords.splice(1, coords.length - 1)}
+            apikey={process.env.GOOGLE_MAPS_API_KEY}
+            strokeWidth={4}
+            strokeColor="#ff0000"
+        />
     )
 }
 
