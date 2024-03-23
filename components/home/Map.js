@@ -119,7 +119,7 @@ function createStops(stops) {
             description={stopObj.StopName}
         >
             <View>
-                <Octicons name="dot-fill" size={30} color="black" />
+                <Octicons name="dot-fill" size={30} color="red" />
             </View>
         </Marker>
     )
