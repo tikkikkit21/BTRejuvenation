@@ -87,7 +87,7 @@ export default function Map({ navigation }) {
             </View>
             <View style={styles.locationButton}>
                 <TouchableOpacity onPress={handleLocationClick}>
-                    <MaterialIcons name="my-location" size={24} color="white" />
+                    <MaterialIcons name="my-location" size={20} color="white" />
                 </TouchableOpacity>
             </View>
         </View>
