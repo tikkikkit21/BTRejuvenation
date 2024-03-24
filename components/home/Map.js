@@ -42,6 +42,11 @@ export default function Map({ navigation }) {
         }
     }
 
+    // centers user on the map and zooms in a bit
+    function handleLocationClick() {
+
+    }
+
     // fetches bus data from backend
     async function loadBuses() {
         const buses = await getAllBuses();
@@ -78,6 +83,11 @@ export default function Map({ navigation }) {
             <View style={styles.feedbackButton}>
                 <TouchableOpacity onPress={() => navigation.navigate("Feedback")}>
                     <MaterialIcons name="feedback" size={20} color="white" />
+                </TouchableOpacity>
+            </View>
+            <View style={styles.locationButton}>
+                <TouchableOpacity onPress={handleLocationClick}>
+                    <FontAwesome name="refresh" size={24} color="white" />
                 </TouchableOpacity>
             </View>
         </View>
@@ -177,14 +187,21 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
-        backgroundColor: '#A40046', // Color code
-        padding: 15, // Increase button padding
+        backgroundColor: '#A40046',
+        padding: 15
     },
     feedbackButton: {
         position: 'absolute',
         top: 80,
         right: 10,
-        backgroundColor: '#A40046', // Color code
-        padding: 15, // Increase button padding
+        backgroundColor: '#A40046',
+        padding: 15
+    },
+    locationButton: {
+        position: 'absolute',
+        top: 150,
+        right: 10,
+        backgroundColor: '#A40046',
+        padding: 15
     }
 });
