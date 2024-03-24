@@ -16,6 +16,7 @@ function Map({ navigation }) {
     const [isOnCooldown, setIsOnCooldown] = useState(false);
     const refreshTimer = useRef(null);
 
+    // automatically refresh bus locations every 10s
     useEffect(() => {
         loadBuses();
         refreshTimer.current = setInterval(() => {
@@ -27,6 +28,7 @@ function Map({ navigation }) {
         };
     }, []);
 
+    // refresh button has a 5s cooldown, and resets the automatic refresh
     function handleRefreshClick() {
         if (!isOnCooldown) {
             clearInterval(refreshTimer.current);
@@ -41,11 +43,13 @@ function Map({ navigation }) {
         }
     }
 
+    // fetches bus data from backend
     async function loadBuses() {
         const buses = await getAllBuses();
         setBuses(buses);
     }
 
+    // fetches stop data for a particular bus
     async function handleMarkerSelect(busCode) {
         const stops = await getStops(busCode);
         setStops(stops);
@@ -81,6 +85,7 @@ function Map({ navigation }) {
     )
 }
 
+// creates bus icons for each bus in the bus data
 function createMarkers(buses, handleSelect) {
     return buses.map(busObj => {
         return (
@@ -103,6 +108,7 @@ function createMarkers(buses, handleSelect) {
     });
 }
 
+// creates circles for each stop
 function createStops(stops) {
     return stops.map(stopObj =>
         <Marker
@@ -122,6 +128,7 @@ function createStops(stops) {
     )
 }
 
+// uses Google Maps API to trace the route between stops (not perfect)
 function createRoute(stops) {
     const coords = stops.map(stop => {
         return {
