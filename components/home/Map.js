@@ -3,6 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons } from '@expo/vector-icons';
 
@@ -49,8 +50,14 @@ export default function Map({ navigation }) {
     }
 
     // centers user on the map and zooms in a bit
-    function handleLocationClick() {
-
+    async function handleLocationClick() {
+        const location = await Location.getCurrentPositionAsync({});
+        setMapRegion({
+            longitude: location.coords.longitude,
+            latitude: location.coords.latitude,
+            latitudeDelta: 0.00964806666502227,
+            longitudeDelta: 0.008857245616368914
+        })
     }
 
     // fetches bus data from backend
