@@ -130,16 +130,32 @@ function createRoute(stops) {
         }
     });
 
-    return (
-        <MapViewDirections
-            origin={coords[0]}
-            destination={coords[0]}
-            waypoints={coords.splice(1, coords.length - 1)}
-            apikey={process.env.GOOGLE_MAPS_API_KEY}
-            strokeWidth={2}
-            strokeColor="#ff0000"
-        />
-    )
+    const mapCoords = format(coords);
+
+    return mapCoords.map((mc, index) => {
+        return (
+            <MapViewDirections
+                key={index}
+                origin={mc[0]}
+                destination={mc[mc.length - 1]}
+                waypoints={mc.slice(1, mc.length - 1)}
+                apikey={process.env.GOOGLE_MAPS_API_KEY}
+                strokeWidth={2}
+                strokeColor="#ff0000"
+            />
+        );
+    });
+}
+
+// Google API can only handle up to 25 waypoints, so if a bus has more stops,
+// split into 2 MapViewDirections
+function format(coords) {
+    coords.push(coords[0]);
+    if (coords.length <= 27) {
+        return [coords];
+    }
+
+    return [coords.slice(0, 20), coords.slice(19, coords.length)];
 }
 
 export default Map;
