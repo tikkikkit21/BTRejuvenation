@@ -10,6 +10,12 @@ import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 
 export default function Map({ navigation }) {
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 37.227468937500895,
+        longitude: -80.42357646125542,
+        latitudeDelta: 0.051202637986392574,
+        longitudeDelta: 0.03720943536600885,
+    })
     const [buses, setBuses] = useState([]);
     const [stops, setStops] = useState([]);
     const [isOnCooldown, setIsOnCooldown] = useState(false);
@@ -63,12 +69,8 @@ export default function Map({ navigation }) {
         <View style={appStyles.container}>
             <MapView
                 style={styles.map}
-                initialRegion={{
-                    latitude: 37.227613,
-                    longitude: -80.422137,
-                    latitudeDelta: 0.0122,
-                    longitudeDelta: 0.0121,
-                }}
+                region={mapRegion}
+                onRegionChangeComplete={(region) => setMapRegion(region)}
                 showsUserLocation={true}
             >
                 {createMarkers(buses, handleMarkerSelect)}
