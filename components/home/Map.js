@@ -9,7 +9,7 @@ import { FontAwesome, FontAwesome6, MaterialIcons, Octicons } from '@expo/vector
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 
-function Map({ navigation }) {
+export default function Map({ navigation }) {
     const [buses, setBuses] = useState([]);
     const [stops, setStops] = useState([]);
     const [isOnCooldown, setIsOnCooldown] = useState(false);
@@ -168,8 +168,6 @@ function format(coords) {
 
     return [coords.slice(0, 20), coords.slice(19, coords.length)];
 }
-
-export default Map;
 
 const styles = StyleSheet.create({
     map: {
