@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -7,7 +7,6 @@ import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons } from '@expo/vector-icons';
 
 import appStyles from '../../styles/App.style';
-import styles from '../../styles/HomeTab.style';
 import { getStops } from '../../backend/stopController';
 
 function Map({ navigation }) {
@@ -171,3 +170,23 @@ function format(coords) {
 }
 
 export default Map;
+
+const styles = StyleSheet.create({
+    map: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    refreshButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: '#A40046', // Color code
+        padding: 15, // Increase button padding
+    },
+    feedbackButton: {
+        position: 'absolute',
+        top: 80,
+        right: 10,
+        backgroundColor: '#A40046', // Color code
+        padding: 15, // Increase button padding
+    }
+});
