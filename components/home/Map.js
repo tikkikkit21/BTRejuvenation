@@ -22,6 +22,9 @@ export default function Map({ navigation }) {
     const [isOnCooldown, setIsOnCooldown] = useState(false);
     const refreshTimer = useRef(null);
 
+    // ask for user location
+    Location.requestForegroundPermissionsAsync();
+
     // automatically refresh bus locations every 10s
     useEffect(() => {
         loadBuses();
