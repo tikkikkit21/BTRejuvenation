@@ -48,7 +48,7 @@ function RouteTab() {
     async function fetchScheduledRoutes() {
         try {
             const routesLocal = await getScheduledRoutes(stopCode);
-            console.log(routesLocal)
+            //console.log(routesLocal)
             setRoutes(routesLocal)
         } catch (error) {
             console.error('Error fetching stops:', error);
