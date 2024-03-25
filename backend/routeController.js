@@ -17,7 +17,7 @@ export async function getScheduledRoutes(stopCode){
         busRoutes = [[scheduledStops.RouteName._text, scheduledStops.RouteColor._text, scheduledStops.RouteShortName._text, scheduledStops.RouteTextColor._text, scheduledStops.RouteURL._text, scheduledStops.ServiceLevel._text]];
     }
     //const busRoutes = formatScheduledStops(scheduledStops)
-    console.log(busRoutes);
+    //console.log(busRoutes);
     return busRoutes;
 }
 
