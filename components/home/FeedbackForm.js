@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity
 import Slider from '@react-native-community/slider';
 import { submitFeedback } from '../../backend/feedbackController';
 
-function FeedbackForm({ navigation }) {
+function FeedbackForm({ route, navigation }) {
     // Default Slider value
     const [sliderValue, setSliderValue] = useState(5);
     // State variable for fullName
@@ -25,6 +25,10 @@ function FeedbackForm({ navigation }) {
             alert(`Full Name: ${fullName}\nRating:${sliderValue}\nComments: ${comments}`);
         }
     };
+
+    if (route) {
+        console.log("Data received:", route.params.qrData);
+    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>

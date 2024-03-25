@@ -13,9 +13,7 @@ export default function QRScanner({ navigation }) {
 
     function onQRScanned(result) {
         if (result.type === "org.iso.QRCode") {
-            console.log("QR code scanned:", result.data);
-
-            navigation.navigate("Feedback");
+            navigation.navigate("Feedback", { qrData: result.data });
         }
     }
 
