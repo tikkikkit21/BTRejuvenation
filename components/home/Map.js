@@ -1,20 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons } from '@expo/vector-icons';
 
 import appStyles from '../../styles/App.style';
-import styles from '../../styles/HomeTab.style';
 import { getStops } from '../../backend/stopController';
 
-function Map({ navigation }) {
+export default function Map({ navigation }) {
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 37.227468937500895,
+        longitude: -80.42357646125542,
+        latitudeDelta: 0.051202637986392574,
+        longitudeDelta: 0.03720943536600885,
+    })
     const [buses, setBuses] = useState([]);
     const [stops, setStops] = useState([]);
     const [isOnCooldown, setIsOnCooldown] = useState(false);
     const refreshTimer = useRef(null);
+
+    // ask for user location
+    Location.requestForegroundPermissionsAsync();
 
     // automatically refresh bus locations every 10s
     useEffect(() => {
@@ -43,6 +52,17 @@ function Map({ navigation }) {
         }
     }
 
+    // centers user on the map and zooms in a bit
+    async function handleLocationClick() {
+        const location = await Location.getCurrentPositionAsync({});
+        setMapRegion({
+            longitude: location.coords.longitude,
+            latitude: location.coords.latitude,
+            latitudeDelta: 0.00964806666502227,
+            longitudeDelta: 0.008857245616368914
+        })
+    }
+
     // fetches bus data from backend
     async function loadBuses() {
         const buses = await getAllBuses();
@@ -59,12 +79,8 @@ function Map({ navigation }) {
         <View style={appStyles.container}>
             <MapView
                 style={styles.map}
-                initialRegion={{
-                    latitude: 37.227613,
-                    longitude: -80.422137,
-                    latitudeDelta: 0.0122,
-                    longitudeDelta: 0.0121,
-                }}
+                region={mapRegion}
+                onRegionChangeComplete={(region) => setMapRegion(region)}
                 showsUserLocation={true}
             >
                 {createMarkers(buses, handleMarkerSelect)}
@@ -79,6 +95,11 @@ function Map({ navigation }) {
             <View style={styles.feedbackButton}>
                 <TouchableOpacity onPress={() => navigation.navigate("Feedback")}>
                     <MaterialIcons name="feedback" size={20} color="white" />
+                </TouchableOpacity>
+            </View>
+            <View style={styles.locationButton}>
+                <TouchableOpacity onPress={handleLocationClick}>
+                    <MaterialIcons name="my-location" size={20} color="white" />
                 </TouchableOpacity>
             </View>
         </View>
@@ -170,4 +191,29 @@ function format(coords) {
     return [coords.slice(0, 20), coords.slice(19, coords.length)];
 }
 
-export default Map;
+const styles = StyleSheet.create({
+    map: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    refreshButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: '#A40046',
+        padding: 15
+    },
+    feedbackButton: {
+        position: 'absolute',
+        top: 80,
+        right: 10,
+        backgroundColor: '#A40046',
+        padding: 15
+    },
+    locationButton: {
+        position: 'absolute',
+        top: 150,
+        right: 10,
+        backgroundColor: '#A40046',
+        padding: 15
+    }
+});
