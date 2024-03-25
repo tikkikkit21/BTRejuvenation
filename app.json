@@ -25,6 +25,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "react-native-permissions",
+      {
+        "iosPermissions": [
+          "AppTrackingTransparency",
+          "Bluetooth",
+          "CalendarsWriteOnly",
+          "Notifications",
+          "SpeechRecognition"
+        ]
+      }
+    ]
   }
 }
