@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
-import { getAllBuses } from '../backend/busController';
-import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
+import { getAllBuses } from '../../backend/busController';
+import { FontAwesome, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 
-import appStyles from '../styles/App.style';
-import styles from '../styles/HomeTab.style';
+import appStyles from '../../styles/App.style';
+import styles from '../../styles/HomeTab.style';
 
-function HomeTab() {
+function Map({ navigation }) {
     const [buses, setBuses] = useState([]);
     const [isOnCooldown, setIsOnCooldown] = useState(false);
     const refreshTimer = useRef(null);
@@ -57,13 +57,18 @@ function HomeTab() {
             >
                 {getMarkers(buses)}
             </MapView>
-            <View style={styles.buttonContainer}>
+            <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleButtonClick}>
                     <FontAwesome name="refresh" size={24} color="white" />
                 </TouchableOpacity>
             </View>
+            <View style={styles.feedbackButton}>
+                <TouchableOpacity onPress={() => navigation.navigate("Feedback")}>
+                    <MaterialIcons name="feedback" size={20} color="white" />
+                </TouchableOpacity>
+            </View>
         </View>
-    );
+    )
 }
 
 function getMarkers(buses) {
@@ -86,4 +91,4 @@ function getMarkers(buses) {
     });
 }
 
-export default HomeTab;
+export default Map;
