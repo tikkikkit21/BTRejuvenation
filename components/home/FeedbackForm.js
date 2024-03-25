@@ -5,11 +5,13 @@ import Slider from '@react-native-community/slider';
 // import QRCodeScanner from 'react-native-qrcode-scanner';
 // import { RNCamera } from 'react-native-camera';
 // import { request, PERMISSIONS } from 'react-native-permissions';
+import {Camera, CameraType} from 'expo-camera';
 import { submitFeedback } from '../../backend/feedbackController';
 
 
 function FeedbackForm() {
-
+    const [type, setType] = useState(CameraType.back);
+    const [permission, requestPermission] = Camera.useCameraPermissions();
     // Default Slider value
     const [sliderValue, setSliderValue] = useState(5);
     // State variable for fullName
@@ -36,6 +38,11 @@ function FeedbackForm() {
           console.error('An error occured', err)
         );
       };
+    
+      function toggleCameraType() {
+        setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+      }
+    
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -59,6 +66,13 @@ function FeedbackForm() {
                     </TouchableOpacity>
                     }
                 /> */}
+                <Camera style={styles.camera} type={type}>
+                    <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+                        <Text style={styles.text}>Flip Camera</Text>
+                    </TouchableOpacity>
+                    </View>
+                </Camera>
             </View>
             {getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue)}
             <View style={styles.submitContainer}>
