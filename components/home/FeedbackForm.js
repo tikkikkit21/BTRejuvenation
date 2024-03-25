@@ -5,9 +5,8 @@ import Slider from '@react-native-community/slider';
 // import QRCodeScanner from 'react-native-qrcode-scanner';
 // import { RNCamera } from 'react-native-camera';
 // import { request, PERMISSIONS } from 'react-native-permissions';
-import {Camera, CameraType} from 'expo-camera';
+import { Camera, CameraType } from 'expo-camera';
 import { submitFeedback } from '../../backend/feedbackController';
-
 
 function FeedbackForm() {
     const [type, setType] = useState(CameraType.back);
@@ -23,26 +22,25 @@ function FeedbackForm() {
     const handleSubmit = () => {
         // Handle form submission here
         if (comments !== '' && fullName === '') {
-            alert(`Missing full name!`);    
+            alert(`Missing full name!`);
         } else if (fullName === '') {
-            alert(`Please fill in form first.`); 
+            alert(`Please fill in form first.`);
         } else {
             const form = `\n${fullName}\n${sliderValue}\n${comments}`;
             submitFeedback(form);
             alert(`Full Name: ${fullName}\nRating:${sliderValue}\nComments: ${comments}`);
-        }  
+        }
     };
     // Successful reading QR code
     onSuccess = e => {
         Linking.openURL(e.data).catch(err =>
-          console.error('An error occured', err)
+            console.error('An error occured', err)
         );
-      };
-    
-      function toggleCameraType() {
+    };
+
+    function toggleCameraType() {
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-      }
-    
+    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -68,9 +66,9 @@ function FeedbackForm() {
                 /> */}
                 <Camera style={styles.camera} type={type}>
                     <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-                        <Text style={styles.text}>Flip Camera</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+                            <Text style={styles.text}>Flip Camera</Text>
+                        </TouchableOpacity>
                     </View>
                 </Camera>
             </View>
@@ -85,9 +83,9 @@ function FeedbackForm() {
 function getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue) {
 
     const questions = [
-        {question: "Full Name", defaultText: "Enter your full name"},
-        {question: "Rate your travel experience", defaultValue: sliderValue},
-        {question: "Comments", defaultText: "Enter in any additional comments"},
+        { question: "Full Name", defaultText: "Enter your full name" },
+        { question: "Rate your travel experience", defaultValue: sliderValue },
+        { question: "Comments", defaultText: "Enter in any additional comments" },
     ];
 
     return questions.map((item, index) => {
@@ -95,7 +93,7 @@ function getQuestions(fullName, setFullName, comments, setComments, sliderValue,
             return (
                 <View style={styles.section} key={index}>
                     <Text style={styles.question}>{item.question}</Text>
-                    <SliderQuestion sliderValue={sliderValue} setSliderValue={setSliderValue}/>
+                    <SliderQuestion sliderValue={sliderValue} setSliderValue={setSliderValue} />
                 </View>
             );
         } else {
@@ -115,7 +113,7 @@ function getQuestions(fullName, setFullName, comments, setComments, sliderValue,
 }
 
 // Serves as a view to dynamically update the value of the Slider bar
-function SliderQuestion( {sliderValue, setSliderValue} ) {
+function SliderQuestion({ sliderValue, setSliderValue }) {
     // Handle slider change
     const handleSliderChange = (value) => {
         setSliderValue(value);
