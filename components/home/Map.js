@@ -139,6 +139,11 @@ function createRoute(stops) {
 
     const mapCoords = format(coords);
 
+    if (!process.env.GOOGLE_MAPS_API_KEY) {
+        console.log("GOOGLE_MAPS_API_KEY missing");
+        return;
+    }
+
     return mapCoords.map((mc, index) => {
         return (
             <MapViewDirections
