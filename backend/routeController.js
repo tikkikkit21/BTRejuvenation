@@ -5,6 +5,7 @@ const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
 export async function getScheduledRoutes(stopCode){
     // stopcode should be a number 1000 -> 2303
+    // leaving servicedate as blank because it auto-searches for today's date
     const { data } = await axios.get((`${ROOT}/GetScheduledRoutes?stopCode=${stopCode}&serviceDate=`));
     json = xml2js(data, { compact: true });
     scheduledStops = json.DocumentElement.ScheduledRoutes;

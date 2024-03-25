@@ -81,12 +81,12 @@ function RouteTab() {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                     <View style = {styles.flatListItem}>
-                        <Text style = {{fontSize: 27, color: '#' + item[1], textAlign: 'left'}}>{item[2]}</Text>
-                        <Text style = {{fontSize: 27, color: '#' + item[1]}}>{item[0]}</Text>
+                        <Text style = {{fontSize: 20, color: '#' + item[1], textAlign: 'left'}}>{item[2]}</Text>
+                        <Text style = {{fontSize: 22, color: '#' + item[1], fontWeight: 'bold'}}>{item[0]}</Text>
+
                     </View>
                 )}
             />
-            <Text>This is the route Tab</Text>
         </View>
     );
 }

@@ -4,7 +4,7 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
+        alignItems: 'left',
         justifyContent: 'flex-start', 
         paddingTop: 0, 
     },
@@ -17,9 +17,14 @@ export default StyleSheet.create({
         height:'20px',
     },
     flatListItem: {
-        paddingLeft: 0, 
-        paddingRight: 0, 
-        paddingTop: 20, 
+        paddingLeft:10,
+        paddingRight: '32%', 
+        paddingTop: 5, 
         paddingBottom: 5, 
+        marginVertical: 0.02,
+        borderRadius: 1,
+        borderRadius: 0,
+        borderWidth: 0.5,
+        borderColor: '#ccc',
     },
 });
