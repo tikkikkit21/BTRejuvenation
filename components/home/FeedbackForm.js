@@ -2,12 +2,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { Camera, CameraType } from 'expo-camera';
 import { submitFeedback } from '../../backend/feedbackController';
 
 function FeedbackForm() {
-    const [type, setType] = useState(CameraType.back);
-    const [permission, requestPermission] = Camera.useCameraPermissions();
     // Default Slider value
     const [sliderValue, setSliderValue] = useState(5);
     // State variable for fullName
@@ -28,16 +25,6 @@ function FeedbackForm() {
             alert(`Full Name: ${fullName}\nRating:${sliderValue}\nComments: ${comments}`);
         }
     };
-    // Successful reading QR code
-    onSuccess = e => {
-        Linking.openURL(e.data).catch(err =>
-            console.error('An error occured', err)
-        );
-    };
-
-    function toggleCameraType() {
-        setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -45,13 +32,6 @@ function FeedbackForm() {
             <Text style={styles.question}>Scan QR Code on the Bus?</Text>
             <View style={styles.buttonContainer}>
                 <Button title="Scan" onPress={() => alert('Form not linked.')} />
-                <Camera style={styles.camera} type={type}>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-                            <Text style={styles.text}>Flip Camera</Text>
-                        </TouchableOpacity>
-                    </View>
-                </Camera>
             </View>
             {getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue)}
             <View style={styles.submitContainer}>
