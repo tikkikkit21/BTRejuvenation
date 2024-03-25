@@ -1,6 +1,5 @@
-import { FontAwesome } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { submitFeedback } from '../../backend/feedbackController';
 
@@ -26,6 +25,7 @@ function FeedbackForm({ route, navigation }) {
         }
     };
 
+    // route is only non-null if we've come back to this page form QR scanner
     if (route) {
         console.log("Data received:", route.params.qrData);
     }
@@ -42,11 +42,11 @@ function FeedbackForm({ route, navigation }) {
                 <Button title="Submit" onPress={handleSubmit} />
             </View>
         </ScrollView>
-    )
+    );
 }
 
+// convert questions into Views
 function getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue) {
-
     const questions = [
         { question: "Full Name", defaultText: "Enter your full name" },
         { question: "Rate your travel experience", defaultValue: sliderValue },

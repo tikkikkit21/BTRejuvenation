@@ -7,10 +7,12 @@ export default function QRScanner({ navigation }) {
     const isFocused = useIsFocused();
     const [permission, requestPermission] = useCameraPermissions();
 
+    // ask for permission to use camera
     if (!permission || !permission.granted) {
         requestPermission();
     }
 
+    // send scanned data back to feedback form
     function onQRScanned(result) {
         if (result.type === "org.iso.QRCode") {
             navigation.navigate("Feedback", { qrData: result.data });
