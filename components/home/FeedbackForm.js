@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity
 import Slider from '@react-native-community/slider';
 import { submitFeedback } from '../../backend/feedbackController';
 
-function FeedbackForm() {
+function FeedbackForm(props) {
     // Default Slider value
     const [sliderValue, setSliderValue] = useState(5);
     // State variable for fullName
@@ -31,7 +31,7 @@ function FeedbackForm() {
             <Text style={styles.title}>Feedback Form</Text>
             <Text style={styles.question}>Scan QR Code on the Bus?</Text>
             <View style={styles.buttonContainer}>
-                <Button title="Scan" onPress={() => alert('Form not linked.')} />
+                <Button title="Scan" onPress={props.route.params.goToQRScanner} />
             </View>
             {getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue)}
             <View style={styles.submitContainer}>
