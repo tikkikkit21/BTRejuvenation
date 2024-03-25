@@ -2,9 +2,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
-// import QRCodeScanner from 'react-native-qrcode-scanner';
-// import { RNCamera } from 'react-native-camera';
-// import { request, PERMISSIONS } from 'react-native-permissions';
 import { Camera, CameraType } from 'expo-camera';
 import { submitFeedback } from '../../backend/feedbackController';
 
@@ -48,22 +45,6 @@ function FeedbackForm() {
             <Text style={styles.question}>Scan QR Code on the Bus?</Text>
             <View style={styles.buttonContainer}>
                 <Button title="Scan" onPress={() => alert('Form not linked.')} />
-                {/* <QRCodeScanner
-                    onRead={this.onSuccess}
-                    flashMode={RNCamera.Constants.FlashMode.torch}
-                    topContent={
-                    <Text style={styles.centerText}>
-                        Go to{' '}
-                        <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-                        your computer and scan the QR code.
-                    </Text>
-                    }
-                    bottomContent={
-                    <TouchableOpacity style={styles.buttonTouchable}>
-                        <Text style={styles.buttonText}>OK. Got it!</Text>
-                    </TouchableOpacity>
-                    }
-                /> */}
                 <Camera style={styles.camera} type={type}>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
