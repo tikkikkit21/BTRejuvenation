@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera/next';
 
-export default function QRScanner() {
+export default function QRScanner({ navigation }) {
     const [facing, setFacing] = useState('back');
     const [permission, requestPermission] = useCameraPermissions();
 
@@ -16,7 +16,9 @@ export default function QRScanner() {
 
     function onQRScanned(result) {
         if (result.type === "org.iso.QRCode") {
-            console.log("QR code scanned:", result.data)
+            console.log("QR code scanned:", result.data);
+
+            navigation.navigate("Feedback");
         }
     }
 
