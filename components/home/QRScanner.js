@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera/next';
 
 export default function QRScanner({ navigation }) {
+    const isFocused = useIsFocused();
     const [facing, setFacing] = useState('back');
     const [permission, requestPermission] = useCameraPermissions();
 
@@ -24,7 +26,7 @@ export default function QRScanner({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <CameraView
+            {isFocused && <CameraView
                 style={styles.camera}
                 facing={facing}
                 barcodeScannerSettings={{
@@ -37,7 +39,7 @@ export default function QRScanner({ navigation }) {
                         <Text style={styles.text}>Flip Camera</Text>
                     </TouchableOpacity>
                 </View>
-            </CameraView>
+            </CameraView>}
         </View>
     )
 }
