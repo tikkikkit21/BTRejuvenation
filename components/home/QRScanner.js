@@ -14,9 +14,22 @@ export default function QRScanner() {
         setFacing(current => (current === 'back' ? 'front' : 'back'));
     }
 
+    function onQRScanned(result) {
+        if (result.type === "org.iso.QRCode") {
+            console.log("QR code scanned:", result.data)
+        }
+    }
+
     return (
         <View style={styles.container}>
-            <CameraView style={styles.camera} facing={facing}>
+            <CameraView
+                style={styles.camera}
+                facing={facing}
+                barcodeScannerSettings={{
+                    barcodeTypes: ["qr"]
+                }}
+                onBarcodeScanned={onQRScanned}
+            >
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
                         <Text style={styles.text}>Flip Camera</Text>
