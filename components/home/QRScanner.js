@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Camera, CameraType } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera/next';
 
 export default function QRScanner() {
-    const [type, setType] = useState(CameraType.back);
-    const [permission, requestPermission] = Camera.useCameraPermissions();
+    const [facing, setFacing] = useState('back');
+    const [permission, requestPermission] = useCameraPermissions();
 
     if (!permission || !permission.granted) {
         requestPermission();
     }
 
-    function toggleCameraType() {
-        setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+    function toggleCameraFacing() {
+        setFacing(current => (current === 'back' ? 'front' : 'back'));
     }
 
     return (
-        <Camera style={styles.camera} type={type}>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-                    <Text style={styles.text}>Flip Camera</Text>
-                </TouchableOpacity>
-            </View>
-        </Camera>
+        <View style={styles.container}>
+            <CameraView style={styles.camera} facing={facing}>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+                        <Text style={styles.text}>Flip Camera</Text>
+                    </TouchableOpacity>
+                </View>
+            </CameraView>
+        </View>
     )
 }
 
