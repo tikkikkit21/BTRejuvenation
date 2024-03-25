@@ -86,7 +86,7 @@ function getQuestions(fullName, setFullName, comments, setComments, sliderValue,
             );
         } else {
             return (
-                <View style={styles.section}>
+                <View style={styles.section} key={index}>
                     <Text style={styles.question}>{item.question}</Text>
                     <TextInput
                         style={styles.answer}
