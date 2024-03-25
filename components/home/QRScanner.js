@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera/next';
 
 export default function QRScanner({ navigation }) {
     const isFocused = useIsFocused();
-    const [facing, setFacing] = useState('back');
     const [permission, requestPermission] = useCameraPermissions();
 
     if (!permission || !permission.granted) {
         requestPermission();
-    }
-
-    function toggleCameraFacing() {
-        setFacing(current => (current === 'back' ? 'front' : 'back'));
     }
 
     function onQRScanned(result) {
@@ -28,18 +23,12 @@ export default function QRScanner({ navigation }) {
         <View style={styles.container}>
             {isFocused && <CameraView
                 style={styles.camera}
-                facing={facing}
+                facing={'back'}
                 barcodeScannerSettings={{
                     barcodeTypes: ["qr"]
                 }}
                 onBarcodeScanned={onQRScanned}
-            >
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-                        <Text style={styles.text}>Flip Camera</Text>
-                    </TouchableOpacity>
-                </View>
-            </CameraView>}
+            />}
         </View>
     )
 }
