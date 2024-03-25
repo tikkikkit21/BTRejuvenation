@@ -8,7 +8,7 @@ import { FontAwesome, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
 import styles from '../../styles/HomeTab.style';
 
-function Map(props) {
+function Map({ navigation }) {
     const [buses, setBuses] = useState([]);
     const [isOnCooldown, setIsOnCooldown] = useState(false);
     const refreshTimer = useRef(null);
@@ -63,7 +63,7 @@ function Map(props) {
                 </TouchableOpacity>
             </View>
             <View style={styles.feedbackButton}>
-                <TouchableOpacity onPress={props.route.params.handleFeedbackButtonClick}>
+                <TouchableOpacity onPress={() => navigation.navigate("Feedback")}>
                     <MaterialIcons name="feedback" size={20} color="white" />
                 </TouchableOpacity>
             </View>
