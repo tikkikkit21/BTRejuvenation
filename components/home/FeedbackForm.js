@@ -89,7 +89,7 @@ function SliderQuestion({ sliderValue, setSliderValue }) {
         <View style={styles.sliderContainer}>
             <Slider
                 style={styles.slider}
-                minimumValue={1}
+                minimumValue={0}
                 maximumValue={10}
                 step={1}
                 value={sliderValue}
