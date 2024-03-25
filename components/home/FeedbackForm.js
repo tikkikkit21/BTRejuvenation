@@ -25,8 +25,8 @@ function FeedbackForm({ route, navigation }) {
         }
     };
 
-    // route is only non-null if we've come back to this page form QR scanner
-    if (route) {
+    // check if we have any data from QR scanner
+    if (route?.params?.qrData) {
         console.log("Data received:", route.params.qrData);
     }
 
