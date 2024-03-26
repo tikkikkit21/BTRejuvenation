@@ -1,12 +1,19 @@
-import { View, Text } from 'react-native';
-import styles from '../../styles/App.style'
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import Alerts from './Alerts';
 
-function AlertsTab() {
+const Stack = createStackNavigator();
+
+export default function AlertsTab() {
     return (
-        <View style={styles.container}>
-            <Text>This is the Alerts Tab</Text>
-        </View>
-    )
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: { backgroundColor: '#7F1237' },
+                headerTintColor: 'white'
+            }}
+            initialRouteName="Alerts"
+        >
+            <Stack.Screen name="Alerts" component={Alerts} />
+        </Stack.Navigator>
+    );
 }
-
-export default AlertsTab;
