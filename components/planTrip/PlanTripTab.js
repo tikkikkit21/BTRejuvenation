@@ -1,12 +1,19 @@
-import { View, Text } from 'react-native';
-import styles from '../../styles/App.style'
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import PlanTrip from './PlanTrip';
 
-function PlanTrip() {
+const Stack = createStackNavigator();
+
+export default function PlanTripTab() {
     return (
-        <View style={styles.container}>
-            <Text>This is the Plan a Trip Tab</Text>
-        </View>
-    )
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: { backgroundColor: '#7F1237' },
+                headerTintColor: 'white'
+            }}
+            initialRouteName="Plan a Trip"
+        >
+            <Stack.Screen name="Plan a Trip" component={PlanTrip} />
+        </Stack.Navigator>
+    );
 }
-
-export default PlanTrip;
