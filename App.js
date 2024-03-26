@@ -40,7 +40,7 @@ export default function App() {
 
                         return icon;
                     },
-                    tabBarActiveTintColor: 'tomato',
+                    tabBarActiveTintColor: '#7F1237',
                     tabBarInactiveTintColor: 'gray',
                     headerShown: false
                 })}
