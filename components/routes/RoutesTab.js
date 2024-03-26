@@ -3,6 +3,7 @@ import { View, Text, FlatList} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../styles/Route.style';
 import { getAllStops, getScheduledRoutes } from '../backend/routeController';
+import styles from '../../styles/App.style'
 
 
 function RouteTab() {

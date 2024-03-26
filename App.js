@@ -5,9 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import HomeTab from './components/home/HomeTab';
-import AlertsTab from './components/AlertsTab';
-import PlanTrip from './components/PlanTrip';
-import RoutesTab from './components/RoutesTab';
+import AlertsTab from './components/alerts/AlertsTab';
+import PlanTrip from './components/planTrip/PlanTrip';
+import RoutesTab from './components/routes/RoutesTab';
 
 const Tab = createBottomTabNavigator();
 
