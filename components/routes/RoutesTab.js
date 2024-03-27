@@ -1,86 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import styles from '../styles/Route.style';
-import { getAllStops, getScheduledRoutes } from '../backend/routeController';
-import styles from '../../styles/App.style'
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import RoutesList from './RoutesList';
 
+const Stack = createStackNavigator();
 
-function RouteTab() {
-    const [open, setOpen] = useState(false);
-    const [stops, setStops] = useState([]);
-    const [routes, setRoutes] = useState([]);
-    const [selectedStop, selectStop] = useState("");
-    useEffect(() => {
-        async function fetchStops() {
-            try {
-                const stopLocal = await getAllStops();
-                setStops(stopLocal);
-            } catch (error) {
-                console.error('Error fetching stops:', error);
-            }
-        }
-
-        fetchStops();
-
-        async function fetchAllRoutes() {
-            try {
-                const routeLocal = await getScheduledRoutes("");
-                setRoutes(routeLocal);
-            } catch (error) {
-                console.error('Error fetching stops:', error);
-            }
-        }
-
-        fetchAllRoutes()
-    }, []);
-
-
-    const handleStopChange = (itemValue) => {
-        selectStop(itemValue);
-        stopCode = itemValue.value
-
-        async function fetchScheduledRoutes() {
-            try {
-                const routesLocal = await getScheduledRoutes(stopCode);
-                setRoutes(routesLocal)
-            } catch (error) {
-                console.error('Error fetching stops:', error);
-            }
-        }
-
-        fetchScheduledRoutes();
-
-    };
+export default function RoutestTab() {
     return (
-        <View style={styles.container}>
-            <DropDownPicker
-                items={stops.map(stop => ({ label: stop[1], value: stop[0] }))}
-                defaultValue={selectedStop}
-                placeholder="--Filter By Stop--"
-                value={selectedStop}
-                containerStyle={{ height: 50, width: '100%' }}
-                style={styles.picker}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
-                onSelectItem={handleStopChange}
-                search={true}
-                open={open}
-                setOpen={setOpen}
-            />
-            <Text style={{ fontSize: 27, color: '#1E1E1E' }}>Scheduled Routes:</Text>
-            <FlatList
-                data={routes}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <View style={styles.flatListItem}>
-                        <Text style={{ fontSize: 20, color: '#' + item[1], textAlign: 'left' }}>{item[2]}</Text>
-                        <Text style={{ fontSize: 22, color: '#' + item[1], fontWeight: 'bold' }}>{item[0]}</Text>
-
-                    </View>
-                )}
-            />
-        </View>
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: { backgroundColor: '#7F1237' },
+                headerTintColor: 'white'
+            }}
+            initialRouteName="Routes"
+        >
+            <Stack.Screen name="Routes" component={RoutesList} />
+        </Stack.Navigator>
     );
 }
-
-export default RouteTab;
