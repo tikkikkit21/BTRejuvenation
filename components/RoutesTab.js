@@ -14,7 +14,6 @@ function RouteTab() {
     async function fetchStops() {
         try {
             const stopLocal = await getAllStops();
-            //console.log(stopLocal)
             setStops(stopLocal);
         } catch (error) {
             console.error('Error fetching stops:', error);
@@ -26,7 +25,6 @@ function RouteTab() {
     async function fetchAllRoutes(){
         try {
             const routeLocal = await getScheduledRoutes("");
-            //console.log(stopLocal)
             setRoutes(routeLocal);
         } catch (error) {
             console.error('Error fetching stops:', error);
@@ -38,10 +36,7 @@ function RouteTab() {
 
    
    const handleStopChange = (itemValue) => {
-    //console.log(itemValue) //RETURNS {"label": "STOPNAME", "value": "STOPCODE"}
-    //console.log(itemValue.value) // returns STOPCODE
-    //alert change here, call getScheduledRoutes with the se 
-    
+ 
     selectStop(itemValue);
     stopCode = itemValue.value
 
