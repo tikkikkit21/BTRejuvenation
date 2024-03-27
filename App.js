@@ -5,9 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import HomeTab from './components/home/HomeTab';
-import AlertsTab from './components/AlertsTab';
-import PlanTrip from './components/PlanTrip';
-import RoutesTab from './components/RoutesTab';
+import AlertsTab from './components/alerts/AlertsTab';
+import PlanTrip from './components/planTrip/PlanTripTab';
+import RoutesTab from './components/routes/RoutesTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +40,7 @@ export default function App() {
 
                         return icon;
                     },
-                    tabBarActiveTintColor: 'tomato',
+                    tabBarActiveTintColor: '#7F1237',
                     tabBarInactiveTintColor: 'gray',
                     headerShown: false
                 })}

@@ -9,7 +9,7 @@ export async function getStops(busCode) {
     let json = xml2js(data, { compact: true });
     json = json.DocumentElement.ScheduledStops;
     json = json.map(stop => formatStop(stop));
-    
+
     return json;
 }
 

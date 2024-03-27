@@ -5,8 +5,7 @@ export default StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'left',
-        justifyContent: 'flex-start', 
-        paddingTop: 35, 
+        justifyContent: 'flex-start'
     },
     picker: {
         backgroundColor: '#fff',

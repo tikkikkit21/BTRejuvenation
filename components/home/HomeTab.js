@@ -10,6 +10,8 @@ function HomeTab() {
     return (
         <Stack.Navigator
             screenOptions={{
+                headerStyle: { backgroundColor: '#7F1237' },
+                headerTintColor: 'white'
             }}
             initialRouteName="Map"
         >
