@@ -17,20 +17,18 @@ export async function getScheduledRoutes(stopCode){
     else{
         busRoutes = [[scheduledStops.RouteName._text, scheduledStops.RouteColor._text, scheduledStops.RouteShortName._text, scheduledStops.RouteTextColor._text, scheduledStops.RouteURL._text, scheduledStops.ServiceLevel._text]];
     }
-    //const busRoutes = formatScheduledStops(scheduledStops)
-    //console.log(busRoutes);
+
+    //returns a list of routes with the data as formatted above
     return busRoutes;
 }
 
 export async function getAllStops() {
     const { data } = await axios.get(`${ROOT}/GetScheduledStopCodes?routeShortName=`);
-    //console.log(data);
+    //fetch data from the api, then step into the data with the ScheduledStops list
     json = xml2js(data, { compact: true });
     scheduledStops = json.DocumentElement.ScheduledStops;
     const stops = scheduledStops.map(stop =>  [stop.StopCode._text, stop.StopName._text]);
-    //console.log(stops)
     //return a list of [stopCode, stopName]
-    //console.log(stops)
     return stops;
 }
 

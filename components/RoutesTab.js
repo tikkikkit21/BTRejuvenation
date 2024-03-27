@@ -11,6 +11,7 @@ function RouteTab() {
     const [routes, setRoutes] = useState([]);
     const [selectedStop, selectStop] = useState("");
    useEffect(() => {
+    //populate our structures with data from the api
     async function fetchStops() {
         try {
             const stopLocal = await getAllStops();
@@ -40,10 +41,11 @@ function RouteTab() {
     selectStop(itemValue);
     stopCode = itemValue.value
 
+    //backend call to get the scheduled routes, and uses the stopcode to fetch databse
     async function fetchScheduledRoutes() {
         try {
             const routesLocal = await getScheduledRoutes(stopCode);
-            //console.log(routesLocal)
+            
             setRoutes(routesLocal)
         } catch (error) {
             console.error('Error fetching stops:', error);
@@ -57,6 +59,7 @@ function RouteTab() {
 };
     return (
         <View style={styles.container}>
+        {/* populates the picker with all the routes */}
             <DropDownPicker
                 items={stops.map(stop => ({ label: stop[1], value: stop[0] }))}
                 defaultValue={selectedStop}
@@ -71,6 +74,7 @@ function RouteTab() {
                 setOpen={setOpen}
             />
             <Text style = {{fontSize: 27,color: '#1E1E1E'}}>Scheduled Routes:</Text>
+            {/* populates the list with busses, and puts them into their desired color */}
             <FlatList
                 data={routes}
                 keyExtractor={(item, index) => index.toString()}
