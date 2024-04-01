@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { MapCallout, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
@@ -153,8 +153,8 @@ function createStops(stops) {
 function createRoute(stops) {
     const coords = stops.map(stop => {
         return {
-            latitude: stop.Latitude,
-            longitude: stop.Longitude
+            latitude: Number(stop.Latitude),
+            longitude: Number(stop.Longitude)
         }
     });
 
@@ -184,6 +184,7 @@ function createRoute(stops) {
 // split into 2 MapViewDirections
 function format(coords) {
     coords.push(coords[0]);
+
     if (coords.length <= 27) {
         return [coords];
     }
