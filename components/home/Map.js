@@ -19,6 +19,7 @@ export default function Map({ navigation }) {
     })
     const [buses, setBuses] = useState([]);
     const [stops, setStops] = useState([]);
+    const [route, setRoute] = useState();
     const [isOnCooldown, setIsOnCooldown] = useState(false);
     const refreshTimer = useRef(null);
 
@@ -75,6 +76,11 @@ export default function Map({ navigation }) {
         setStops(stops);
     }
 
+    // redraw route only when stops change
+    useEffect(() => {
+        setRoute(createRoute(stops));
+    }, [stops]);
+
     return (
         <View style={appStyles.container}>
             <MapView
@@ -85,7 +91,7 @@ export default function Map({ navigation }) {
             >
                 {createMarkers(buses, handleMarkerSelect)}
                 {createStops(stops)}
-                {stops.length != 0 && createRoute(stops)}
+                {route}
             </MapView>
             <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleRefreshClick}>
