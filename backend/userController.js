@@ -9,12 +9,15 @@ const FAVORITE_STOPS_KEY = "favorite-stops";
  * Sets the user's favorite routes, will overwrite any existing saved list
  * 
  * @param {string[]} favoriteRoutes array of route codes as strings
+ * @returns true if success, false if it failed
  */
 export async function setFavoriteRoutes(favoriteRoutes) {
     try {
         await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
+        return true;
     } catch (error) {
         console.error(error);
+        return false;
     }
 }
 
@@ -39,6 +42,7 @@ export async function getFavoriteRoutes() {
  * Add a single route to existing routes
  * 
  * @param {string} routeCode route code to add
+ * @returns true if success, false if it failed
  */
 export async function addFavoriteRoute(routeCode) {
     try {
@@ -46,11 +50,12 @@ export async function addFavoriteRoute(routeCode) {
         const favoriteRoutes = value !== null
             ? JSON.parse(value)
             : [];
-
         favoriteRoutes.push(routeCode);
         await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
+        return true;
     } catch (error) {
         console.error(error);
+        return false;
     }
 }
 
@@ -58,6 +63,7 @@ export async function addFavoriteRoute(routeCode) {
  * Delete a single route from existing routes
  * 
  * @param {string} routeCode route code to delete
+ * @returns true if success, false if it failed
  */
 export async function deleteFavoriteRoute(routeCode) {
     try {
@@ -67,8 +73,10 @@ export async function deleteFavoriteRoute(routeCode) {
             favoriteRoutes = favoriteRoutes.filter(route => route !== routeCode);
             await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
         }
+        return true;
     } catch (error) {
         console.error(error);
+        return false
     }
 }
 
@@ -78,12 +86,15 @@ export async function deleteFavoriteRoute(routeCode) {
  * Sets the user's favorite stops, will overwrite any existing saved list
  * 
  * @param {number[]} favoriteStops array of stop codes as integers
+ * @returns true if success, false if it failed
  */
 export async function setFavoriteStops(favoriteStops) {
     try {
         await AsyncStorage.setItem(FAVORITE_STOPS_KEY, JSON.stringify(favoriteStops));
+        return true;
     } catch (error) {
         console.error(error);
+        return false;
     }
 }
 
@@ -108,6 +119,7 @@ export async function getFavoriteStops() {
  * Add a single stop to existing stops
  * 
  * @param {number} stopCode stop code to add
+ * @returns true if success, false if it failed
  */
 export async function addFavoriteStop(stopCode) {
     try {
@@ -115,11 +127,12 @@ export async function addFavoriteStop(stopCode) {
         const favoriteStops = value !== null
             ? JSON.parse(value)
             : [];
-
         favoriteStops.push(stopCode);
         await AsyncStorage.setItem(FAVORITE_STOPS_KEY, JSON.stringify(favoriteStops));
+        return true;
     } catch (error) {
         console.error(error);
+        return false;
     }
 }
 
@@ -127,6 +140,7 @@ export async function addFavoriteStop(stopCode) {
  * Delete a single stop from existing stops
  * 
  * @param {number} favoriteRoute stop code to delete
+ * @returns true if success, false if it failed
  */
 export async function deleteFavoriteStop(stopCode) {
     try {
@@ -136,7 +150,9 @@ export async function deleteFavoriteStop(stopCode) {
             favoriteStops = favoriteStops.filter(stop => stop !== stopCode);
             await AsyncStorage.setItem(FAVORITE_STOPS_KEY, JSON.stringify(favoriteStops));
         }
+        return true;
     } catch (error) {
         console.error(error);
+        return false;
     }
 }
