@@ -24,6 +24,7 @@ export async function getFavoriteRoutes() {
     }
 }
 
+// add a single route to existing routes
 export async function addFavoriteRoute(favoriteRoute) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
