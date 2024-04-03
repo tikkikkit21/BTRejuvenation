@@ -10,7 +10,17 @@ import { FontAwesome, FontAwesome6, MaterialIcons, Octicons } from '@expo/vector
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 
+import * as User from '../../backend/userController';
+
+async function test() {
+    User.setFavoriteRoutes(['a', 'b', 'c']);
+    result = await User.getFavoriteRoutes()
+    console.log("result:", result)
+    console.log("type:", typeof(result))
+}
+
 export default function Map({ navigation }) {
+    test()
     const [mapRegion, setMapRegion] = useState({
         latitude: 37.227468937500895,
         longitude: -80.42357646125542,

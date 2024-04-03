@@ -21,3 +21,17 @@ export async function getFavoriteRoutes() {
         console.error(error);
     }
 }
+
+export async function addFavoriteRoute(favoriteRoute) {
+    try {
+        const value = await AsyncStorage.getItem("favorite-routes");
+        const favoriteRoutes = value !== null
+            ? favoriteRoutes = JSON.parse(value)
+            : [];
+
+        favoriteRoutes.append(favoriteRoute);
+        await AsyncStorage.setItem("favorite-routes", JSON.stringify(favoriteRoutes));
+    } catch (error) {
+        console.error(error);
+    }
+}
