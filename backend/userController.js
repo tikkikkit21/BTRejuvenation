@@ -5,7 +5,11 @@ const FAVORITE_STOPS_KEY = "favorite-stops";
 
 /* Favorite routes */
 
-// sets the user's favorite routes, will overwrite existing
+/**
+ * Sets the user's favorite routes, will overwrite any existing saved list
+ * 
+ * @param {string[]} favoriteRoutes array of route codes as strings
+ */
 export async function setFavoriteRoutes(favoriteRoutes) {
     try {
         await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
@@ -14,20 +18,28 @@ export async function setFavoriteRoutes(favoriteRoutes) {
     }
 }
 
-// fetches all the user's favorite routes, may be null
+/**
+ * Fetches all the user's favorite routes
+ * 
+ * @returns array of saved route codes, or empty if nothing 
+ */
 export async function getFavoriteRoutes() {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
         if (value !== null) {
             return JSON.parse(value);
         }
-        return value;
+        return [];
     } catch (error) {
         console.error(error);
     }
 }
 
-// add a single route to existing routes
+/**
+ * Add a single route to existing routes
+ * 
+ * @param {string} favoriteRoute route code to add
+ */
 export async function addFavoriteRoute(favoriteRoute) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
@@ -42,7 +54,11 @@ export async function addFavoriteRoute(favoriteRoute) {
     }
 }
 
-// delete a single route from existing routes
+/**
+ * Delete a single route from existing routes
+ * 
+ * @param {string} favoriteRoute route code to delete
+ */
 export async function deleteFavoriteRoute(favoriteRoute) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
@@ -58,7 +74,11 @@ export async function deleteFavoriteRoute(favoriteRoute) {
 
 /* Favorite Stops */
 
-// sets the user's favorite routes, will overwrite existing
+/**
+ * Sets the user's favorite stops, will overwrite any existing saved list
+ * 
+ * @param {number[]} favoriteStops array of stop codes as integers
+ */
 export async function setFavoriteStops(favoriteStops) {
     try {
         await AsyncStorage.setItem(FAVORITE_STOPS_KEY, JSON.stringify(favoriteStops));
@@ -67,7 +87,11 @@ export async function setFavoriteStops(favoriteStops) {
     }
 }
 
-// fetches all the user's favorite stops, may be null
+/**
+ * Fetches all the user's favorite stops
+ * 
+ * @returns array of saved stop codes, or empty if nothing 
+ */
 export async function getFavoriteStops() {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_STOPS_KEY);
@@ -80,7 +104,11 @@ export async function getFavoriteStops() {
     }
 }
 
-// add a single stop to existing stops
+/**
+ * Add a single stop to existing stops
+ * 
+ * @param {number} favoriteStop stop code to add
+ */
 export async function addFavoriteStop(favoriteStop) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_STOPS_KEY);
@@ -95,7 +123,11 @@ export async function addFavoriteStop(favoriteStop) {
     }
 }
 
-// delete a single stop from existing stops
+/**
+ * Delete a single stop from existing stops
+ * 
+ * @param {number} favoriteRoute stop code to delete
+ */
 export async function deleteFavoriteStop(favoriteStop) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_STOPS_KEY);
