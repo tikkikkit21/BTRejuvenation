@@ -1,5 +1,5 @@
 module.exports = function (api) {
-    api.cache.invalidate(() => process.env.GOOGLE_MAPS_API_KEY)
+    api.cache(false)
     return {
         presets: ['babel-preset-expo'],
         plugins: [
