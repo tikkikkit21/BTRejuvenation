@@ -38,3 +38,17 @@ export async function addFavoriteRoute(favoriteRoute) {
         console.error(error);
     }
 }
+
+// delete a single route from existing routes
+export async function deleteFavoriteRoute(favoriteRoute) {
+    try {
+        const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
+        if (value !== null) {
+            let favoriteRoutes = JSON.parse(value);
+            favoriteRoutes = favoriteRoutes.filter(route => route !== favoriteRoute);
+            await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
