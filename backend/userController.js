@@ -38,16 +38,16 @@ export async function getFavoriteRoutes() {
 /**
  * Add a single route to existing routes
  * 
- * @param {string} favoriteRoute route code to add
+ * @param {string} routeCode route code to add
  */
-export async function addFavoriteRoute(favoriteRoute) {
+export async function addFavoriteRoute(routeCode) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
         const favoriteRoutes = value !== null
             ? JSON.parse(value)
             : [];
 
-        favoriteRoutes.push(favoriteRoute);
+        favoriteRoutes.push(routeCode);
         await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
     } catch (error) {
         console.error(error);
@@ -57,14 +57,14 @@ export async function addFavoriteRoute(favoriteRoute) {
 /**
  * Delete a single route from existing routes
  * 
- * @param {string} favoriteRoute route code to delete
+ * @param {string} routeCode route code to delete
  */
-export async function deleteFavoriteRoute(favoriteRoute) {
+export async function deleteFavoriteRoute(routeCode) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
         if (value !== null) {
             let favoriteRoutes = JSON.parse(value);
-            favoriteRoutes = favoriteRoutes.filter(route => route !== favoriteRoute);
+            favoriteRoutes = favoriteRoutes.filter(route => route !== routeCode);
             await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
         }
     } catch (error) {
@@ -107,16 +107,16 @@ export async function getFavoriteStops() {
 /**
  * Add a single stop to existing stops
  * 
- * @param {number} favoriteStop stop code to add
+ * @param {number} stopCode stop code to add
  */
-export async function addFavoriteStop(favoriteStop) {
+export async function addFavoriteStop(stopCode) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_STOPS_KEY);
         const favoriteStops = value !== null
             ? JSON.parse(value)
             : [];
 
-        favoriteStops.push(favoriteStop);
+        favoriteStops.push(stopCode);
         await AsyncStorage.setItem(FAVORITE_STOPS_KEY, JSON.stringify(favoriteStops));
     } catch (error) {
         console.error(error);
@@ -128,12 +128,12 @@ export async function addFavoriteStop(favoriteStop) {
  * 
  * @param {number} favoriteRoute stop code to delete
  */
-export async function deleteFavoriteStop(favoriteStop) {
+export async function deleteFavoriteStop(stopCode) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_STOPS_KEY);
         if (value !== null) {
             let favoriteStops = JSON.parse(value);
-            favoriteStops = favoriteStops.filter(stop => stop !== favoriteStop);
+            favoriteStops = favoriteStops.filter(stop => stop !== stopCode);
             await AsyncStorage.setItem(FAVORITE_STOPS_KEY, JSON.stringify(favoriteStops));
         }
     } catch (error) {
