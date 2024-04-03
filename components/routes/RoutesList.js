@@ -78,16 +78,16 @@ export default function RoutesList() {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                 <View style={styles.flatListItem}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <FontAwesome6 name="bus-simple" size={20} color={'#' + item[1]} />
-                <View style={{ marginLeft: 10 }}>
-                    <Text style={{ fontSize: 20, color: '#' + item[1], textAlign: 'left' }}>{item[2]}</Text>
-                    <Text style={{ fontSize: 22, color: '#' + item[1], fontWeight: 'bold' }}>{item[0]}</Text>
-                </View>
-                </View>
-                    <AntDesign name="right" size={20} color={'#' + item[1]} />
-                </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <FontAwesome6 name="bus-simple" size={20} color={'#' + item[1]} />
+                            <View style={{ marginLeft: 10 }}>
+                                <Text style={{ fontSize: 20, color: '#' + item[1], textAlign: 'left' }}>{item[2]}</Text>
+                                <Text style={{ fontSize: 22, color: '#' + item[1], fontWeight: 'bold' }}>{item[0]}</Text>
+                            </View>
+                        </View>
+                        <AntDesign name="right" size={20} color={'#' + item[1]} />
+                    </View>
                 </View>
                 )}
             />
