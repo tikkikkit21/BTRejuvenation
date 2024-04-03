@@ -29,10 +29,10 @@ export async function addFavoriteRoute(favoriteRoute) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
         const favoriteRoutes = value !== null
-            ? favoriteRoutes = JSON.parse(value)
+            ? JSON.parse(value)
             : [];
 
-        favoriteRoutes.append(favoriteRoute);
+        favoriteRoutes.push(favoriteRoute);
         await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
     } catch (error) {
         console.error(error);
