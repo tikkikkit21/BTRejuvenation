@@ -4,8 +4,7 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'left',
-        justifyContent: 'flex-start'
+        padding: 10,
     },
     picker: {
         backgroundColor: '#fff',
@@ -16,14 +15,15 @@ export default StyleSheet.create({
         height:'20px',
     },
     flatListItem: {
-        paddingLeft:10,
-        paddingRight: '32%', 
-        paddingTop: 5, 
-        paddingBottom: 5, 
+        width: '100%',
+        paddingLeft:5, 
+        paddingTop:5,
+        paddingRight: 10,
+        paddingBottom:10,
         marginVertical: 0.02,
         borderRadius: 1,
         borderRadius: 0,
-        borderWidth: 0.5,
+        borderTopWidth: 0.5,
         borderColor: '#ccc',
     },
 });
