@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../../styles/Route.style';
-import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign  } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
 import { getAllStops, getScheduledRoutes } from '../../backend/routeController';
 
 export default function RoutesList() {
@@ -18,7 +18,7 @@ export default function RoutesList() {
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
-                const updatedStops = [[ "", "All Routes" ], ...stopLocal];
+                const updatedStops = [["", "All Routes"], ...stopLocal];
                 setStops(updatedStops);
             } catch (error) {
                 console.error('Error fetching stops:', error);
@@ -77,18 +77,18 @@ export default function RoutesList() {
                 data={routes}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                <View style={styles.flatListItem}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />
-                            <View style={{ marginLeft: 10 }}>
-                                <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
-                                <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
+                    <View style={styles.flatListItem}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />
+                                <View style={{ marginLeft: 10 }}>
+                                    <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
+                                    <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
+                                </View>
                             </View>
+                            <AntDesign name="right" size={20} color={'#' + item.RouteColor} />
                         </View>
-                        <AntDesign name="right" size={20} color={'#' + item.RouteColor} />
                     </View>
-                </View>
                 )}
             />
         </View>
