@@ -29,7 +29,7 @@ export default function RoutesList() {
 
         async function fetchAllRoutes() {
             try {
-                const routeLocal = await getScheduledRoutes("");
+                const routeLocal = await getScheduledRoutes();
                 setRoutes(routeLocal);
             } catch (error) {
                 console.error('Error fetching stops:', error);

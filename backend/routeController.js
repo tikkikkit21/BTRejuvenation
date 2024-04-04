@@ -4,12 +4,12 @@ import { xml2js } from "xml-js";
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
 /**
- * Gets every scheduled route for a particular stop
+ * Gets scheduled routes for a particular stop or every one
  * 
- * @param {number} stopCode stop code number (1000 - 2303)
+ * @param {number} stopCode stop code number (1000-2303), empty will return all routes
  * @returns list of bus routes that serve the stop
  */
-export async function getScheduledRoutes(stopCode) {
+export async function getScheduledRoutes(stopCode = "") {
     // leaving servicedate as blank because it auto-searches for today's date
     const { data } = await axios.get(`${ROOT}/GetScheduledRoutes?stopCode=${stopCode}&serviceDate=`);
     const json = xml2js(data, { compact: true });
