@@ -32,8 +32,8 @@ export async function getScheduledRoutes(stopCode = "") {
  */
 export async function getAllStops() {
     const { data } = await axios.get(`${ROOT}/GetScheduledStopCodes?routeShortName=`);
-    json = xml2js(data, { compact: true });
-    scheduledStops = json.DocumentElement.ScheduledStops;
+    const json = xml2js(data, { compact: true });
+    let scheduledStops = json.DocumentElement.ScheduledStops;
     const stops = scheduledStops.map(stop => [stop.StopCode._text, stop.StopName._text]);
 
     return stops;
