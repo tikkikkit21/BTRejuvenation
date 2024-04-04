@@ -20,16 +20,16 @@ export default function App() {
                         let icon;
 
                         switch (route.name) {
-                            case "Home":
+                            case "HomeTab":
                                 icon = <Ionicons name='map' size={size} color={color} />
                                 break;
-                            case "Alerts":
+                            case "AlertsTab":
                                 icon = <Foundation name='alert' size={size} color={color} />
                                 break;
-                            case "Plan a Trip":
+                            case "PlanTripTab":
                                 icon = <FontAwesome5 name='map-marked-alt' size={size} color={color} />
                                 break;
-                            case "Routes":
+                            case "RoutesTab":
                                 icon = <FontAwesome5 name='route' size={size} color={color} />
                                 break;
 
@@ -42,14 +42,31 @@ export default function App() {
                     },
                     tabBarActiveTintColor: '#7F1237',
                     tabBarInactiveTintColor: 'gray',
+                    tabBarLabel: getTabBarLabel(route.name), // Custom tab label
                     headerShown: false
                 })}
             >
-                <Tab.Screen name="Home" component={HomeTab} />
-                <Tab.Screen name="Alerts" component={AlertsTab} />
-                <Tab.Screen name="Plan a Trip" component={PlanTrip} />
-                <Tab.Screen name="Routes" component={RoutesTab} />
+                <Tab.Screen name="HomeTab" component={HomeTab} />
+                <Tab.Screen name="AlertsTab" component={AlertsTab} />
+                <Tab.Screen name="PlanTripTab" component={PlanTrip} />
+                <Tab.Screen name="RoutesTab" component={RoutesTab} />
             </Tab.Navigator>
         </NavigationContainer>
     );
+}
+
+// Function to get custom tab label based on screen name
+function getTabBarLabel(routeName) {
+    switch (routeName) {
+        case "HomeTab":
+            return "Home";
+        case "AlertsTab":
+            return "Alerts";
+        case "PlanTripTab":
+            return "Plan a Trip";
+        case "RoutesTab":
+            return "Routes";
+        default:
+            return routeName;
+    }
 }
