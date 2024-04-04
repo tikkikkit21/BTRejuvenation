@@ -39,7 +39,7 @@ export async function getFavoriteRoutes() {
 }
 
 /**
- * Add a single route to existing routes
+ * Add a single route to existing favorite routes
  * 
  * @param {string} routeCode route code to add
  * @returns true if success, false if it failed
@@ -60,7 +60,8 @@ export async function addFavoriteRoute(routeCode) {
 }
 
 /**
- * Delete a single route from existing routes
+ * Delete a single route from existing favorite routes. To delete all favorite
+ * routes, `use saveFavoriteRoutes([])`
  * 
  * @param {string} routeCode route code to delete
  * @returns true if success, false if it failed
@@ -116,7 +117,7 @@ export async function getFavoriteStops() {
 }
 
 /**
- * Add a single stop to existing stops
+ * Add a single stop to existing favorite stops
  * 
  * @param {number} stopCode stop code to add
  * @returns true if success, false if it failed
@@ -137,7 +138,8 @@ export async function addFavoriteStop(stopCode) {
 }
 
 /**
- * Delete a single stop from existing stops
+ * Delete a single stop from existing favorite stops. To delete all favorite
+ * stops, use `saveFavoriteStops([])`
  * 
  * @param {number} favoriteRoute stop code to delete
  * @returns true if success, false if it failed
