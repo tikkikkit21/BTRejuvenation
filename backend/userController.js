@@ -6,12 +6,12 @@ const FAVORITE_STOPS_KEY = "favorite-stops";
 /* Favorite routes */
 
 /**
- * Sets the user's favorite routes, will overwrite any existing saved list
+ * Saves the user's favorite routes, will overwrite any existing saved list
  * 
  * @param {string[]} favoriteRoutes array of route codes as strings
  * @returns true if success, false if it failed
  */
-export async function setFavoriteRoutes(favoriteRoutes) {
+export async function saveFavoriteRoutes(favoriteRoutes) {
     try {
         await AsyncStorage.setItem(FAVORITE_ROUTES_KEY, JSON.stringify(favoriteRoutes));
         return true;
@@ -83,12 +83,12 @@ export async function deleteFavoriteRoute(routeCode) {
 /* Favorite Stops */
 
 /**
- * Sets the user's favorite stops, will overwrite any existing saved list
+ * Saves the user's favorite stops, will overwrite any existing saved list
  * 
  * @param {number[]} favoriteStops array of stop codes as integers
  * @returns true if success, false if it failed
  */
-export async function setFavoriteStops(favoriteStops) {
+export async function saveFavoriteStops(favoriteStops) {
     try {
         await AsyncStorage.setItem(FAVORITE_STOPS_KEY, JSON.stringify(favoriteStops));
         return true;
