@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
         top: 80,
         right: 10,
         backgroundColor: '#A40046',
-        padding: 15,
+        padding: 16,
         borderRadius: 15
     },
     locationButton: {
