@@ -1,5 +1,6 @@
 import axios from "axios";
 import { xml2js } from "xml-js";
+import { formatTextProperty } from "./util";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
@@ -19,8 +20,8 @@ export async function getScheduledRoutes(stopCode = "") {
     if (!Array.isArray(scheduledStops)) {
         scheduledStops = [scheduledStops]
     }
-    
-    scheduledStops = scheduledStops.map(stop => formatStop(stop));
+
+    scheduledStops = scheduledStops.map(stop => formatTextProperty(stop));
 
     return scheduledStops;
 }
@@ -37,12 +38,4 @@ export async function getAllStops() {
     const stops = scheduledStops.map(stop => [stop.StopCode._text, stop.StopName._text]);
 
     return stops;
-}
-
-function formatStop(stopData) {
-    for (const key of Object.keys(stopData)) {
-        stopData[key] = stopData[key]._text;
-    }
-
-    return stopData;
 }
