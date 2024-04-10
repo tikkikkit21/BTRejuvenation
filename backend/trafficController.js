@@ -1,6 +1,6 @@
 import axios from "axios";
 import { xml2js } from "xml-js";
-import { getStopTimesForRoute } from "./routeController";
+import { getScheduledRoutes, getStopTimesForRoute } from "./routeController";
 import { LayoutAnimation } from "react-native";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
@@ -22,39 +22,63 @@ const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
  * alert if there are any accidents or crashes
  */
 
-
-
-
-
-export function isRouteDelayed(route){
+export function getExpectedRouteDelay(route){
     /**
      * get route start destination
      * get route end destination
      * 
-     * can hardcode this
      * 
      * then use the google maps api to see if there is heavy traffic in that area
      */
 
-    startStop, endStop = getStartAndEndForRoute(route);
+    startStop, midPointStop, endStop = getStartAndEndForRoute(route);
 
-    delay = getRouteTrafficInformation(startStop, endStop)
+    delay = getTrafficDelay(startStop, midPointStop, endStop)
    
 }
 
+/**
+ * 
+ * @param {*} route route short code
+ * gets the start and ending stop with long/lats
+ */
 function getStartAndEndForRoute(route){
+    stops = getScheduledRoutes(route);
 
-    /**
-     * swtich route, get route start and get route destination
-     * 
-     * see if there is duration in traffic between these two
-     * 
-     * return duration_in_traffic
-     */ 
- 
+    midpoint = stops.length/2;
+    endpoint = stops.length - 1;
+
+    firstStop = stops[0];
+
+
+    //the midpoint is normally from where the busses will turn around and begin to come back, so we want the midpoint
+    midPointStop = stops[midpoint];
+    endStop = stops[end];
+    return [firstStop,  midPointStop, endStop]
+
  }
+/**
+ * 
+ * @param {*} startStop start point for a route for teh API call
+ * @param {*} midpoint midpoint for a route, used to connect two and combine traffic info, can be null if only start and end
+ * @param {*} endStop  endpoint for a route for the api call
+ */
+export function getTrafficDelay(startStop, midStop, endStop){
+    startLat = startStop.Latitude;
+    startLong = startStop.Longitude;
 
-export function getRouteTrafficInformation(startStop, endStop){
+    if(midStop != null){
+        midLat = midStop.Latitude;
+        midLong = midStop.Longitude;
+    }
+    
+    if(endStop != null){
+        endLat = endStop.Latitude;
+        endLong = endStop.Longitude;
+    
+    }
+  
+
     /**
      * use the google maps to see if there is a delay
      */
@@ -72,6 +96,10 @@ export function getRouteTrafficPattern(route){
     const date = new Date();
     const day = date.getDay();
     const hour = date.getHours();
+
+    //main street routes: MSS, MSN, PHD, HDG, PRO, PHB
+    //prices fork routes: PRO, HWA, HWB, TOM, UCB
+    //on campus routes: CRB, HXP, HDG, CRC
    
     //Mon and Wed
     if (day == 1 || day == 3){
@@ -143,15 +171,7 @@ export function getRouteTrafficPattern(route){
             
     }
 
-
     return 0;
-
-    //main street routes
-
-    //prices fork routes
-
-    //on campus routes
-
 
 }
 
