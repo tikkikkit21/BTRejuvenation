@@ -1,18 +1,14 @@
 import axios from "axios";
 
-const origin = '11200 Foxtrail Ln, Blacksburg, VA 24060';
-const destination = '2000 Kraft Dr SW STE 2000, Blacksburg, VA 24060';
+// const origin = '11200 Foxtrail Ln, Blacksburg, VA 24060';
+// const destination = '2000 Kraft Dr SW STE 2000, Blacksburg, VA 24060';
 const APIKEY = process.env.GOOGLE_MAPS_API_KEY;
+const GMAPS_ROOT = "https://maps.googleapis.com/maps/api/directions";
 
-const GMAPS_ROOT = "https://maps.googleapis.com/maps/api/directions"
-const GMAPS_QUERY = `json?origin=${origin}&destination=${destination}&key=${APIKEY}&mode=transit`;
-
-/**
- * no idea what i'm doing
- */
-export async function idfk() {
+export async function idfk(origin, destination) {
     console.log("function called");
-    const { data } = await axios.get(`${GMAPS_ROOT}/${GMAPS_QUERY}`);
+    const query = `json?origin=${origin}&destination=${destination}&key=${APIKEY}&mode=transit`;
+    const { data } = await axios.get(`${GMAPS_ROOT}/${query}`);
 
     const transitSteps = data.routes[0].legs[0].steps
         .filter(step => step.travel_mode === "TRANSIT")
