@@ -20,7 +20,7 @@ export async function idfk() {
 
     return transitSteps.map(step => {
         return {
-            polyline: decode(step.polyline),
+            polyline: decodeCoords(step.polyline),
             routeName: step.transit_details.line.short_name
         }
     });
@@ -32,7 +32,7 @@ export async function idfk() {
  * 
  * source: https://github.com/react-native-maps/react-native-maps/issues/929#issuecomment-271365235
  */
-function decode(t, e) {
+function decodeCoords(t, e) {
     for (var n, o, u = 0, l = 0, r = 0, d = [], h = 0, i = 0, a = null, c = Math.pow(10, e || 5); u < t.length;) {
         a = null, h = 0, i = 0;
 
