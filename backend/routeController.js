@@ -1,7 +1,13 @@
 import axios from "axios";
 import { xml2js } from "xml-js";
+import { formatTextProperty } from "./util";
+import { json } from "stream/consumers";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
+
+
+//create the routeList here
+routeStops = []
 
 export async function getScheduledRoutes(stopCode) {
     // stopcode should be a number 1000 -> 2303
@@ -28,4 +34,36 @@ export async function getAllStops() {
     const stops = scheduledStops.map(stop => [stop.StopCode._text, stop.StopName._text]);
 
     return stops;
+}
+
+
+//returns a list of all of stop times for the specified route
+export async function getStopTimesForRoute(route){
+    trips = 1
+    const { data } = await axios.get((`${ROOT}/GetArrivalAndDepartureTimesForRoutes?routeShortNames=${route}&noOfTrips=${trips}&serviceDate=`));
+    json = xml2js(data, { compact: true });
+    json = json.DocumentElement.DeparturesForRoute;
+    json = json.map(stop => formatTextProperty(stop));
+
+    populateStopListForRoute(json)
+    return json;
+
+}
+
+/**
+ * populates a local stoplist with a list of the stoptimes and stops
+ * caches this so that we do not have to keep calling a method
+ */
+function populateStopListForRoute(routeJson){
+    for (item in routeJson){
+        newStop = {
+            stopName: routeJson.StopName,
+            stopCode: routeJson.StopCode,
+            longitude: 0,
+            latitude: 0,
+            arrivalTime: routeJson.CalculatedArrivalTime,
+            departureTime: routeJson.CalculatedDepartureTime
+        }
+        routeStops.push(newStop)
+    }
 }
