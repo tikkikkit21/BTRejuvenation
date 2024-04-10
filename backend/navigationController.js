@@ -23,12 +23,15 @@ export async function idfk() {
     const transitSteps = data.routes[0].legs[0].steps
         .filter(step => step.travel_mode === "TRANSIT")
         .filter(step => step.transit_details.line.agencies[0][0].name === "Blacksburg Transit")
-    
+
     // transitSteps.forEach(step => console.log("step:", step.transit_details.line.agencies));
-
-    return results;
+    return transitSteps.map(step => {
+        return {
+            polyline: decode(step.polyline),
+            routeName: step.transit_details.line.short_name
+        }
+    });
 }
-
 
 /**
  * transforms something like this geocFltrhVvDsEtA}ApSsVrDaEvAcBSYOS_@... to an
