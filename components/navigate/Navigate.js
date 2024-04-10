@@ -13,10 +13,10 @@ export default function Navigate() {
           <MapViewMemo />
           <BottomSheet 
               snapPoints={snapPoints}
-              backgroundStyle={{backgroundColor: '#7F1237'}}
+              backgroundStyle={{backgroundColor: '#FFFFFF'}}
           >
               <View style={styles.inputContainer}>
-                  <Octicons name='search' size={15} color='#000'/>
+                  <Octicons name='search' size={15} color='white'/>
                   <BottomSheetTextInput style={styles.inputText} placeholder='Search for Destination'/>
               </View>
               <View style={[styles.inputContainer, styles.suggestedRoutesContainer]}>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
       flexDirection: 'row',
-      backgroundColor: 'white',
+      backgroundColor: '#861F41',
       borderRadius: 10,
       width: '90%',
       paddingHorizontal: 10,
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
       marginTop: 5,
       marginHorizontal: 5,
       marginBottom: 5,
+      paddingRight: 175,
       borderRadius: 10,
       fontSize: 16,
       padding: 5,

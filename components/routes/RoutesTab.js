@@ -8,8 +8,8 @@ export default function RoutestTab() {
     return (
         <Stack.Navigator
             screenOptions={{
-                headerStyle: { backgroundColor: '#7F1237' },
-                headerTintColor: 'white'
+                headerStyle: { backgroundColor: '#FFFFFF' },
+                headerTintColor: '#000000'
             }}
             initialRouteName="Routes"
         >

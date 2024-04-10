@@ -40,7 +40,7 @@ export default function App() {
 
                         return icon;
                     },
-                    tabBarActiveTintColor: '#7F1237',
+                    tabBarActiveTintColor: '#861F41',
                     tabBarInactiveTintColor: 'gray',
                     tabBarLabel: getTabBarLabel(route.name), // Custom tab label
                     headerShown: false
