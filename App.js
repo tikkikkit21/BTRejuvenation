@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import HomeTab from './components/home/HomeTab';
-import AlertsTab from './components/alerts/AlertsTab';
+import FavoritesTab from './components/favorites/FavoritesTab';
 import PlanTrip from './components/planTrip/PlanTripTab';
 import RoutesTab from './components/routes/RoutesTab';
 
@@ -23,11 +23,11 @@ export default function App() {
                             case "HomeTab":
                                 icon = <Ionicons name='map' size={size} color={color} />
                                 break;
-                            case "AlertsTab":
-                                icon = <Foundation name='alert' size={size} color={color} />
-                                break;
                             case "PlanTripTab":
                                 icon = <FontAwesome5 name='map-marked-alt' size={size} color={color} />
+                                break;
+                            case "FavoritesTab":
+                                icon = <Foundation name='heart' size={size} color={color} />
                                 break;
                             case "RoutesTab":
                                 icon = <FontAwesome5 name='route' size={size} color={color} />
@@ -47,9 +47,9 @@ export default function App() {
                 })}
             >
                 <Tab.Screen name="HomeTab" component={HomeTab} />
-                <Tab.Screen name="AlertsTab" component={AlertsTab} />
                 <Tab.Screen name="PlanTripTab" component={PlanTrip} />
                 <Tab.Screen name="RoutesTab" component={RoutesTab} />
+                <Tab.Screen name="FavoritesTab" component={FavoritesTab} />
             </Tab.Navigator>
         </NavigationContainer>
     );
@@ -60,8 +60,8 @@ function getTabBarLabel(routeName) {
     switch (routeName) {
         case "HomeTab":
             return "Home";
-        case "AlertsTab":
-            return "Alerts";
+        case "FavoritesTab":
+            return "Favorites";
         case "PlanTripTab":
             return "Plan a Trip";
         case "RoutesTab":

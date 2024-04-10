@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Alerts from './Alerts';
+import Favorites from './Favorites';
 
 const Stack = createStackNavigator();
 
@@ -11,9 +11,9 @@ export default function AlertsTab() {
                 headerStyle: { backgroundColor: '#7F1237' },
                 headerTintColor: 'white'
             }}
-            initialRouteName="Alerts"
+            initialRouteName="Favorites"
         >
-            <Stack.Screen name="Alerts" component={Alerts} />
+            <Stack.Screen name="Favorites" component={Favorites} />
         </Stack.Navigator>
     );
 }

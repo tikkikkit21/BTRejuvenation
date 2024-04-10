@@ -5,7 +5,7 @@ import MapView, { MapCallout, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome, FontAwesome6, MaterialIcons, Octicons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome6, Octicons, Entypo } from '@expo/vector-icons';
 
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
@@ -100,12 +100,12 @@ export default function Map({ navigation }) {
             </View>
             <View style={styles.feedbackButton}>
                 <TouchableOpacity onPress={() => navigation.navigate("Feedback")}>
-                    <MaterialIcons name="feedback" size={20} color="white" />
+                    <FontAwesome6 name="qrcode" size={20} color="white" />
                 </TouchableOpacity>
             </View>
             <View style={styles.locationButton}>
                 <TouchableOpacity onPress={handleLocationClick}>
-                    <MaterialIcons name="my-location" size={20} color="white" />
+                    <Entypo name="direction" size={20} color="white" />
                 </TouchableOpacity>
             </View>
         </View>
@@ -207,20 +207,23 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         backgroundColor: '#A40046',
-        padding: 15
+        padding: 15,
+        borderRadius: 15
     },
     feedbackButton: {
         position: 'absolute',
         top: 80,
         right: 10,
         backgroundColor: '#A40046',
-        padding: 15
+        padding: 16,
+        borderRadius: 15
     },
     locationButton: {
         position: 'absolute',
         top: 150,
         right: 10,
         backgroundColor: '#A40046',
-        padding: 15
+        padding: 15,
+        borderRadius: 15
     }
 });
