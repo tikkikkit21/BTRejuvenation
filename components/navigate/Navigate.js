@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
 
-export default function PlanTrip() {
+export default function Navigate() {
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['12%','25%', '50%', '70%', '95%'], []);
 

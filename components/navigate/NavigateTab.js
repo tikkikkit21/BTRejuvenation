@@ -1,19 +1,19 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import PlanTrip from './PlanTrip';
+import Navigate from './Navigate';
 
 const Stack = createStackNavigator();
 
-export default function PlanTripTab() {
+export default function NavigateTab() {
     return (
         <Stack.Navigator
             screenOptions={{
                 headerStyle: { backgroundColor: '#7F1237' },
                 headerTintColor: 'white'
             }}
-            initialRouteName="Plan a Trip"
+            initialRouteName="Navigate"
         >
-            <Stack.Screen name="Plan a Trip" component={PlanTrip} />
+            <Stack.Screen name="Navigate" component={Navigate} />
         </Stack.Navigator>
     );
 }

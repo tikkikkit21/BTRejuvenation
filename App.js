@@ -6,8 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import HomeTab from './components/home/HomeTab';
 import FavoritesTab from './components/favorites/FavoritesTab';
-import PlanTrip from './components/planTrip/PlanTripTab';
 import RoutesTab from './components/routes/RoutesTab';
+import NavigateTab from './components/navigate/NavigateTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +23,7 @@ export default function App() {
                             case "HomeTab":
                                 icon = <Ionicons name='map' size={size} color={color} />
                                 break;
-                            case "PlanTripTab":
+                            case "NavigateTab":
                                 icon = <FontAwesome5 name='map-marked-alt' size={size} color={color} />
                                 break;
                             case "FavoritesTab":
@@ -47,7 +47,7 @@ export default function App() {
                 })}
             >
                 <Tab.Screen name="HomeTab" component={HomeTab} />
-                <Tab.Screen name="PlanTripTab" component={PlanTrip} />
+                <Tab.Screen name="NavigateTab" component={NavigateTab} />
                 <Tab.Screen name="RoutesTab" component={RoutesTab} />
                 <Tab.Screen name="FavoritesTab" component={FavoritesTab} />
             </Tab.Navigator>
@@ -62,8 +62,8 @@ function getTabBarLabel(routeName) {
             return "Home";
         case "FavoritesTab":
             return "Favorites";
-        case "PlanTripTab":
-            return "Plan a Trip";
+        case "NavigateTab":
+            return "Navigate";
         case "RoutesTab":
             return "Routes";
         default:
