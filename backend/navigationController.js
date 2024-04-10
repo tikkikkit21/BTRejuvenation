@@ -1,18 +1,24 @@
 import axios from "axios";
 
-// const origin = '11200 Foxtrail Ln, Blacksburg, VA 24060';
-// const destination = '2000 Kraft Dr SW STE 2000, Blacksburg, VA 24060';
 const APIKEY = process.env.GOOGLE_MAPS_API_KEY;
 const GMAPS_ROOT = "https://maps.googleapis.com/maps/api/directions";
 
-export async function idfk(origin, destination) {
-    console.log("function called");
+/**
+ * Takes an origin and destination and finds connected BT bus routes between the
+ * two
+ * @param {string} origin origin address or coordinates in string format
+ * @param {*} destination dest address or coordinates in string format
+ * @returns an array of trip legs with the following properties:
+ * - polyline: array of coords for drawing route
+ * - routeName: the BT route name for this leg
+ */
+export async function getConnectedRoutes(origin, destination) {
     const query = `json?origin=${origin}&destination=${destination}&key=${APIKEY}&mode=transit`;
     const { data } = await axios.get(`${GMAPS_ROOT}/${query}`);
 
     const transitSteps = data.routes[0].legs[0].steps
         .filter(step => step.travel_mode === "TRANSIT")
-        .filter(step => step.transit_details.line.agencies[0][0].name === "Blacksburg Transit")
+        .filter(step => step.transit_details.line.agencies[0][0].name === "Blacksburg Transit");
 
     return transitSteps.map(step => {
         return {
