@@ -1,5 +1,6 @@
 import axios from "axios";
 import { xml2js } from "xml-js";
+require('dotenv').config(); 
 import { getScheduledRoutes, getStopTimesForRoute } from "./routeController";
 import { LayoutAnimation } from "react-native";
 
@@ -21,18 +22,18 @@ const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
  * 
  * alert if there are any accidents or crashes
  */
+export function showTrafficOnMap(){
+
+}
+
 
 export function getExpectedRouteDelay(route){
     /**
      * get route start destination
      * get route end destination
-     * 
-     * 
      * then use the google maps api to see if there is heavy traffic in that area
      */
-
     startStop, midPointStop, endStop = getStartAndEndForRoute(route);
-
     delay = getTrafficDelay(startStop, midPointStop, endStop)
    
 }
@@ -67,22 +68,89 @@ export function getTrafficDelay(startStop, midStop, endStop){
     startLat = startStop.Latitude;
     startLong = startStop.Longitude;
 
+    origin = `${startLat},${startLong}`
+
+    totalTrafficDuration = 0;
+
     if(midStop != null){
         midLat = midStop.Latitude;
         midLong = midStop.Longitude;
+        destination = `${midLat},${midLong}`
+        //make api request here
+        midpointTrafficDuration =  makeApiRequest(origin, destination);
+
+        totalTrafficDuration += midpointTrafficDuration;
     }
-    
+
+
+    /**
+     * Used for midpoint -> endpoint, or simply if we want to see a whole route's expected duration in traffic
+     * will be null for two stops
+     */
     if(endStop != null){
         endLat = endStop.Latitude;
         endLong = endStop.Longitude;
-    
+        destination = `${endLat},${endLong}`
+
+        endPointTrafficDuration = makeApiRequest(origin, destination);
+        //make second api request here
+        totalTrafficDuration += endPointTrafficDuration;
     }
   
 
     /**
      * use the google maps to see if there is a delay
      */
+    return totalTrafficDuration;
 
+}
+
+/**
+ * makes the call to the google maps api
+ */
+async function makeApiRequest(origin, destination){
+    const apiUrl = 'https://maps.googleapis.com/maps/api/directions/json';
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY; 
+    const now = Date.getTime() / 100;
+    const params = {
+        origin: origin,
+        destination: destination,
+        mode: 'driving',
+        departure_time: now,
+        key: apiKey
+    };
+    try {
+        const response = await axios.get(apiUrl, { params });
+        // get duration spent in traffic
+        const durationInTraffic = response.data.routes[0].legs[0].duration_in_traffic.text;
+        //console.log(response.data);
+        console.log(durationInTraffic);
+        return durationInTraffic;
+    } catch (error) {
+        console.error('bad api request', error);
+        throw error; 
+        
+    }
+
+}
+
+
+export function twoWayTrafficDelay(startStop, endStop){
+
+    startLat = startStop.Latitude;
+    startLong = startStop.Longitude;
+    origin = `${startLat},${startLong}`;
+    
+        
+    endLat = endStop.Latitude;
+    endLong = endStop.Longitude;
+    destination = `${endLat},${endLong}`;
+
+    durationInTraffic = makeApiRequest(origin, destination);
+
+
+    return durationInTraffic;
+        
 }
 
 /**
@@ -175,7 +243,8 @@ export function getRouteTrafficPattern(route){
 
 }
 
-function addTrafficAlert(){
+
+function getStopDelay(route){
 
 }
 
