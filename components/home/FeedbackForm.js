@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
+import { FormTextInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
 
 function FeedbackForm({ route, navigation }) {
@@ -77,7 +78,13 @@ function FeedbackForm({ route, navigation }) {
             <View style={styles.buttonContainer}>
                 <Button title="Scan" onPress={() => navigation.navigate("QR Scanner")} />
             </View>
-            {getQuestions()}
+            {/* {getQuestions()} */}
+            <FormTextInput
+                question={"Full Name"}
+                placeholder={"Enter your full name"}
+                value={fullName}
+                handleChangeText={setFullName}
+            />
             <View style={styles.submitContainer}>
                 <Button title="Submit" onPress={handleSubmit} />
             </View>
