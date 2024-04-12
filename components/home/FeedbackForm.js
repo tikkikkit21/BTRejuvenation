@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { FormTextInput } from './FormComponents';
+import { FormTextInput, FormSliderInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
 
 function FeedbackForm({ route, navigation }) {
@@ -84,6 +84,11 @@ function FeedbackForm({ route, navigation }) {
                 placeholder={"Enter your full name"}
                 value={fullName}
                 handleChangeText={setFullName}
+            />
+            <FormSliderInput
+                question="Rate your travel experience"
+                value={sliderValue}
+                handleSliderChange={setSliderValue}
             />
             <FormTextInput
                 question="Comments"
