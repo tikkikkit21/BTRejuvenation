@@ -2,7 +2,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import DropDownPicker from 'react-native-dropdown-picker';
 import Map from '../home/Map';
 import { TouchableOpacity } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
