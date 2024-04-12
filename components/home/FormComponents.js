@@ -1,6 +1,6 @@
 import React from "react";
 
-export function TextInput(question, placeholder, value) {
+export function TextInput(question, placeholder, value, handleChangeText) {
     return (
         <View style={styles.container} key={index}>
             <Text style={styles.question}>{question}</Text>
@@ -8,7 +8,7 @@ export function TextInput(question, placeholder, value) {
                 style={styles.answer}
                 placeholder={placeholder}
                 value={value}
-            // onChangeText={text => item.question === "Full Name" ? setFullName(text) : setComments(text)}
+                onChangeText={handleChangeText}
             />
         </View>
     );
