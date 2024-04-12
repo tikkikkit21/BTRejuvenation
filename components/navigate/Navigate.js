@@ -51,9 +51,9 @@ export default function Navigate() {
         
         // Extend or reduce screen if more options displayed
         if (!showMoreOptions) {
-            bottomSheetRef.current?.snapToIndex(1);
+            bottomSheetRef.current?.snapToIndex(1); // Extend
         } else {
-            bottomSheetRef.current?.snapToIndex(0);
+            bottomSheetRef.current?.snapToIndex(0); // Reduce
         }
     }
 
