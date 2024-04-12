@@ -24,12 +24,15 @@ export default function FeedbackForm({ route, navigation }) {
             alert(`Please fill in form first.`);
         } else {
             const form = {
+                time: Date.now(),
+                route: routeName,
+                bus_id: busID,
                 name: fullName,
                 rating: sliderValue,
                 comments: comments
             }
             submitFeedback(form);
-            alert(`Full Name: ${fullName}\nRating:${sliderValue}\nComments: ${comments}`);
+            alert("Thanks for submitting your feedback!");
         }
     };
 
