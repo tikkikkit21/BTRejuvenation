@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { Octicons, Fontisto, FontAwesome6, Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -101,8 +101,24 @@ export default function Navigate() {
               </View>
               {showMoreOptions && (
                 <View>
-                    <Text>When</Text>
-                    <Text>Priority</Text>
+                    <View style={styles.whenInputContainer}>
+                        <Ionicons name="time-outline" size={15} color='white'/>
+                        <View style={styles.textInputContainer}>
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                placeholder='When'
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.priorityInputContainer}>
+                        <MaterialCommunityIcons name="priority-high" size={15} color='white'/>
+                        <View style={styles.textInputContainer}>
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                placeholder='Priority'
+                            />
+                        </View>
+                    </View>
                 </View>
               )
               }
@@ -166,5 +182,29 @@ const styles = StyleSheet.create({
   moreButtonText: {
     color: 'blue',
     fontSize: 16
+  },
+  whenInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    width: '90%',
+    marginLeft: 20,
+    padding: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#75787B',
+    color: 'white',
+    marginBottom: 10 // Add margin bottom to create space
+  },
+  priorityInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    width: '90%',
+    marginLeft: 20,
+    padding: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#75787B',
+    color: 'white',
+    marginBottom: 10 // Add margin bottom to create space
   }
 });
