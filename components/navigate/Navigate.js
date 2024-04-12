@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 export default function Navigate() {
+
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['35%', '50%', '70%', '95%'], []);
 
@@ -16,6 +17,11 @@ export default function Navigate() {
 
     // Ref for the BottomSheet component
     const bottomSheetRef = useRef(null);
+
+    // States to maintain destination values
+    const [startDestination, setStartDestination] = useState('');
+    const [endDestination, setEndDestination] = useState('');
+
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
     useEffect(() => {
@@ -28,7 +34,10 @@ export default function Navigate() {
 
     // Handles when the arrow-swap button is clicked
     function handleSwapDestinations() {
-        console.log("Swap 'em!");
+        // Swap out the destination values
+        temp_start = startDestination;
+        setStartDestination(endDestination);
+        setEndDestination(temp_start);
     }
 
     return (
@@ -42,7 +51,12 @@ export default function Navigate() {
           >
               <View style={styles.inputContainer}>
                 <FontAwesome6 name='location-crosshairs' size={15} color='white'/>
-                <BottomSheetTextInput style={styles.inputText} placeholder='Start Destination'/>
+                <BottomSheetTextInput
+                    style={styles.inputText}
+                    placeholder='Start Destination'
+                    value={startDestination}
+                    onChangeText={setStartDestination} // Updates the startDestination
+                />
               </View>
               <View style={styles.swapButtonContainer}>
                 <TouchableOpacity onPress={handleSwapDestinations}>
@@ -51,7 +65,17 @@ export default function Navigate() {
               </View>
               <View style={styles.inputContainer}>
                 <Entypo name='location' size={15} color='white'/>
-                <BottomSheetTextInput style={styles.inputText} placeholder='End Destination  '/>
+                <BottomSheetTextInput
+                    style={styles.inputText}
+                    placeholder='End Destination  '
+                    value={endDestination}
+                    onChangeText={setEndDestination} // Updates the endDestination
+                />
+              </View>
+              <View style={styles.moreButtonContainer}>
+                <TouchableOpacity>
+                    <Text style={styles.moreButtonText}>More Options</Text>
+                </TouchableOpacity>
               </View>
           </BottomSheet>
         </View>
@@ -100,18 +124,15 @@ const styles = StyleSheet.create({
       fontSize: 16,
       padding: 5,
       backgroundColor: 'white',
-      color: 'white'
+      color: 'black'
   },
-  suggestedRoutesContainer: {
-      marginTop: 50,
-      backgroundColor: '#A24857',
-      paddingTop: 15,
-      paddingBottom: 70
+  moreButtonContainer: {
+      backgroundColor: 'white',
+      padding: 20,
+      paddingLeft: 25
   },
-  suggestedRoutesText: {
-      fontSize: 20,
-      fontWeight: '700',
-      color: 'white',
-      marginLeft: 5
+  moreButtonText: {
+    color: 'blue',
+    fontSize: 16
   }
 });
