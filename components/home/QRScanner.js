@@ -19,12 +19,10 @@ export default function QRScanner({ navigation }) {
             if (typeof result.data === "string" && result.data.startsWith("{")) {
                 try {
                     json = JSON.parse(result.data);
-
-                    console.log("parsing json", json)
                     if (json.route && json.bus_id) {
                         qrData = json;
                     }
-                } catch (e) { console.log(e) }
+                } catch (_) { }
             }
             navigation.navigate("Feedback", { qrData: qrData });
         }
