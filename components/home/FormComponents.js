@@ -1,8 +1,9 @@
 import React from "react";
+import { StyleSheet, View, Text, TextInput } from "react-native";
 
-export function FormTextInput(question, placeholder, value, handleChangeText) {
+export function FormTextInput({question, placeholder, value, handleChangeText}) {
     return (
-        <View style={styles.container} key={index}>
+        <View style={styles.container}>
             <Text style={styles.question}>{question}</Text>
             <TextInput
                 style={styles.answer}
@@ -14,9 +15,9 @@ export function FormTextInput(question, placeholder, value, handleChangeText) {
     );
 }
 
-export function FormSliderInput() {
+// export function FormSliderInput() {
 
-}
+// }
 
 const styles = StyleSheet.create({
     container: {
