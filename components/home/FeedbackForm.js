@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { FormTextInput, FormSliderInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
@@ -28,17 +28,14 @@ export default function FeedbackForm({ route, navigation }) {
     };
 
     // check if we have any data from QR scanner
-    if (route?.params?.qrData) {
-        console.log("Data received:", route.params.qrData);
-        console.log("Data type:", typeof route.params.qrData);
-        if (
-            typeof route.params.qrData === "object"
-            && route.params.qrData.route
-            && route.params.qrData.bus_id
-        ) {
-            console.log("valid")
+    useEffect(() => {
+        if (route?.params?.qrData) {
+            data = route.params.qrData
+            if (typeof data === "object" && data.route && data.bus_id) {
+                setRouteName(data.route);
+            }
         }
-    }
+    }, [route]);
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
