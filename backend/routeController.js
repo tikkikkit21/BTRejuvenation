@@ -45,25 +45,17 @@ export async function getStopTimesForRoute(route){
     json = json.DocumentElement.DeparturesForRoute;
     json = json.map(stop => formatTextProperty(stop));
 
-    populateStopListForRoute(json)
     return json;
 
 }
 
-/**
- * populates a local stoplist with a list of the stoptimes and stops
- * caches this so that we do not have to keep calling a method
- */
-function populateStopListForRoute(routeJson){
-    for (item in routeJson){
-        newStop = {
-            stopName: routeJson.StopName,
-            stopCode: routeJson.StopCode,
-            longitude: 0,
-            latitude: 0,
-            arrivalTime: routeJson.CalculatedArrivalTime,
-            departureTime: routeJson.CalculatedDepartureTime
-        }
-        routeStops.push(newStop)
-    }
+export async function getScheduledStopTimesForRoute(route){
+    const { data } = await axios.get((`${ROOT}/GetScheduledStopInfo?routeShortName=${route}&serviceDate=`));
+    json = xml2js(data, { compact: true });
+    json = json.DocumentElement.ScheduledStops;
+
+    json = json.map(stop => formatTextProperty(stop));
+
+    return json;
 }
+

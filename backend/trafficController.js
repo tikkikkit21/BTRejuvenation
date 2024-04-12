@@ -6,26 +6,6 @@ import { LayoutAnimation } from "react-native";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
-/**
- * create a method to get traffic information for map
- * 
- * then, after getting traffic information
- * 
- * create an alert that will display which routes are delayed
- * 
- * also, hardcode some alerts into the map -> main street routes expect delays on
- * weekdays between 5 and 6
- * 
- * on campus routes expect delays from people walking, could get to destination a few minutes late
- * 
- * foot traffic notifications
- * 
- * alert if there are any accidents or crashes
- */
-export function showTrafficOnMap(){
-
-}
-
 
 export function getExpectedRouteDelay(route){
     /**
@@ -44,20 +24,21 @@ export function getExpectedRouteDelay(route){
  * gets the start and ending stop with long/lats
  */
 function getStartAndEndForRoute(route){
-    stops = getScheduledRoutes(route);
+    //calls BT API to get list of schedules stops per route
+    stops = getScheduledStopTimesForRoute(route);
 
     midpoint = stops.length/2;
     endpoint = stops.length - 1;
-
     firstStop = stops[0];
-
 
     //the midpoint is normally from where the busses will turn around and begin to come back, so we want the midpoint
     midPointStop = stops[midpoint];
     endStop = stops[end];
-    return [firstStop,  midPointStop, endStop]
+    return firstStop,  midPointStop, endStop;
 
  }
+
+
 /**
  * 
  * @param {*} startStop start point for a route for teh API call
@@ -82,7 +63,6 @@ export function getTrafficDelay(startStop, midStop, endStop){
         totalTrafficDuration += midpointTrafficDuration;
     }
 
-
     /**
      * Used for midpoint -> endpoint, or simply if we want to see a whole route's expected duration in traffic
      * will be null for two stops
@@ -91,19 +71,42 @@ export function getTrafficDelay(startStop, midStop, endStop){
         endLat = endStop.Latitude;
         endLong = endStop.Longitude;
         destination = `${endLat},${endLong}`
-
-        endPointTrafficDuration = makeApiRequest(origin, destination);
         //make second api request here
+        endPointTrafficDuration = makeApiRequest(origin, destination);
+        
         totalTrafficDuration += endPointTrafficDuration;
     }
-  
-
     /**
      * use the google maps to see if there is a delay
      */
     return totalTrafficDuration;
 
 }
+
+/**
+ * meant for two traffic stops
+ * @param {*} startStop source
+ * @param {*} endStop destination
+ * @returns minutes in traffic
+ */
+export function twoWayTrafficDelay(startStop, endStop){
+
+    startLat = startStop.Latitude;
+    startLong = startStop.Longitude;
+    origin = `${startLat},${startLong}`;
+    
+        
+    endLat = endStop.Latitude;
+    endLong = endStop.Longitude;
+    destination = `${endLat},${endLong}`;
+
+    durationInTraffic = makeApiRequest(origin, destination);
+
+
+    return durationInTraffic;
+        
+}
+
 
 /**
  * makes the call to the google maps api
@@ -132,25 +135,6 @@ async function makeApiRequest(origin, destination){
         
     }
 
-}
-
-
-export function twoWayTrafficDelay(startStop, endStop){
-
-    startLat = startStop.Latitude;
-    startLong = startStop.Longitude;
-    origin = `${startLat},${startLong}`;
-    
-        
-    endLat = endStop.Latitude;
-    endLong = endStop.Longitude;
-    destination = `${endLat},${endLong}`;
-
-    durationInTraffic = makeApiRequest(origin, destination);
-
-
-    return durationInTraffic;
-        
 }
 
 /**
@@ -234,7 +218,7 @@ export function getRouteTrafficPattern(route){
     else if (day == 0 || day == 6){
         if((hour >= 12 && hour <= 14) && route == 'UCB' || route == 'TOM')
         {
-            return 5;
+            return 3;
         }
             
     }
@@ -243,8 +227,44 @@ export function getRouteTrafficPattern(route){
 
 }
 
-
+/**
+ * more specific general stop delays for stops per route
+ * 
+ * @param {*} route  route short code 
+ */
 function getStopDelay(route){
+    const date = new Date();
+    const day = date.getDay();
+    const hour = date.getHours();
+
+    // get current bus info, then get the nearest stop
+    // if the nearest stop is further than what is said on the api
+    // then report it and modify the timetables
+
+
+    if(day > 0 && day < 6){
+
+        if(hour > 12 && hour < 15){
+            //stops that go all over blacksburg
+            if(route == 'HDG' || route == 'HXP' || route == 'UCB'){
+                return 3;
+            }
+            //stops that go to squires
+            else if(route == 'PHD' || route == 'PRO'){
+                return 4;
+
+            }
+            //goes around on W campus
+            else if(route == 'TOM'){
+                return 2;                                                                   1
+            }
+
+        }
+        else if(hour > 16 && hour < 18){
+            
+            
+        }
+    }
 
 }
 
