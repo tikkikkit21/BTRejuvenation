@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { FormTextInput, FormSliderInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
 
@@ -32,7 +33,11 @@ export default function FeedbackForm({ route, navigation }) {
                 comments: comments
             }
             submitFeedback(form);
-            alert("Thanks for submitting your feedback!");
+            Toast.show({
+                type: "success",
+                text1: "Thank you for submitting your feedback!",
+                position: "bottom"
+            });
         }
     };
 
@@ -47,7 +52,7 @@ export default function FeedbackForm({ route, navigation }) {
         }
     }, [route]);
 
-    return (
+    return (<>
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Feedback Form</Text>
             <Text style={styles.question}>Scan QR Code on the Bus?</Text>
@@ -81,7 +86,8 @@ export default function FeedbackForm({ route, navigation }) {
                 <Button title="Submit" onPress={handleSubmit} />
             </View>
         </ScrollView>
-    );
+        <Toast />
+    </>);
 }
 
 const styles = StyleSheet.create({
