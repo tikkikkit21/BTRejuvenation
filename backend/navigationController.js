@@ -11,6 +11,9 @@ const GMAPS_ROOT = "https://maps.googleapis.com/maps/api/directions";
  * @returns an array of trip legs with the following properties:
  * - polyline: array of coords for drawing route
  * - routeName: the BT route name for this leg
+ * - duration: how long this leg will take
+ * - distance: distance travelled on this leg
+ * - instructions: text description of the leg
  */
 export async function getConnectedRoutes(origin, destination) {
     const query = `json?origin=${origin}&destination=${destination}&key=${APIKEY}&mode=transit`;
@@ -23,8 +26,11 @@ export async function getConnectedRoutes(origin, destination) {
     return transitSteps.map(step => {
         return {
             polyline: decodeCoords(step.polyline),
-            routeName: step.transit_details.line.short_name
-        }
+            routeName: step.transit_details.line.short_name,
+            duration: step.duration,
+            distance: step.distance,
+            instructions: html_instructions
+        };
     });
 }
 
