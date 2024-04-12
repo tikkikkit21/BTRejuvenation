@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
-import Slider from '@react-native-community/slider';
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { FormTextInput, FormSliderInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
 
@@ -39,38 +38,6 @@ function FeedbackForm({ route, navigation }) {
         }
     }
 
-    // convert questions into Views
-    function getQuestions() {
-        const questions = [
-            { question: "Full Name", defaultText: "Enter your full name" },
-            { question: "Rate your travel experience", defaultValue: sliderValue },
-            { question: "Comments", defaultText: "Enter in any additional comments" },
-        ];
-
-        return questions.map((item, index) => {
-            if (item.question === "Rate your travel experience") {
-                return (
-                    <View style={styles.section} key={index}>
-                        <Text style={styles.question}>{item.question}</Text>
-                        <SliderQuestion sliderValue={sliderValue} setSliderValue={setSliderValue} />
-                    </View>
-                );
-            } else {
-                return (
-                    <View style={styles.section} key={index}>
-                        <Text style={styles.question}>{item.question}</Text>
-                        <TextInput
-                            style={styles.answer}
-                            placeholder={item.defaultText}
-                            value={item.question === "Full Name" ? fullName : comments}
-                            onChangeText={text => item.question === "Full Name" ? setFullName(text) : setComments(text)}
-                        />
-                    </View>
-                );
-            }
-        });
-    }
-
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Feedback Form</Text>
@@ -100,31 +67,6 @@ function FeedbackForm({ route, navigation }) {
                 <Button title="Submit" onPress={handleSubmit} />
             </View>
         </ScrollView>
-    );
-}
-
-// Serves as a view to dynamically update the value of the Slider bar
-function SliderQuestion({ sliderValue, setSliderValue }) {
-    // Handle slider change
-    const handleSliderChange = (value) => {
-        setSliderValue(value);
-    };
-
-    // Return view of slider
-    return (
-        <View style={styles.sliderContainer}>
-            <Slider
-                style={styles.slider}
-                minimumValue={0}
-                maximumValue={10}
-                step={1}
-                value={sliderValue}
-                onValueChange={handleSliderChange}
-                minimumTrackTintColor="#00FF00"
-                maximumTrackTintColor="#FF0000"
-            />
-            <Text style={styles.sliderValue}>{sliderValue}</Text>
-        </View>
     );
 }
 
