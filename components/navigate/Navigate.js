@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Octicons, Fontisto, FontAwesome6, Entypo } from '@expo/vector-icons';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Map from '../home/Map';
@@ -10,6 +10,15 @@ export default function Navigate() {
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['12%','25%', '50%', '70%', '95%'], []);
 
+    // State to manage the index of the bottom sheet
+    const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
+
+    // Reset bottom sheet index to a fixed snap point whenever the component mounts
+    useEffect(() => {
+        // You can set the desired snap point index here (e.g., 2 for the 50% snap point)
+        setBottomSheetIndex(2);
+    }, []);
+
     // Handles when the arrow-swap button is clicked
     function handleSwapDestinations() {
         console.log("Swap 'em!");
@@ -18,7 +27,8 @@ export default function Navigate() {
     return (
         <View style={styles.container}>
           <MapViewMemo />
-          <BottomSheet 
+          <BottomSheet
+              index={bottomSheetIndex} 
               snapPoints={snapPoints}
               backgroundStyle={{backgroundColor: '#FFFFFF'}}
           >
