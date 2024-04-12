@@ -28,6 +28,14 @@ function FeedbackForm({ route, navigation }) {
     // check if we have any data from QR scanner
     if (route?.params?.qrData) {
         console.log("Data received:", route.params.qrData);
+        console.log("Data type:", typeof route.params.qrData);
+        if (
+            typeof route.params.qrData === "object"
+            && route.params.qrData.route
+            && route.params.qrData.bus_id
+        ) {
+            console.log("valid")
+        }
     }
 
     return (
