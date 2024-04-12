@@ -93,8 +93,8 @@ function FeedbackForm({ route, navigation }) {
             <FormTextInput
                 question="Comments"
                 placeholder="Enter in any additional comments"
-                value={fullName}
-                handleChangeText={setFullName}
+                value={comments}
+                handleChangeText={setComments}
             />
             <View style={styles.submitContainer}>
                 <Button title="Submit" onPress={handleSubmit} />
