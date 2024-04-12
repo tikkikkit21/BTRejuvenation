@@ -6,6 +6,8 @@ import { submitFeedback } from '../../backend/feedbackController';
 export default function FeedbackForm({ route, navigation }) {
     // Default Slider value
     const [sliderValue, setSliderValue] = useState(5);
+    // State variables for behind-the-scenes data
+    const [busID, setBusID] = useState("");
     // State variable for the route the user took
     const [routeName, setRouteName] = useState('');
     // State variable for fullName
@@ -33,6 +35,7 @@ export default function FeedbackForm({ route, navigation }) {
             data = route.params.qrData
             if (typeof data === "object" && data.route && data.bus_id) {
                 setRouteName(data.route);
+                setBusID(data.bus_id);
             }
         }
     }, [route]);
