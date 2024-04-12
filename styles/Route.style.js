@@ -19,10 +19,6 @@ export default StyleSheet.create({
         paddingTop:5,
         paddingRight: 10,
         paddingBottom:10,
-        marginVertical: 0.02,
-        borderRadius: 1,
-        borderRadius: 0,
-        borderTopWidth: 0.5,
-        borderColor: '#ccc',
+        marginVertical: 0.02
     },
 });

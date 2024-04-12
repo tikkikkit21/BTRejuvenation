@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../../styles/Route.style';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -95,12 +95,12 @@ export default function RoutesList() {
                                         <Text style={{ fontSize: 22, color: '#' + item[1], fontWeight: 'bold' }}>{item[0]}</Text>
                                     </View>
                                 </View>
-                                <AntDesign name="right" size={20} color={'#' + item[1]} />
+                                <TouchableOpacity>
+                                    <AntDesign name="right" size={20} color={'#' + item[1]} />
+                                </TouchableOpacity>
                             </View>
                         </View>
                         )}
-                        // Style separator to be transparent
-                        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: 'transparent' }} />}
                     />
                 </BottomSheet>
             </View>
