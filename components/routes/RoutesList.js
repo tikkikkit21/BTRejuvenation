@@ -60,21 +60,21 @@ export default function RoutesList() {
     };
 
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['10%','25%', '50%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
     return (
             <View style={styles.container}>
                 <MapViewMemo />
                 <BottomSheet 
                     snapPoints={snapPoints}
-                    backgroundStyle={{backgroundColor: '#FFFFFF', borderTopLeftRadius: 20, borderTopRightRadius: 20, borderColor: 'maroon', borderWidth: 3}}
+                    backgroundStyle={{backgroundColor: '#FFFFFF'}}
                 >
                     <DropDownPicker
                         items={stops.map(stop => ({ label: stop[1], value: stop[0] }))}
                         defaultValue={selectedStop}
                         placeholder={placeHolder}
                         value={selectedStop}
-                        containerStyle={{ height: 50, width: '100%' }}
+                        containerStyle={{ height: 50, width: '95%', marginLeft: 10 }}
                         style={styles.picker}
                         dropDownStyle={{ backgroundColor: '#fafafa' }}
                         onSelectItem={handleStopChange}
@@ -82,13 +82,12 @@ export default function RoutesList() {
                         open={open}
                         setOpen={setOpen}
                     />
-                    <Text style={{ fontSize: 27, color: '#1E1E1E' }}>Scheduled Routes:</Text>
                     <FlatList
                         data={routes}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
                         <View style={styles.flatListItem}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 10, marginRight: 10 }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <FontAwesome6 name="bus-simple" size={20} color={'#' + item[1]} />
                                     <View style={{ marginLeft: 10 }}>
@@ -100,6 +99,8 @@ export default function RoutesList() {
                             </View>
                         </View>
                         )}
+                        // Style separator to be transparent
+                        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: 'transparent' }} />}
                     />
                 </BottomSheet>
             </View>

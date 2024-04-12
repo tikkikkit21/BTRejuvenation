@@ -1,10 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
-import { TouchableOpacity } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
 
 export default function Navigate() {
 
