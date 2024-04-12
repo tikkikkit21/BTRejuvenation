@@ -23,7 +23,11 @@ export default function FeedbackForm({ route, navigation }) {
         } else if (fullName === '') {
             alert(`Please fill in form first.`);
         } else {
-            const form = `\n${fullName}\n${sliderValue}\n${comments}`;
+            const form = {
+                name: fullName,
+                rating: sliderValue,
+                comments: comments
+            }
             submitFeedback(form);
             alert(`Full Name: ${fullName}\nRating:${sliderValue}\nComments: ${comments}`);
         }
