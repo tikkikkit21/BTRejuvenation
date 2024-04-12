@@ -3,6 +3,7 @@ import { xml2js } from "xml-js";
 require('dotenv').config(); 
 import { getScheduledRoutes, getStopTimesForRoute } from "./routeController";
 import { LayoutAnimation } from "react-native";
+import { getBus } from "./busController";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
@@ -237,34 +238,44 @@ function getStopDelay(route){
     const day = date.getDay();
     const hour = date.getHours();
 
+    bus = getBus(route);
+
+    busLat = bus.Latitude;
+    busLong = bus.Longitude;
+
+    if(bus.IsAtStop == 'N'){
+        call getScheduledStopInfo(route)
+        or 
+        call getArrivalandDepartureTimesPerRoute(route)
+
+        stop[0] = nearest stop
+
+        stop[0].Latitude
+        stop[0].Longitude
+
+
+        
+
+        /**
+         * now call the google maps api 
+         * get distance 
+         * 
+         * if distance == scheduled stop time
+         * 
+         * then return 0
+         * else return minutes behind
+         * 
+         * update timetables
+         */
+
+    }
+    else{
+        return 0; //bus is at stop already, cannot be behind
+    }
+
     // get current bus info, then get the nearest stop
     // if the nearest stop is further than what is said on the api
     // then report it and modify the timetables
-
-
-    if(day > 0 && day < 6){
-
-        if(hour > 12 && hour < 15){
-            //stops that go all over blacksburg
-            if(route == 'HDG' || route == 'HXP' || route == 'UCB'){
-                return 3;
-            }
-            //stops that go to squires
-            else if(route == 'PHD' || route == 'PRO'){
-                return 4;
-
-            }
-            //goes around on W campus
-            else if(route == 'TOM'){
-                return 2;                                                                   1
-            }
-
-        }
-        else if(hour > 16 && hour < 18){
-            
-            
-        }
-    }
 
 }
 
