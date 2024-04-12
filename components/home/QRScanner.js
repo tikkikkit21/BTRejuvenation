@@ -15,7 +15,18 @@ export default function QRScanner({ navigation }) {
     // send scanned data back to feedback form
     function onQRScanned(result) {
         if (result.type === "org.iso.QRCode") {
-            navigation.navigate("Feedback", { qrData: result.data });
+            let qrData = {};
+            if (typeof result.data === "string" && result.data.startsWith("{")) {
+                try {
+                    json = JSON.parse(result.data);
+
+                    console.log("parsing json", json)
+                    if (json.route && json.bus_id) {
+                        qrData = json;
+                    }
+                } catch (e) { console.log(e) }
+            }
+            navigation.navigate("Feedback", { qrData: qrData });
         }
     }
 
