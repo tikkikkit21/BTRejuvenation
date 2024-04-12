@@ -1,23 +1,30 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Octicons, Fontisto, FontAwesome6, Entypo } from '@expo/vector-icons';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Map from '../home/Map';
 import { TouchableOpacity } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Navigate() {
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['12%','25%', '50%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['35%', '50%', '70%', '95%'], []);
 
-    // State to manage the index of the bottom sheet
-    const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
+    // Checks if tab is focused on
+    const isFocused = useIsFocused();
+
+    // Ref for the BottomSheet component
+    const bottomSheetRef = useRef(null);
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
     useEffect(() => {
-        // You can set the desired snap point index here (e.g., 2 for the 50% snap point)
-        setBottomSheetIndex(2);
-    }, []);
+        // Checks if tab has been clicked on
+        if (isFocused) {
+            // Reset the BottomSheet to the desired snap point
+            bottomSheetRef.current?.snapToIndex(0);
+        }
+    }, [isFocused]);
 
     // Handles when the arrow-swap button is clicked
     function handleSwapDestinations() {
@@ -28,7 +35,8 @@ export default function Navigate() {
         <View style={styles.container}>
           <MapViewMemo />
           <BottomSheet
-              index={bottomSheetIndex} 
+              ref={bottomSheetRef}
+              index={0} 
               snapPoints={snapPoints}
               backgroundStyle={{backgroundColor: '#FFFFFF'}}
           >
