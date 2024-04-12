@@ -49,6 +49,13 @@ export default function Navigate() {
     // Handles when 'More Options' is clicked
     const handleMoreOptions = () => {
         setShowMoreOptions(!showMoreOptions);
+        
+        // Extend or reduce screen if more options displayed
+        if (!showMoreOptions) {
+            bottomSheetRef.current?.snapToIndex(1);
+        } else {
+            bottomSheetRef.current?.snapToIndex(0);
+        }
     }
 
     return (
