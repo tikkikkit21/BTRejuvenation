@@ -6,6 +6,8 @@ import { submitFeedback } from '../../backend/feedbackController';
 export default function FeedbackForm({ route, navigation }) {
     // Default Slider value
     const [sliderValue, setSliderValue] = useState(5);
+    // State variable for the route the user took
+    const [routeName, setRouteName] = useState('');
     // State variable for fullName
     const [fullName, setFullName] = useState('');
     // State variable for comments
@@ -45,7 +47,12 @@ export default function FeedbackForm({ route, navigation }) {
             <View style={styles.buttonContainer}>
                 <Button title="Scan" onPress={() => navigation.navigate("QR Scanner")} />
             </View>
-            {/* {getQuestions()} */}
+            <FormTextInput
+                question={"Route Name"}
+                placeholder={"What bus route did you take?"}
+                value={routeName}
+                handleChangeText={setRouteName}
+            />
             <FormTextInput
                 question={"Full Name"}
                 placeholder={"Enter your full name"}
