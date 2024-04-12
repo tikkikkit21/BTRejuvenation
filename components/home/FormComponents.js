@@ -1,6 +1,6 @@
 import React from "react";
 
-export function TextInput(question, placeholder, value, handleChangeText) {
+export function FormTextInput(question, placeholder, value, handleChangeText) {
     return (
         <View style={styles.container} key={index}>
             <Text style={styles.question}>{question}</Text>
@@ -14,7 +14,7 @@ export function TextInput(question, placeholder, value, handleChangeText) {
     );
 }
 
-export function SliderInput() {
+export function FormSliderInput() {
 
 }
 
