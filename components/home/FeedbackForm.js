@@ -48,8 +48,14 @@ export default function FeedbackForm({ route, navigation }) {
             if (typeof data === "object" && data.route && data.bus_id) {
                 setRouteName(data.route);
                 setBusID(data.bus_id);
+                return;
             }
         }
+        Toast.show({
+            type: "error",
+            text1: "Invalid QR code was scanned",
+            position: "bottom"
+        })
     }, [route]);
 
     return (<>
