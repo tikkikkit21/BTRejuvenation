@@ -22,6 +22,9 @@ export default function Navigate() {
     const [startDestination, setStartDestination] = useState('');
     const [endDestination, setEndDestination] = useState('');
 
+    // State to determine when to display more options
+    const [showMoreOptions, setShowMoreOptions] = useState(false);
+
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
     useEffect(() => {
@@ -29,15 +32,23 @@ export default function Navigate() {
         if (isFocused) {
             // Reset the BottomSheet to the desired snap point
             bottomSheetRef.current?.snapToIndex(0);
+            // Reset destinations
+            setStartDestination('');
+            setEndDestination('');
         }
     }, [isFocused]);
 
     // Handles when the arrow-swap button is clicked
-    function handleSwapDestinations() {
+    const handleSwapDestinations = () => {
         // Swap out the destination values
         temp_start = startDestination;
         setStartDestination(endDestination);
         setEndDestination(temp_start);
+    }
+
+    // Handles when 'More Options' is clicked
+    const handleMoreOptions = () => {
+        setShowMoreOptions(!showMoreOptions);
     }
 
     return (
@@ -51,12 +62,14 @@ export default function Navigate() {
           >
               <View style={styles.inputContainer}>
                 <FontAwesome6 name='location-crosshairs' size={15} color='white'/>
-                <BottomSheetTextInput
-                    style={styles.inputText}
-                    placeholder='Start Destination'
-                    value={startDestination}
-                    onChangeText={setStartDestination} // Updates the startDestination
-                />
+                <View style={styles.textInputContainer}>
+                    <BottomSheetTextInput
+                        style={styles.textInput}
+                        placeholder='Start Destination'
+                        value={startDestination}
+                        onChangeText={setStartDestination} // Updates the startDestination
+                    />
+                </View>
               </View>
               <View style={styles.swapButtonContainer}>
                 <TouchableOpacity onPress={handleSwapDestinations}>
@@ -65,18 +78,27 @@ export default function Navigate() {
               </View>
               <View style={styles.inputContainer}>
                 <Entypo name='location' size={15} color='white'/>
-                <BottomSheetTextInput
-                    style={styles.inputText}
-                    placeholder='End Destination  '
-                    value={endDestination}
-                    onChangeText={setEndDestination} // Updates the endDestination
-                />
+                <View style={styles.textInputContainer}>
+                    <BottomSheetTextInput
+                        style={styles.textInput}
+                        placeholder='End Destination  '
+                        value={endDestination}
+                        onChangeText={setEndDestination} // Updates the endDestination
+                    />
+                </View>
               </View>
               <View style={styles.moreButtonContainer}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleMoreOptions}>
                     <Text style={styles.moreButtonText}>More Options</Text>
                 </TouchableOpacity>
               </View>
+              {showMoreOptions && (
+                <View>
+                    <Text>When</Text>
+                    <Text>Priority</Text>
+                </View>
+              )
+              }
           </BottomSheet>
         </View>
     );
@@ -107,24 +129,27 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
       flexDirection: 'row',
-      backgroundColor: '#75787B',
+      alignItems: 'center',
       borderRadius: 10,
       width: '90%',
-      paddingHorizontal: 10,
-      alignItems: 'center',
       marginLeft: 20,
+      padding: 10,
+      paddingHorizontal: 10,
+      backgroundColor: '#75787B',
       color: 'white'
   },
-  inputText: {
-      marginTop: 5,
-      marginHorizontal: 5,
-      marginBottom: 5,
-      paddingRight: 205,
-      borderRadius: 10,
-      fontSize: 16,
+  textInputContainer: {
+      flex: 1,
+      marginLeft: 5,
+      height: 30
+  },
+  textInput: {
+      flex: 1,
       padding: 5,
+      fontSize: 16,
+      color: 'black',
       backgroundColor: 'white',
-      color: 'black'
+      borderRadius: 10
   },
   moreButtonContainer: {
       backgroundColor: 'white',
