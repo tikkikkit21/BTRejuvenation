@@ -38,6 +38,38 @@ function FeedbackForm({ route, navigation }) {
         }
     }
 
+    // convert questions into Views
+    function getQuestions() {
+        const questions = [
+            { question: "Full Name", defaultText: "Enter your full name" },
+            { question: "Rate your travel experience", defaultValue: sliderValue },
+            { question: "Comments", defaultText: "Enter in any additional comments" },
+        ];
+
+        return questions.map((item, index) => {
+            if (item.question === "Rate your travel experience") {
+                return (
+                    <View style={styles.section} key={index}>
+                        <Text style={styles.question}>{item.question}</Text>
+                        <SliderQuestion sliderValue={sliderValue} setSliderValue={setSliderValue} />
+                    </View>
+                );
+            } else {
+                return (
+                    <View style={styles.section} key={index}>
+                        <Text style={styles.question}>{item.question}</Text>
+                        <TextInput
+                            style={styles.answer}
+                            placeholder={item.defaultText}
+                            value={item.question === "Full Name" ? fullName : comments}
+                            onChangeText={text => item.question === "Full Name" ? setFullName(text) : setComments(text)}
+                        />
+                    </View>
+                );
+            }
+        });
+    }
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Feedback Form</Text>
@@ -45,44 +77,12 @@ function FeedbackForm({ route, navigation }) {
             <View style={styles.buttonContainer}>
                 <Button title="Scan" onPress={() => navigation.navigate("QR Scanner")} />
             </View>
-            {getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue)}
+            {getQuestions()}
             <View style={styles.submitContainer}>
                 <Button title="Submit" onPress={handleSubmit} />
             </View>
         </ScrollView>
     );
-}
-
-// convert questions into Views
-function getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue) {
-    const questions = [
-        { question: "Full Name", defaultText: "Enter your full name" },
-        { question: "Rate your travel experience", defaultValue: sliderValue },
-        { question: "Comments", defaultText: "Enter in any additional comments" },
-    ];
-
-    return questions.map((item, index) => {
-        if (item.question === "Rate your travel experience") {
-            return (
-                <View style={styles.section} key={index}>
-                    <Text style={styles.question}>{item.question}</Text>
-                    <SliderQuestion sliderValue={sliderValue} setSliderValue={setSliderValue} />
-                </View>
-            );
-        } else {
-            return (
-                <View style={styles.section} key={index}>
-                    <Text style={styles.question}>{item.question}</Text>
-                    <TextInput
-                        style={styles.answer}
-                        placeholder={item.defaultText}
-                        value={item.question === "Full Name" ? fullName : comments}
-                        onChangeText={text => item.question === "Full Name" ? setFullName(text) : setComments(text)}
-                    />
-                </View>
-            );
-        }
-    });
 }
 
 // Serves as a view to dynamically update the value of the Slider bar
