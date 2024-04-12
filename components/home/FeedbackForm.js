@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
-import Slider from '@react-native-community/slider';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { FormTextInput, FormSliderInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
 
-function FeedbackForm({ route, navigation }) {
+export default function FeedbackForm({ route, navigation }) {
     // Default Slider value
     const [sliderValue, setSliderValue] = useState(5);
+    // State variables for behind-the-scenes data
+    const [busID, setBusID] = useState("");
+    // State variable for the route the user took
+    const [routeName, setRouteName] = useState('');
     // State variable for fullName
     const [fullName, setFullName] = useState('');
     // State variable for comments
@@ -19,90 +24,77 @@ function FeedbackForm({ route, navigation }) {
         } else if (fullName === '') {
             alert(`Please fill in form first.`);
         } else {
-            const form = `\n${fullName}\n${sliderValue}\n${comments}`;
+            const form = {
+                time: Date.now(),
+                route: routeName,
+                bus_id: busID,
+                name: fullName,
+                rating: sliderValue,
+                comments: comments
+            }
             submitFeedback(form);
-            alert(`Full Name: ${fullName}\nRating:${sliderValue}\nComments: ${comments}`);
+            Toast.show({
+                type: "success",
+                text1: "Thank you for submitting your feedback!",
+                position: "bottom"
+            });
         }
     };
 
     // check if we have any data from QR scanner
-    if (route?.params?.qrData) {
-        console.log("Data received:", route.params.qrData);
-    }
+    useEffect(() => {
+        if (route?.params?.qrData) {
+            data = route.params.qrData
+            if (typeof data === "object" && data.route && data.bus_id) {
+                setRouteName(data.route);
+                setBusID(data.bus_id);
+                return;
+            }
+        }
+        Toast.show({
+            type: "error",
+            text1: "Invalid QR code was scanned",
+            position: "bottom"
+        })
+    }, [route]);
 
-    return (
+    return (<>
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Feedback Form</Text>
             <Text style={styles.question}>Scan QR Code on the Bus?</Text>
             <View style={styles.buttonContainer}>
                 <Button title="Scan" onPress={() => navigation.navigate("QR Scanner")} />
             </View>
-            {getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue)}
+            <FormTextInput
+                question={"Route Name"}
+                placeholder={"What bus route did you take?"}
+                value={routeName}
+                handleChangeText={setRouteName}
+            />
+            <FormTextInput
+                question={"Full Name"}
+                placeholder={"Enter your full name"}
+                value={fullName}
+                handleChangeText={setFullName}
+            />
+            <FormSliderInput
+                question="Rate your travel experience"
+                value={sliderValue}
+                handleSliderChange={setSliderValue}
+            />
+            <FormTextInput
+                question="Comments"
+                placeholder="Enter in any additional comments"
+                value={comments}
+                handleChangeText={setComments}
+            />
             <View style={styles.submitContainer}>
                 <Button title="Submit" onPress={handleSubmit} />
             </View>
         </ScrollView>
-    );
+        <Toast />
+    </>);
 }
-
-// convert questions into Views
-function getQuestions(fullName, setFullName, comments, setComments, sliderValue, setSliderValue) {
-    const questions = [
-        { question: "Full Name", defaultText: "Enter your full name" },
-        { question: "Rate your travel experience", defaultValue: sliderValue },
-        { question: "Comments", defaultText: "Enter in any additional comments" },
-    ];
-
-    return questions.map((item, index) => {
-        if (item.question === "Rate your travel experience") {
-            return (
-                <View style={styles.section} key={index}>
-                    <Text style={styles.question}>{item.question}</Text>
-                    <SliderQuestion sliderValue={sliderValue} setSliderValue={setSliderValue} />
-                </View>
-            );
-        } else {
-            return (
-                <View style={styles.section} key={index}>
-                    <Text style={styles.question}>{item.question}</Text>
-                    <TextInput
-                        style={styles.answer}
-                        placeholder={item.defaultText}
-                        value={item.question === "Full Name" ? fullName : comments}
-                        onChangeText={text => item.question === "Full Name" ? setFullName(text) : setComments(text)}
-                    />
-                </View>
-            );
-        }
-    });
-}
-
-// Serves as a view to dynamically update the value of the Slider bar
-function SliderQuestion({ sliderValue, setSliderValue }) {
-    // Handle slider change
-    const handleSliderChange = (value) => {
-        setSliderValue(value);
-    };
-
-    // Return view of slider
-    return (
-        <View style={styles.sliderContainer}>
-            <Slider
-                style={styles.slider}
-                minimumValue={0}
-                maximumValue={10}
-                step={1}
-                value={sliderValue}
-                onValueChange={handleSliderChange}
-                minimumTrackTintColor="#00FF00"
-                maximumTrackTintColor="#FF0000"
-            />
-            <Text style={styles.sliderValue}>{sliderValue}</Text>
-        </View>
-    );
-}
-
-export default FeedbackForm;
 
 const styles = StyleSheet.create({
     container: {
