@@ -45,30 +45,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         paddingTop: 25,
     },
-    buttonContainer: {
-        width: 225,
-        height: 50,
-        borderWidth: 1, // Add border
-        borderRadius: 15, // Add border radius for rounded corners
-        padding: 5, // Add padding for space around the button
-    },
-    submitContainer: {
-        width: 225,
-        height: 50,
-        borderWidth: 1, // Add border
-        borderRadius: 15, // Add border radius for rounded corners
-        padding: 5, // Add padding for space around the button
-        margin: 40,
-    },
     section: {
         justifyContent: 'center',
         padding: 5,
         margin: 5,
         marginTop: 15
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 40,
     },
     question: {
         textAlign: 'left',  // Align questions on left side of screen
