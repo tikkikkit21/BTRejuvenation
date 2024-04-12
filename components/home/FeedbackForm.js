@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { FormTextInput, FormSliderInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
 
-function FeedbackForm({ route, navigation }) {
+export default function FeedbackForm({ route, navigation }) {
     // Default Slider value
     const [sliderValue, setSliderValue] = useState(5);
     // State variable for fullName
@@ -69,8 +69,6 @@ function FeedbackForm({ route, navigation }) {
         </ScrollView>
     );
 }
-
-export default FeedbackForm;
 
 const styles = StyleSheet.create({
     container: {
