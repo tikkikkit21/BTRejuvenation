@@ -16,6 +16,9 @@ export default function Navigate() {
     // Ref for the BottomSheet component
     const bottomSheetRef = useRef(null);
 
+    // States to monitor index of BottomSheet
+    const [bottomSheetIndex, setBottomSheetIndex] = useState(0);
+
     // States to maintain destination values
     const [startDestination, setStartDestination] = useState('');
     const [endDestination, setEndDestination] = useState('');
@@ -30,6 +33,7 @@ export default function Navigate() {
         if (isFocused) {
             // Reset the BottomSheet to the desired snap point
             bottomSheetRef.current?.snapToIndex(0);
+            setBottomSheetIndex(0);
             // Reset destinations
             setStartDestination('');
             setEndDestination('');
@@ -49,21 +53,30 @@ export default function Navigate() {
         setShowMoreOptions(!showMoreOptions);
         
         // Extend or reduce screen if more options displayed
-        if (!showMoreOptions) {
+        if (!showMoreOptions && bottomSheetIndex == 0) {
             bottomSheetRef.current?.snapToIndex(1); // Extend
-        } else {
+            setBottomSheetIndex(1);
+        }  else if (showMoreOptions && bottomSheetIndex == 1) {
             bottomSheetRef.current?.snapToIndex(0); // Reduce
+            setBottomSheetIndex(0);
         }
     }
+
+    // Event handler for BottomSheet animation
+    const handleAnimateBottomSheet = (param) => {
+        setBottomSheetIndex(param);
+    };
+    
 
     return (
         <View style={styles.container}>
           <MapViewMemo />
           <BottomSheet
               ref={bottomSheetRef}
-              index={0} 
+              index={bottomSheetIndex}
               snapPoints={snapPoints}
               backgroundStyle={{backgroundColor: '#FFFFFF'}}
+              onChange={handleAnimateBottomSheet}
           >
               <View style={styles.inputContainer}>
                 <FontAwesome6 name='location-crosshairs' size={15} color='white'/>
