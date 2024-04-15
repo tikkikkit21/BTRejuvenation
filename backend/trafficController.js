@@ -4,6 +4,7 @@ require('dotenv').config();
 import { getScheduledRoutes, getStopTimesForRoute } from "./routeController";
 import { LayoutAnimation } from "react-native";
 import { getBus } from "./busController";
+import { getStops } from "./stopController";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
@@ -59,7 +60,7 @@ export function getTrafficDelay(startStop, midStop, endStop){
         midLong = midStop.Longitude;
         destination = `${midLat},${midLong}`
         //make api request here
-        midpointTrafficDuration =  makeApiRequest(origin, destination);
+        midpointTrafficDuration =  makeApiRequest(origin, destination, false);
 
         totalTrafficDuration += midpointTrafficDuration;
     }
@@ -71,9 +72,12 @@ export function getTrafficDelay(startStop, midStop, endStop){
     if(endStop != null){
         endLat = endStop.Latitude;
         endLong = endStop.Longitude;
+        if(midStop != null){
+            origin =  `${midLat},${midLong}`
+        }
         destination = `${endLat},${endLong}`
         //make second api request here
-        endPointTrafficDuration = makeApiRequest(origin, destination);
+        endPointTrafficDuration = makeApiRequest(origin, destination, false);
         
         totalTrafficDuration += endPointTrafficDuration;
     }
@@ -90,7 +94,7 @@ export function getTrafficDelay(startStop, midStop, endStop){
  * @param {*} endStop destination
  * @returns minutes in traffic
  */
-export function twoWayTrafficDelay(startStop, endStop){
+export function twoWayTrafficDelay(startStop, endStop, returnArrivalTime){
 
     startLat = startStop.Latitude;
     startLong = startStop.Longitude;
@@ -101,7 +105,7 @@ export function twoWayTrafficDelay(startStop, endStop){
     endLong = endStop.Longitude;
     destination = `${endLat},${endLong}`;
 
-    durationInTraffic = makeApiRequest(origin, destination);
+    durationInTraffic = makeApiRequest(origin, destination, returnArrivalTime);
 
 
     return durationInTraffic;
@@ -112,7 +116,7 @@ export function twoWayTrafficDelay(startStop, endStop){
 /**
  * makes the call to the google maps api
  */
-async function makeApiRequest(origin, destination){
+async function makeApiRequest(origin, destination, returnArrivalTime){
     const apiUrl = 'https://maps.googleapis.com/maps/api/directions/json';
     const apiKey = process.env.GOOGLE_MAPS_API_KEY; 
     const now = Date.getTime() / 100;
@@ -125,11 +129,19 @@ async function makeApiRequest(origin, destination){
     };
     try {
         const response = await axios.get(apiUrl, { params });
-        // get duration spent in traffic
-        const durationInTraffic = response.data.routes[0].legs[0].duration_in_traffic.text;
-        //console.log(response.data);
-        console.log(durationInTraffic);
-        return durationInTraffic;
+
+        if (returnArrivalTime) {
+            // get the arrival time from the API response
+            const arrivalTime = response.data.routes[0].legs[0].arrival_time.text;
+            console.log('Arrival time:', arrivalTime);
+            return arrivalTime;
+        } else {
+            // get the duration spent in traffic from the API response
+            const durationInTraffic = response.data.routes[0].legs[0].duration_in_traffic.text;
+            console.log('Duration in traffic:', durationInTraffic);
+            return durationInTraffic;
+        }
+
     } catch (error) {
         console.error('bad api request', error);
         throw error; 
@@ -232,6 +244,18 @@ export function getRouteTrafficPattern(route){
  * more specific general stop delays for stops per route
  * 
  * @param {*} route  route short code 
+ * 
+ * 
+ * FRONTEND: pass in the list of the stop information, such as latitude, longitude, and 
+ * calculated arrival time. 
+ * 
+ * Use a checkbox to toggle between the updated time and the basic time
+ * So, once the checkbox is clicked, then call the method below to return a list of stop\stoptimes
+ * 
+ *          Frontend Functionaloty in the main screen:  ADD ROUTE INFO LIKE ON APP. you press the info marker and then
+            a list of the next trip pops up with calcualted route departure times.
+            Then, a message int he upper right for toggle advanced timing screenOptions
+            If this is pressed, then call the backend functionality to update the times and pass in the list of upcoming stops 
  */
 function getStopDelay(route){
     const date = new Date();
@@ -239,23 +263,46 @@ function getStopDelay(route){
     const hour = date.getHours();
 
     bus = getBus(route);
-
-    busLat = bus.Latitude;
-    busLong = bus.Longitude;
-
     if(bus.IsAtStop == 'N'){
-        call getScheduledStopInfo(route)
-        or 
-        call getArrivalandDepartureTimesPerRoute(route)
+        // call getScheduledStopInfo(route)
+        // or 
+        // call getArrivalandDepartureTimesPerRoute(route)
+        //nextStop = routeStops[0];
+        //or
+        //busStops = getStopTimesForRoute(route);
+        //nextStop = busStops[0]
 
-        stop[0] = nearest stop
 
-        stop[0].Latitude
-        stop[0].Longitude
+        /**
+         * get next stop -> if stopcode == bus.Stopcode
+         * nextStop == 
+         */
+        nextStop = getNextStop(route, bus.stopCode);
 
 
+        time = twoWayTrafficDelay(bus, nextStop, true);
+
+
+        /**
+         * console . log time
+         */
+
+        scheduledStopTime = getNextDepartureForStop(route, nextStop.StopCode);
+
+        depTime = scheduledStopTime.AdjustedDepartureTime
+        //scheduledStopTime = getScheduledStopTime(nextStop, route)
+
+
+        if(time > depTime){
+            timeDelay = time - scheduledStopTime;
+            timeDaley.convertToMinutes()
+            return timeDelay;
+            //now, with this delay, we can add a current time to the rest of the timetable fopr the rest of the stops
+            //accurately predicting how long a bus will be late
+        }
         
 
+        return 0;
         /**
          * now call the google maps api 
          * get distance 
@@ -267,7 +314,6 @@ function getStopDelay(route){
          * 
          * update timetables
          */
-
     }
     else{
         return 0; //bus is at stop already, cannot be behind
@@ -276,7 +322,59 @@ function getStopDelay(route){
     // get current bus info, then get the nearest stop
     // if the nearest stop is further than what is said on the api
     // then report it and modify the timetables
+}
+
+/**
+ * 
+ * @param {*} route route short code
+ * @param {*} stopCode current stop code
+ * @returns the next stop information 
+ * lat, long, stopcode, stopName
+ */
+function getNextStop(route, stopCode){
+
+    stops = getStops(route);
+
+    returnNext == false;
+    for(stop in stops){
+        if(stop.StopCode == stopCode){
+            returnNext == true;
+        }
+
+        if(returnNext){
+            return stop;
+        }
+    }
 
 }
 
+ /**
+     * calculates the difference in time, and converts it to minutes + seconds
+*/
+function calculateTime(googleMapsTime, btTime){
+    /**
+     * calculates the difference in time, and converts it to minutes + seconds
+     */
+    const googleMapsDate = new Date(googleMapsTime);
+    const btDate = new Date(btTime);
+    
+    const timeDiff = googleMapsDate.getTime() - btDate.getTime(); // Calculate time difference in milliseconds
+    const minutes = Math.floor(timeDiff / (1000 * 60)); // Convert milliseconds to minutes
+    const seconds = Math.floor((timeDiff / 1000) % 60); // Convert remaining milliseconds to seconds
+
+    return {
+        minutes: minutes,
+        seconds: seconds
+    };
+}
+
+
+export function recaulculatedTimeTable(route, currentTimeTable){
+    busDelay = getStopDelay(route);
+
+    for (time in currentTimeTable){
+        currentTimeTable.arrivalTime += busDelay.minutes + busDelay.seconds;
+    }
+
+}
 
