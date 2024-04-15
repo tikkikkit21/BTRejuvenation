@@ -5,7 +5,7 @@ import MapView, { MapCallout, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome, FontAwesome6, Octicons, Entypo } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
@@ -95,7 +95,7 @@ export default function Map({ navigation }) {
             </MapView>
             <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleRefreshClick}>
-                    <FontAwesome name="refresh" size={24} color="white" />
+                    <MaterialCommunityIcons name="restart" size={24} color="white" />
                 </TouchableOpacity>
             </View>
             <View style={styles.feedbackButton}>
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         backgroundColor: '#A40046',
-        padding: 15,
+        padding: 13,
         borderRadius: 15
     },
     feedbackButton: {
