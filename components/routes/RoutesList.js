@@ -96,10 +96,9 @@ export default function RoutesList() {
                                     </View>
                                 </View>
                                 <TouchableOpacity>
-                                    <AntDesign name="right" size={20} color={'#' + item[1]} />
+                                    <AntDesign name="right" size={20} color={'#' + item.RouteColor} />
                                 </TouchableOpacity>
                             </View>
-                            <AntDesign name="right" size={20} color={'#' + item.RouteColor} />
                         </View>
                     )}
                 />
