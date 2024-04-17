@@ -108,6 +108,10 @@ export default function Map({ navigation }) {
                     <Entypo name="direction" size={20} color="white" />
                 </TouchableOpacity>
             </View>
+            {/* Frontend Functionaloty in the main screen:  ADD ROUTE INFO LIKE ON APP. you press the info marker and then
+            a list of the next trip pops up with calcualted route departure times.
+            Then, a message int he upper right for toggle advanced timing screenOptions
+            If this is pressed, then call the backend functionality to update the times and pass in the list of upcoming stops */}
         </View>
     )
 }

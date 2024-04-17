@@ -39,3 +39,27 @@ export async function getAllStops() {
 
     return stops;
 }
+
+
+//returns a list of all of stop times for the specified route
+export async function getStopTimesForRoute(route){
+    trips = 1
+    const { data } = await axios.get((`${ROOT}/GetArrivalAndDepartureTimesForRoutes?routeShortNames=${route}&noOfTrips=${trips}&serviceDate=`));
+    json = xml2js(data, { compact: true });
+    json = json.DocumentElement.DeparturesForRoute;
+    json = json.map(stop => formatTextProperty(stop));
+
+    return json;
+
+}
+
+export async function getScheduledStopTimesForRoute(route){
+    const { data } = await axios.get((`${ROOT}/GetScheduledStopInfo?routeShortName=${route}&serviceDate=`));
+    json = xml2js(data, { compact: true });
+    json = json.DocumentElement.ScheduledStops;
+
+    json = json.map(stop => formatTextProperty(stop));
+
+    return json;
+}
+
