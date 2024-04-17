@@ -264,35 +264,21 @@ function getStopDelay(route){
 
     bus = getBus(route);
     if(bus.IsAtStop == 'N'){
-        // call getScheduledStopInfo(route)
-        // or 
-        // call getArrivalandDepartureTimesPerRoute(route)
-        //nextStop = routeStops[0];
-        //or
-        //busStops = getStopTimesForRoute(route);
-        //nextStop = busStops[0]
-
 
         /**
          * get next stop -> if stopcode == bus.Stopcode
          * nextStop == 
          */
         nextStop = getNextStop(route, bus.stopCode);
-
-
         time = twoWayTrafficDelay(bus, nextStop, true);
-
 
         /**
          * console . log time
          */
-
         scheduledStopTime = getNextDepartureForStop(route, nextStop.StopCode);
 
         depTime = scheduledStopTime.AdjustedDepartureTime
         //scheduledStopTime = getScheduledStopTime(nextStop, route)
-
-
         if(time > depTime){
             timeDelay = time - scheduledStopTime;
             timeDaley.convertToMinutes()
@@ -300,8 +286,6 @@ function getStopDelay(route){
             //now, with this delay, we can add a current time to the rest of the timetable fopr the rest of the stops
             //accurately predicting how long a bus will be late
         }
-        
-
         return 0;
         /**
          * now call the google maps api 
@@ -352,15 +336,12 @@ function getNextStop(route, stopCode){
      * calculates the difference in time, and converts it to minutes + seconds
 */
 function calculateTime(googleMapsTime, btTime){
-    /**
-     * calculates the difference in time, and converts it to minutes + seconds
-     */
-    const googleMapsDate = new Date(googleMapsTime);
+   const googleMapsDate = new Date(googleMapsTime);
     const btDate = new Date(btTime);
     
-    const timeDiff = googleMapsDate.getTime() - btDate.getTime(); // Calculate time difference in milliseconds
-    const minutes = Math.floor(timeDiff / (1000 * 60)); // Convert milliseconds to minutes
-    const seconds = Math.floor((timeDiff / 1000) % 60); // Convert remaining milliseconds to seconds
+    const timeDiff = googleMapsDate.getTime() - btDate.getTime(); // calculate time difference in milliseconds
+    const minutes = Math.floor(timeDiff / (1000 * 60)); // convert milliseconds to minutes
+    const seconds = Math.floor((timeDiff / 1000) % 60); // convert remaining milliseconds to seconds
 
     return {
         minutes: minutes,
@@ -373,7 +354,7 @@ export function recaulculatedTimeTable(route, currentTimeTable){
     busDelay = getStopDelay(route);
 
     for (time in currentTimeTable){
-        currentTimeTable.arrivalTime += busDelay.minutes + busDelay.seconds;
+        currentTimeTable.arrivalTime += (busDelay.minutes + busDelay.seconds);
     }
 
 }
