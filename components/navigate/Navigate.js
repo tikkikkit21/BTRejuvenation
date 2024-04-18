@@ -5,7 +5,7 @@ import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
 
-export default function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
+function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
 
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['35%', '50%', '70%', '95%'], []);
@@ -152,6 +152,9 @@ export default function Navigate({ mapRegion, setMapRegion, buses, setBuses, sto
 // Memoized Map component to avoid unnecessary rerendering.
 const MapViewMemo = React.memo(Map);
 
+// Memoize Navigate component
+const MemoizedNavigate = React.memo(Navigate);
+
 const styles = StyleSheet.create({
   container: {
       flex: 1,
@@ -230,3 +233,5 @@ const styles = StyleSheet.create({
     marginBottom: 10 // Add margin bottom to create space
   }
 });
+
+export default MemoizedNavigate;
