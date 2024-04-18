@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../../styles/Route.style';
+import { useNavigation } from '@react-navigation/native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
 import { getAllStops, getScheduledRoutes } from '../../backend/routeController';
@@ -13,6 +14,8 @@ export default function RoutesList() {
     const [routes, setRoutes] = useState([]);
     const [selectedStop, selectStop] = useState("");
     const [placeHolder, setPlaceholder] = useState("")
+    const navigation = useNavigation();
+
 
     useEffect(() => {
 
@@ -62,6 +65,16 @@ export default function RoutesList() {
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
+    const handleRouteInfoClick = (shortName, fullName, color) => {
+        console.log(shortName); 
+        console.log(fullName);
+        console.log(color);
+        navigation.navigate('RouteInfo', {
+            routeShortName: shortName,
+            routeName: fullName,
+            routeColor: color
+        });
+    };
     return (
         <View style={styles.container}>
             <MapViewMemo />
@@ -93,13 +106,16 @@ export default function RoutesList() {
                                     <View style={{ marginLeft: 10 }}>
                                         <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
                                         <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
+                                       
                                     </View>
                                 </View>
-                                <TouchableOpacity>
-                                    <AntDesign name="right" size={20} color={'#' + item[1]} />
+                                <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
+                                    <AntDesign name="right" size={22} />
+                                     {/*Add an onclick to the touchable opcatiy, where it takes you to the new compnent for the busses. Bus information, route information
+                                        and latest trips */}
                                 </TouchableOpacity>
                             </View>
-                            <AntDesign name="right" size={20} color={'#' + item.RouteColor} />
+                            {/* <AntDesign name="right" size={20} color={'#' + item.RouteColor} /> */}
                         </View>
                     )}
                 />
