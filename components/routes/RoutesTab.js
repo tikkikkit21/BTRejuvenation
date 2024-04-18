@@ -4,7 +4,7 @@ import RoutesList from './RoutesList';
 
 const Stack = createStackNavigator();
 
-export default function RoutestTab() {
+export default function RoutestTab(props) {
     return (
         <Stack.Navigator
             screenOptions={{
@@ -13,7 +13,23 @@ export default function RoutestTab() {
             }}
             initialRouteName="Routes"
         >
-            <Stack.Screen name="Routes" component={RoutesList} />
+            <Stack.Screen name="Routes">
+                {(routesProps) => (
+                <RoutesList
+                    {...routesProps}
+                    mapRegion={props.mapRegion}
+                    setMapRegion={props.setMapRegion}
+                    buses={props.buses}
+                    setBuses={props.setBuses}
+                    busStops={props.stops}
+                    setBusStops={props.setStops}
+                    route={props.route}
+                    setRoute={props.setRoute}
+                    isOnCooldown={props.isOnCooldown}
+                    setIsOnCooldown={props.setIsOnCooldown}
+                />
+                )}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 }

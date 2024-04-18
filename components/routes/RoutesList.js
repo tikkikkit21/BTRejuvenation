@@ -7,7 +7,7 @@ import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@
 import { getAllStops, getScheduledRoutes } from '../../backend/routeController';
 import Map from '../home/Map';
 
-export default function RoutesList() {
+function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBusStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
     const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
@@ -64,7 +64,18 @@ export default function RoutesList() {
 
     return (
         <View style={styles.container}>
-            <MapViewMemo />
+            <MapViewMemo 
+                mapRegion={mapRegion}
+                setMapRegion={setMapRegion}
+                buses={buses}
+                setBuses={setBuses}
+                stops={busStops}
+                setStops={setBusStops}
+                route={route}
+                setRoute={setRoute}
+                isOnCooldown={isOnCooldown}
+                setIsOnCooldown={setIsOnCooldown}
+            />
             <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
@@ -109,3 +120,8 @@ export default function RoutesList() {
 
 // Memoized Map component to avoid unnecessary rerendering.
 const MapViewMemo = React.memo(Map);
+
+// Memoize RoutesList component
+const MemoizedRoutesList = React.memo(RoutesList);
+
+export default MemoizedRoutesList;

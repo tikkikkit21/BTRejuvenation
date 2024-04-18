@@ -10,7 +10,7 @@ import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } f
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 
-export default function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
+function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
     
     const refreshTimer = useRef(null);
 
@@ -218,3 +218,8 @@ const styles = StyleSheet.create({
         borderRadius: 15
     }
 });
+
+// Memoize Map component
+const MemoizedMap = React.memo(Map);
+
+export default MemoizedMap;
