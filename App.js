@@ -110,7 +110,23 @@ export default function App() {
                         />
                     )}
                 </Tab.Screen>
-                {/* <Tab.Screen name="FavoritesTab" component={FavoritesTab} /> */}
+                <Tab.Screen name="FavoritesTab">
+                    {(props) => (
+                        <FavoritesTab
+                        {...props}
+                        mapRegion={mapRegion}
+                        setMapRegion={setMapRegion}
+                        buses={buses}
+                        setBuses={setBuses}
+                        stops={stops}
+                        setStops={setStops}
+                        route={route}
+                        setRoute={setRoute}
+                        isOnCooldown={isOnCooldown}
+                        setIsOnCooldown={setIsOnCooldown}
+                        />
+                    )}
+                </Tab.Screen>
             </Tab.Navigator>
         </NavigationContainer>
     );
