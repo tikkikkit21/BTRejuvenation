@@ -10,17 +10,8 @@ import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } f
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 
-export default function Map({ navigation }) {
-    const [mapRegion, setMapRegion] = useState({
-        latitude: 37.227468937500895,
-        longitude: -80.42357646125542,
-        latitudeDelta: 0.051202637986392574,
-        longitudeDelta: 0.03720943536600885,
-    })
-    const [buses, setBuses] = useState([]);
-    const [stops, setStops] = useState([]);
-    const [route, setRoute] = useState();
-    const [isOnCooldown, setIsOnCooldown] = useState(false);
+export default function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
+    
     const refreshTimer = useRef(null);
 
     // ask for user location

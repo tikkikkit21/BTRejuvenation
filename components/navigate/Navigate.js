@@ -5,7 +5,7 @@ import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
 
-export default function Navigate() {
+export default function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
 
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['35%', '50%', '70%', '95%'], []);
@@ -70,7 +70,18 @@ export default function Navigate() {
 
     return (
         <View style={styles.container}>
-          <MapViewMemo />
+          <MapViewMemo 
+            mapRegion={mapRegion}
+            setMapRegion={setMapRegion}
+            buses={buses}
+            setBuses={setBuses}
+            stops={stops}
+            setStops={setStops}
+            route={route}
+            setRoute={setRoute}
+            isOnCooldown={isOnCooldown}
+            setIsOnCooldown={setIsOnCooldown}
+          />
           <BottomSheet
               ref={bottomSheetRef}
               index={bottomSheetIndex}
