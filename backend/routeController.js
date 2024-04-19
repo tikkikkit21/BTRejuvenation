@@ -40,3 +40,14 @@ export async function getAllStops() {
     return stops;
 }
 
+export async function getNextTrip(route){
+    trips = 1;
+    const { data } = await axios.get(`${ROOT}/GetArrivalAndDepartureTimesForRoutes?routeShortNames=${route}&noOfTrips=${trips}&serviceDate=`);
+    const json = xml2js(data, { compact: true });
+    let trip = json.DocumentElement.DeparturesForRoute;
+    trip = trip.map(stop => formatTextProperty(stop));
+
+    return trip;
+
+}
+

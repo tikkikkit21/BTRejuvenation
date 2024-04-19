@@ -1,7 +1,8 @@
 
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import Map from '../home/Map';
+import Map, { createMarkers, createRoute, createStops } from '../home/Map';
+import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
 /**
  * make a call to get bus ->
@@ -21,16 +22,16 @@ import BottomSheet from '@gorhom/bottom-sheet';
 
 import { getStops } from '../../backend/stopController';
 import { getBus } from '../../backend/busController';
+import { getNextTrip } from '../../backend/routeController';
 
+const MapViewMemo = React.memo(Map);
 //const MapViewMemo = React.memo(Map);
 export default function RouteInfo({ route }) {
     const { routeShortName, routeName, routeColor } = route.params;
-    const [capacity, setCapacity] = useState("");
     const [trip, setTrips] = useState([]);
-    //const [route, setRoute] = useState([]);
-    const [lastStop, setLastStop] = useState([]);
     const [stops, setStops] = useState([]);
     const [busses, setBusses] = useState([]);
+    const [mapRoute, setMapRoute] = useState([]);
     
     const bottomSheetRef = useRef(null);
 
@@ -40,35 +41,39 @@ export default function RouteInfo({ route }) {
         async function fetchInfo(){
             const bussesInfo = await getBus(routeShortName);
             //console.log('Route Short Name:', routeShortName);
-            console.log('Busses Info:', bussesInfo);
+           // console.log('Busses Info:', bussesInfo);
             setBusses(bussesInfo);
 
             const stops = await getStops(routeShortName);
             setStops(stops);
+
+            const nextTrip = await getNextTrip(routeShortName);
+            setTrips(nextTrip);
+
+            createMarkers(busses, null);
+            createStops(stops);
+            setMapRoute(createRoute(stops));
         }
         fetchInfo();
-        
-
-        async function fetchAllTrips(){
-
-
-        }
-
-        fetchAllTrips();
-
-        async function getBusFromRoute(){
-
-
-
-        }
-        getBusFromRoute();
-
 
     }, []);
+
+    function formatTime(timeString) {
+        const date = new Date(timeString);
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // "0" should be "12"
+
+        const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
+        const formattedTime = hours + ':' + paddedMinutes + ' ' + ampm;
+        
+        return formattedTime;
+    }
      // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
     
-
     return (
 
         <View style={styles.container}>
@@ -78,16 +83,32 @@ export default function RouteInfo({ route }) {
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
                 ref={bottomSheetRef}
             >
-                <FontAwesome6 name="bus-simple" size={20} color={'#' + routeColor} />
+                {/* Not gonna lie, below background color is from chat gpt, 
+                i used it to make the background color slightly more light
+                so that the text is easier to read */}
+                <View style={[styles.busInfoContainer, { backgroundColor: `rgba(${parseInt(routeColor.slice(0,2), 16)},${parseInt(routeColor.slice(2,4), 16)},${parseInt(routeColor.slice(4,6), 16)}, 0.8)` }]}>
+                    <Text style={{ fontSize: 22, color: '#000000', textAlign: 'center' }}>{`${routeShortName} Bus #${busses.AgencyVehicleName}`}</Text>
+                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Last Stop: ${busses.LastStopName} (#${busses.StopCode})`}</Text>
+                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Bus Capacity: ${busses.PercentOfCapacity}%`}</Text>
 
-                <View style={[styles.routeContainer, { color: `#${routeColor}` }]}>
-                    <Text style={styles.routeShortName}>{routeShortName}</Text>
                 </View>
-                <View style={[styles.routeContainer, { color: `#${routeColor}` }]}>
-                    <Text style={styles.routeFullName}>{routeName}</Text>
-                </View>
 
-
+                <FlatList
+                    data={trip}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.flatListItem}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 2, marginRight: 10 }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ marginLeft: 5 }}>
+                                        <Text style={{ fontSize: 15, color: '#' + routeColor, textAlign: 'left', fontWeight: 'bold' }}>{`${item.StopName} (#${item.StopCode})`}</Text>
+                                    </View>
+                                </View>
+                                    <Text style={{ fontSize: 15, color: '#' + routeColor }}>{formatTime(item.CalculatedDepartureTime)}</Text>
+                            </View>
+                        </View>
+                    )}
+                />
             </BottomSheet>
         </View>
     );
@@ -124,25 +145,27 @@ export default function RouteInfo({ route }) {
      * Upcoming Route (2);
      */
 }
-const MapViewMemo = React.memo(Map);
+
 
 const styles = StyleSheet.create({
     container:{
         flex: 1, 
         backgroundColor: 'white'
     },
-    routeContainer: {
+    busInfoContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        height: 100, // Adjust the height as needed
+        height: 70, // Adjust the height as needed
     },
-    routeShortName: {
-        fontSize: 20
+    flatListItem: {
+        width: '100%',
+        paddingLeft:2, 
+        paddingTop:7,
+        paddingRight: 2,
+        paddingBottom:10,
+        marginVertical: 0.02
     },
-    routeFullName: {
-        fontSize: 20,
-       
-    },
-
+  
+  
 });
 // Memoized Map component to avoid unnecessary rerendering.

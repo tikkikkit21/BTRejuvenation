@@ -66,9 +66,6 @@ export default function RoutesList() {
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
     const handleRouteInfoClick = (shortName, fullName, color) => {
-        console.log(shortName); 
-        console.log(fullName);
-        console.log(color);
         navigation.navigate('RouteInfo', {
             routeShortName: shortName,
             routeName: fullName,
@@ -115,7 +112,6 @@ export default function RoutesList() {
                                         and latest trips */}
                                 </TouchableOpacity>
                             </View>
-                            {/* <AntDesign name="right" size={20} color={'#' + item.RouteColor} /> */}
                         </View>
                     )}
                 />

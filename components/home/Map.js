@@ -113,7 +113,7 @@ export default function Map({ navigation }) {
 }
 
 // creates bus icons for each bus in the bus data
-function createMarkers(buses, handleSelect) {
+export function createMarkers(buses, handleSelect) {
     return buses.map(busObj => {
         return (
             <Marker
@@ -125,7 +125,8 @@ function createMarkers(buses, handleSelect) {
                 title={busObj.RouteShortName}
                 description={`Last stop: ${busObj.LastStopName}`}
                 pointerEvents="auto"
-                onSelect={() => { handleSelect(busObj.RouteShortName) }}
+                // For the route tab the handleseelct is not necesary, as we know bus info already
+                onSelect={handleSelect ? () => { handleSelect(busObj.RouteShortName) } : null}
             >
                 <View>
                     <FontAwesome6 name="bus-simple" size={30} color="black" />
@@ -136,7 +137,7 @@ function createMarkers(buses, handleSelect) {
 }
 
 // creates circles for each stop
-function createStops(stops) {
+export function createStops(stops) {
     return stops.map(stopObj =>
         <Marker
             key={stopObj.StopCode}
@@ -156,7 +157,7 @@ function createStops(stops) {
 }
 
 // uses Google Maps API to trace the route between stops (not perfect)
-function createRoute(stops) {
+export function createRoute(stops) {
     const coords = stops.map(stop => {
         return {
             latitude: Number(stop.Latitude),
