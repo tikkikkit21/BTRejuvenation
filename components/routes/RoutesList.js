@@ -34,6 +34,9 @@ export default function RoutesList() {
 
         async function fetchAllRoutes() {
             try {
+                /**
+                 * change to GetCurrentRoutes
+                 */
                 const routeLocal = await getScheduledRoutes();
                 setRoutes(routeLocal);
             } catch (error) {
@@ -51,6 +54,7 @@ export default function RoutesList() {
 
         async function fetchScheduledRoutes() {
             try {
+                
                 const routesLocal = await getScheduledRoutes(stopCode);
                 setRoutes(routesLocal)
             } catch (error) {
@@ -106,11 +110,14 @@ export default function RoutesList() {
                                        
                                     </View>
                                 </View>
-                                <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
-                                    <AntDesign name="right" size={22} />
-                                     {/*Add an onclick to the touchable opcatiy, where it takes you to the new compnent for the busses. Bus information, route information
-                                        and latest trips */}
-                                </TouchableOpacity>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <TouchableOpacity style={{ marginRight: 15 }}>
+                                        <FontAwesome6 name="heart" size={22} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
+                                        <AntDesign name="right" size={22} />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
                     )}

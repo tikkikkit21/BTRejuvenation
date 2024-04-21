@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-import MapView, { MapCallout, Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 
@@ -21,6 +20,7 @@ export default function Map({ navigation }) {
     const [stops, setStops] = useState([]);
     const [route, setRoute] = useState();
     const [isOnCooldown, setIsOnCooldown] = useState(false);
+
     const refreshTimer = useRef(null);
 
     // ask for user location
@@ -182,7 +182,7 @@ export function createRoute(stops, color) {
                 waypoints={mc.slice(1, mc.length - 1)}
                 apikey={process.env.GOOGLE_MAPS_API_KEY}
                 strokeWidth={2}
-                strokeColor={routeColor}
+                strokeColor= {routeColor}
             />
         );
     });
@@ -227,5 +227,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#A40046',
         padding: 15,
         borderRadius: 15
-    }
+    },
 });

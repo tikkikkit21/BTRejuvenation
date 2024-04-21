@@ -29,7 +29,7 @@ import { getNextTrip } from '../../backend/routeController';
 //const MapViewMemo = React.memo(Map);
 //const MapViewMemo = React.memo(Map);
 export default function RouteInfo({ route }) {
-    const { routeShortName, routeName, routeColor } = route.params;
+    let { routeShortName, routeName, routeColor } = route.params;
     const [trip, setTrips] = useState([]);
     const [stops, setStops] = useState([]);
     const [busses, setBusses] = useState([]);
@@ -49,20 +49,18 @@ export default function RouteInfo({ route }) {
 
     useEffect (() => {
         bottomSheetRef.current?.snapToIndex(0);
-        //console.log(navigation.getParam('routeShortName'))
+        /**
+         * HXP glitch because it can have 2 names
+         */
+        if(routeName == "Hokie Express"){
+            routeShortName = "HXP";
+        }
+
+
         async function fetchInfo(){
             const bussesInfo = await getBus(routeShortName);
-            //console.log('Route Short Name:', routeShortName);
-           // console.log('Busses Info:', bussesInfo);
             setBusses(bussesInfo);
-            /**
-             * set busses to an array for mapping
-             */
-            // if(!Array.isArray(busses)){
-
-            //     setBusses([busses]);
-            // }
-
+            
             const stops = await getStops(routeShortName);
             setStops(stops);
 
@@ -74,6 +72,17 @@ export default function RouteInfo({ route }) {
         fetchInfo();
 
     }, []);
+
+    useEffect(() => {
+        if (busses.length > 0) {
+            setMapRegion({
+                latitude: busses.Latitude, 
+                longitude: busses.Longitude, 
+                latitudeDelta: 0.051202637986392574,
+                longitudeDelta: 0.03720943536600885,
+            });
+        }
+    }, [busses]);
 
     function formatTime(timeString) {
         const date = new Date(timeString);
