@@ -1,7 +1,9 @@
 
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
+import MapView, { MapCallout, Marker } from 'react-native-maps';
 import Map, { createMarkers, createRoute, createStops } from '../home/Map';
+import * as Location from 'expo-location';
 import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
 /**
@@ -24,7 +26,7 @@ import { getStops } from '../../backend/stopController';
 import { getBus } from '../../backend/busController';
 import { getNextTrip } from '../../backend/routeController';
 
-const MapViewMemo = React.memo(Map);
+//const MapViewMemo = React.memo(Map);
 //const MapViewMemo = React.memo(Map);
 export default function RouteInfo({ route }) {
     const { routeShortName, routeName, routeColor } = route.params;
@@ -32,6 +34,16 @@ export default function RouteInfo({ route }) {
     const [stops, setStops] = useState([]);
     const [busses, setBusses] = useState([]);
     const [mapRoute, setMapRoute] = useState([]);
+    /**
+     * map state variables below
+     */
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 37.227468937500895,
+        longitude: -80.42357646125542,
+        latitudeDelta: 0.051202637986392574,
+        longitudeDelta: 0.03720943536600885,
+    })
+    Location.requestForegroundPermissionsAsync();
     
     const bottomSheetRef = useRef(null);
 
@@ -43,6 +55,13 @@ export default function RouteInfo({ route }) {
             //console.log('Route Short Name:', routeShortName);
            // console.log('Busses Info:', bussesInfo);
             setBusses(bussesInfo);
+            /**
+             * set busses to an array for mapping
+             */
+            // if(!Array.isArray(busses)){
+
+            //     setBusses([busses]);
+            // }
 
             const stops = await getStops(routeShortName);
             setStops(stops);
@@ -50,9 +69,7 @@ export default function RouteInfo({ route }) {
             const nextTrip = await getNextTrip(routeShortName);
             setTrips(nextTrip);
 
-            createMarkers(busses, null);
-            createStops(stops);
-            setMapRoute(createRoute(stops));
+            setMapRoute(createRoute(stops, routeColor));
         }
         fetchInfo();
 
@@ -64,8 +81,7 @@ export default function RouteInfo({ route }) {
         const minutes = date.getMinutes();
         const ampm = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12;
-        hours = hours ? hours : 12; // "0" should be "12"
-
+        hours = hours ? hours : 12; // 0 == 12 am
         const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
         const formattedTime = hours + ':' + paddedMinutes + ' ' + ampm;
         
@@ -77,7 +93,16 @@ export default function RouteInfo({ route }) {
     return (
 
         <View style={styles.container}>
-          <MapViewMemo />
+           <MapView
+                style={styles.map}
+                region={mapRegion}
+                onRegionChangeComplete={(region) => setMapRegion(region)}
+                showsUserLocation={true}
+            >
+                {createMarkers([busses], null, routeColor)}
+                {createStops(stops, routeColor)}
+                {mapRoute}
+            </MapView>
           <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
@@ -164,6 +189,9 @@ const styles = StyleSheet.create({
         paddingRight: 2,
         paddingBottom:10,
         marginVertical: 0.02
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject,
     },
   
   

@@ -113,7 +113,7 @@ export default function Map({ navigation }) {
 }
 
 // creates bus icons for each bus in the bus data
-export function createMarkers(buses, handleSelect) {
+export function createMarkers(buses, handleSelect, color) {
     return buses.map(busObj => {
         return (
             <Marker
@@ -129,7 +129,7 @@ export function createMarkers(buses, handleSelect) {
                 onSelect={handleSelect ? () => { handleSelect(busObj.RouteShortName) } : null}
             >
                 <View>
-                    <FontAwesome6 name="bus-simple" size={30} color="black" />
+                    <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : 'black'} />
                 </View>
             </Marker>
         )
@@ -137,7 +137,7 @@ export function createMarkers(buses, handleSelect) {
 }
 
 // creates circles for each stop
-export function createStops(stops) {
+export function createStops(stops, color) {
     return stops.map(stopObj =>
         <Marker
             key={stopObj.StopCode}
@@ -150,14 +150,15 @@ export function createStops(stops) {
             pointerEvents="auto"
         >
             <View>
-                <Octicons name="dot-fill" size={30} color="red" />
+                <Octicons name="dot-fill" size={30} color={color ? '#' + color : 'red'} />
             </View>
         </Marker>
     )
 }
 
 // uses Google Maps API to trace the route between stops (not perfect)
-export function createRoute(stops) {
+export function createRoute(stops, color) {
+    const routeColor = color ? '#' + color : '#ff0000';
     const coords = stops.map(stop => {
         return {
             latitude: Number(stop.Latitude),
@@ -181,7 +182,7 @@ export function createRoute(stops) {
                 waypoints={mc.slice(1, mc.length - 1)}
                 apikey={process.env.GOOGLE_MAPS_API_KEY}
                 strokeWidth={2}
-                strokeColor="#ff0000"
+                strokeColor={routeColor}
             />
         );
     });
