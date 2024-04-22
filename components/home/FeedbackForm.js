@@ -48,7 +48,7 @@ export default function FeedbackForm({ route, navigation }) {
                 Toast.show({
                     type: "error",
                     text1: "Invalid QR code was scanned",
-                    position: "bottom"
+                    position: "top"
                 });
             }
         }
