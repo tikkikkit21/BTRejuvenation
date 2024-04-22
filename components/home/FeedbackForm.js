@@ -18,27 +18,20 @@ export default function FeedbackForm({ route, navigation }) {
 
     // Handles when Submit is clicked
     const handleSubmit = () => {
-        // Handle form submission here
-        if (comments !== '' && fullName === '') {
-            alert(`Missing full name!`);
-        } else if (fullName === '') {
-            alert(`Please fill in form first.`);
-        } else {
-            const form = {
-                time: Date.now(),
-                route: routeName,
-                bus_id: busID,
-                name: fullName,
-                rating: sliderValue,
-                comments: comments
-            }
-            submitFeedback(form);
-            Toast.show({
-                type: "success",
-                text1: "Thank you for submitting your feedback!",
-                position: "bottom"
-            });
+        const form = {
+            time: Date.now(),
+            route: routeName,
+            bus_id: busID,
+            name: fullName,
+            rating: sliderValue,
+            comments: comments
         }
+        submitFeedback(form);
+        Toast.show({
+            type: "success",
+            text1: "Thank you for submitting your feedback!",
+            position: "bottom"
+        });
     };
 
     // check if we have any data from QR scanner
