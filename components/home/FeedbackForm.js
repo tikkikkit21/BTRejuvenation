@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { FormTextInput, FormSliderInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
@@ -57,7 +58,7 @@ export default function FeedbackForm({ route, navigation }) {
                 <Text style={styles.title}>Feedback Form</Text>
                 <Text style={styles.question}>Scan QR Code on the Bus</Text>
                 <View style={styles.buttonContainer}>
-                    <Button title="Scan" onPress={() => navigation.navigate("QR Scanner")} />
+                    <MaterialCommunityIcons name="qrcode-scan" size={50} color="black" />
                 </View>
                 <FormTextInput
                     question={"Route Name"}
@@ -108,11 +109,11 @@ const styles = StyleSheet.create({
         paddingTop: 25,
     },
     buttonContainer: {
-        width: 225,
-        height: 50,
         borderWidth: 1, // Add border
         borderRadius: 15, // Add border radius for rounded corners
-        padding: 5, // Add padding for space around the button
+        padding: 10, // Add padding for space around the button
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     submitContainer: {
         width: 225,
