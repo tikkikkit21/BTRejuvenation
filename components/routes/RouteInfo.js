@@ -55,6 +55,9 @@ export default function RouteInfo({ route }) {
         if(routeName == "Hokie Express"){
             routeShortName = "HXP";
         }
+        else if(routeName == "Hethwood"){
+            routeShortName = "HWD";
+        }
 
 
         async function fetchInfo(){

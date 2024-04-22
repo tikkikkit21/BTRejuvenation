@@ -5,9 +5,9 @@ import styles from '../../styles/Route.style';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
-import { getAllStops, getScheduledRoutes } from '../../backend/routeController';
+import { getAllStops, getCurrentRoutes, getScheduledRoutes } from '../../backend/routeController';
 import Map from '../home/Map';
-import { deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
+import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
 
 export default function RoutesList() {
     const [open, setOpen] = useState(false);
@@ -41,7 +41,7 @@ export default function RoutesList() {
                 /**
                  * change to GetCurrentRoutes
                  */
-                const routeLocal = await getScheduledRoutes();
+                const routeLocal = await getCurrentRoutes();
                 setRoutes(routeLocal);
             } catch (error) {
                 console.error('Error fetching stops:', error);
@@ -90,7 +90,7 @@ export default function RoutesList() {
             await deleteFavoriteRoute(route);
             alert(`${route} removed from favorites`);
         } else {
-            await saveFavoriteRoutes(route);
+            await addFavoriteRoute(route);
             alert(`${route} added to favorites`);
 
             favs = await getFavoriteRoutes();
