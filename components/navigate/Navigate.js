@@ -37,6 +37,8 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
             // Reset destinations
             setStartDestination('');
             setEndDestination('');
+            // Resets show more options
+            setShowMoreOptions(false);
         }
     }, [isFocused]);
 
