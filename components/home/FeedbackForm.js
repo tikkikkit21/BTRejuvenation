@@ -13,10 +13,9 @@ export default function FeedbackForm({ route, navigation }) {
     const [busID, setBusID] = useState("");
     // State variable for the route the user took
     const [routeName, setRouteName] = useState('');
-    // State variable for fullName
-    const [fullName, setFullName] = useState('');
-    // State variable for comments
     const [comments, setComments] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [contact, setContact] = useState('');
 
     // Handles when Submit is clicked
     const handleSubmit = () => {
@@ -24,9 +23,10 @@ export default function FeedbackForm({ route, navigation }) {
             time: Date.now(),
             route: routeName,
             bus_id: busID,
-            name: fullName,
             rating: sliderValue,
-            comments: comments
+            comments: comments,
+            name: fullName,
+            contact: contact
         }
         submitFeedback(form);
         Toast.show({
@@ -93,8 +93,8 @@ export default function FeedbackForm({ route, navigation }) {
                 <FormTextInput
                     question="Contact"
                     placeholder="Please provide your email or phone number"
-                    value={comments}
-                    handleChangeText={setComments}
+                    value={contact}
+                    handleChangeText={setContact}
                 />
                 <View style={styles.submitContainer}>
                     <Button title="Submit" onPress={handleSubmit} />
