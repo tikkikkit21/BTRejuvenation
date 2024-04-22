@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { FormTextInput, FormSliderInput } from './FormComponents';
 import { submitFeedback } from '../../backend/feedbackController';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function FeedbackForm({ route, navigation }) {
     // Default Slider value
@@ -58,7 +59,9 @@ export default function FeedbackForm({ route, navigation }) {
                 <Text style={styles.title}>Scan QR Code on the Bus</Text>
                 <Text style={styles.description}>Scan QR Code on the Bus</Text>
                 <View style={styles.buttonContainer}>
-                    <MaterialCommunityIcons name="qrcode-scan" size={75} color="black" />
+                    <TouchableOpacity onPress={() => navigation.navigate("QR Scanner")}>
+                        <MaterialCommunityIcons name="qrcode-scan" size={75} color="black" />
+                    </TouchableOpacity>
                 </View>
                 <Text style={styles.title}>Feedback</Text>
                 <FormTextInput
