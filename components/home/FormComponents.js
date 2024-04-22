@@ -18,11 +18,11 @@ export function FormTextInput({ question, placeholder, value, handleChangeText }
 
 export function FormSliderInput({ question, value, handleSliderChange }) {
     return (
-        <View style={styles.section}>
+        <View style={styles.container}>
             <Text style={styles.question}>{question}</Text>
-            <View style={styles.sliderContainer}>
+            <View style={sliderStyles.sliderContainer}>
                 <Slider
-                    style={styles.slider}
+                    style={sliderStyles.slider}
                     minimumValue={0}
                     maximumValue={10}
                     step={1}
@@ -31,7 +31,7 @@ export function FormSliderInput({ question, value, handleSliderChange }) {
                     minimumTrackTintColor="#00FF00"
                     maximumTrackTintColor="#FF0000"
                 />
-                <Text style={styles.sliderValue}>{value}</Text>
+                <Text style={sliderStyles.sliderValue}>{value}</Text>
             </View>
         </View>
     );
@@ -39,17 +39,9 @@ export function FormSliderInput({ question, value, handleSliderChange }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'flex-start',
-        paddingTop: 25,
-    },
-    section: {
-        justifyContent: 'center',
-        padding: 5,
-        margin: 5,
-        marginTop: 15
+        margin: 10
     },
     question: {
         textAlign: 'left',  // Align questions on left side of screen
@@ -57,11 +49,20 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     answer: {
-        width: 325,
+        margin: 5,
+        width: "95%",
         padding: 5,
         borderColor: '#000',
         borderWidth: 1,
         borderRadius: 5
+    }
+});
+
+const sliderStyles = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+        padding: 5,
+        margin: 10,
     },
     slider: {
         width: 325,

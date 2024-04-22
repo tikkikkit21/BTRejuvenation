@@ -51,50 +51,52 @@ export default function FeedbackForm({ route, navigation }) {
         })
     }, [route]);
 
-    return (<>
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Feedback Form</Text>
-            <Text style={styles.question}>Scan QR Code on the Bus?</Text>
-            <View style={styles.buttonContainer}>
-                <Button title="Scan" onPress={() => navigation.navigate("QR Scanner")} />
+    return (
+        <ScrollView>
+            <View style={styles.container}>
+                <Text style={styles.title}>Feedback Form</Text>
+                <Text style={styles.question}>Scan QR Code on the Bus</Text>
+                <View style={styles.buttonContainer}>
+                    <Button title="Scan" onPress={() => navigation.navigate("QR Scanner")} />
+                </View>
+                <FormTextInput
+                    question={"Route Name"}
+                    placeholder={"What bus route did you take?"}
+                    value={routeName}
+                    handleChangeText={setRouteName}
+                />
+                <FormSliderInput
+                    question="Rate your travel experience"
+                    value={sliderValue}
+                    handleSliderChange={setSliderValue}
+                />
+                <FormTextInput
+                    question="Comments"
+                    placeholder="Enter in any additional comments"
+                    value={comments}
+                    handleChangeText={setComments}
+                />
+                <Text style={styles.title}>Contact Info</Text>
+                <Text style={styles.answer}>Provide your contact info if you'd like to be entered into sweepstakes</Text>
+                <FormTextInput
+                    question={"Full Name"}
+                    placeholder={"Enter your full name"}
+                    value={fullName}
+                    handleChangeText={setFullName}
+                />
+                <FormTextInput
+                    question="Contact"
+                    placeholder="Please provide your email or phone number"
+                    value={comments}
+                    handleChangeText={setComments}
+                />
+                <View style={styles.submitContainer}>
+                    <Button title="Submit" onPress={handleSubmit} />
+                </View>
             </View>
-            <FormTextInput
-                question={"Route Name"}
-                placeholder={"What bus route did you take?"}
-                value={routeName}
-                handleChangeText={setRouteName}
-            />
-            <FormSliderInput
-                question="Rate your travel experience"
-                value={sliderValue}
-                handleSliderChange={setSliderValue}
-            />
-            <FormTextInput
-                question="Comments"
-                placeholder="Enter in any additional comments"
-                value={comments}
-                handleChangeText={setComments}
-            />
-            <Text style={styles.question}>Contact Info</Text>
-            <Text style={styles.answer}>Provide your contact info if you'd like to be entered into sweepstakes</Text>
-            <FormTextInput
-                question={"Full Name"}
-                placeholder={"Enter your full name"}
-                value={fullName}
-                handleChangeText={setFullName}
-            />
-            <FormTextInput
-                question="Contact"
-                placeholder="Please provide your email or phone number"
-                value={comments}
-                handleChangeText={setComments}
-            />
-            <View style={styles.submitContainer}>
-                <Button title="Submit" onPress={handleSubmit} />
-            </View>
+            <Toast />
         </ScrollView>
-        <Toast />
-    </>);
+    );
 }
 
 const styles = StyleSheet.create({
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        marginBottom: 40,
+        margin: 5
     },
     question: {
         textAlign: 'left',  // Align questions on left side of screen
@@ -137,10 +139,7 @@ const styles = StyleSheet.create({
     },
     answer: {
         width: 325,
-        padding: 5,
-        borderColor: '#000',
-        borderWidth: 1,
-        borderRadius: 5
+        padding: 5
     },
     slider: {
         width: 325,
