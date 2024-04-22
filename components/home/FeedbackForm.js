@@ -21,23 +21,32 @@ export default function FeedbackForm({ route, navigation }) {
 
     // Handles when Submit is clicked
     const handleSubmit = () => {
-        const form = {
-            time: Date.now(),
-            route: routeName,
-            bus_id: busID,
-            rating_time: timeRating,
-            rating_clean: cleanRating,
-            rating_overall: overallRating,
-            comments: comments,
-            name: fullName,
-            contact: contact
+        if (routeName === '') {
+            Toast.show({
+                type: "error",
+                text1: "Please provide route name",
+                position: "bottom"
+            });
         }
-        submitFeedback(form);
-        Toast.show({
-            type: "success",
-            text1: "Thank you for submitting your feedback!",
-            position: "bottom"
-        });
+        else {
+            const form = {
+                time: Date.now(),
+                route: routeName,
+                bus_id: busID,
+                rating_time: timeRating,
+                rating_clean: cleanRating,
+                rating_overall: overallRating,
+                comments: comments,
+                name: fullName,
+                contact: contact
+            }
+            submitFeedback(form);
+            Toast.show({
+                type: "success",
+                text1: "Thank you for submitting your feedback!",
+                position: "bottom"
+            });
+        }
     };
 
     // check if we have any data from QR scanner
