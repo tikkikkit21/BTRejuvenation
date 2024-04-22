@@ -86,6 +86,7 @@ export default function RoutesList() {
     async function onHeartPress(route) {
         //const newColor = isFavorite(route) ? 'black' : 'red';
     
+        saveFavoriteRoutes([]);
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
             alert(`${route} removed from favorites`);
@@ -98,7 +99,6 @@ export default function RoutesList() {
             
         }
     
-        //setHeartColor(newColor);
     }
 
 
