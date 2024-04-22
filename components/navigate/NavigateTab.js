@@ -15,19 +15,7 @@ export default function NavigateTab(props) {
         >
             <Stack.Screen name="Navigate">
                 {(navigationProps) => (
-                <Navigate
-                    {...navigationProps}
-                    mapRegion={props.mapRegion}
-                    setMapRegion={props.setMapRegion}
-                    buses={props.buses}
-                    setBuses={props.setBuses}
-                    stops={props.stops}
-                    setStops={props.setStops}
-                    route={props.route}
-                    setRoute={props.setRoute}
-                    isOnCooldown={props.isOnCooldown}
-                    setIsOnCooldown={props.setIsOnCooldown}
-                />
+                    <Navigate {...navigationProps} {...props} />
                 )}
             </Stack.Screen>
         </Stack.Navigator>

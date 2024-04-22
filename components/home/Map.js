@@ -5,7 +5,7 @@ import MapView, { MapCallout, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';

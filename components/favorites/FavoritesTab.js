@@ -15,19 +15,7 @@ export default function FavoritesTab(props) {
         >
             <Stack.Screen name="Favorites">
                 {(favoritesProps) => (
-                <Favorites
-                    {...favoritesProps}
-                    mapRegion={props.mapRegion}
-                    setMapRegion={props.setMapRegion}
-                    buses={props.buses}
-                    setBuses={props.setBuses}
-                    stops={props.stops}
-                    setStops={props.setStops}
-                    route={props.route}
-                    setRoute={props.setRoute}
-                    isOnCooldown={props.isOnCooldown}
-                    setIsOnCooldown={props.setIsOnCooldown}
-                />
+                    <Favorites {...favoritesProps} {...props} />
                 )}
             </Stack.Screen>
         </Stack.Navigator>
