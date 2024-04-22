@@ -55,11 +55,12 @@ export default function FeedbackForm({ route, navigation }) {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Text style={styles.title}>Feedback Form</Text>
-                <Text style={styles.question}>Scan QR Code on the Bus</Text>
+                <Text style={styles.title}>Scan QR Code on the Bus</Text>
+                <Text style={styles.description}>Scan QR Code on the Bus</Text>
                 <View style={styles.buttonContainer}>
-                    <MaterialCommunityIcons name="qrcode-scan" size={50} color="black" />
+                    <MaterialCommunityIcons name="qrcode-scan" size={75} color="black" />
                 </View>
+                <Text style={styles.title}>Feedback</Text>
                 <FormTextInput
                     question={"Route Name"}
                     placeholder={"What bus route did you take?"}
@@ -78,7 +79,7 @@ export default function FeedbackForm({ route, navigation }) {
                     handleChangeText={setComments}
                 />
                 <Text style={styles.title}>Contact Info</Text>
-                <Text style={styles.answer}>Provide your contact info if you'd like to be entered into sweepstakes</Text>
+                <Text style={styles.description}>Provide your contact info if you'd like to be entered into sweepstakes</Text>
                 <FormTextInput
                     question={"Full Name"}
                     placeholder={"Enter your full name"}
@@ -105,7 +106,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'flex-start',
         paddingTop: 25,
     },
     buttonContainer: {
@@ -113,7 +113,8 @@ const styles = StyleSheet.create({
         borderRadius: 15, // Add border radius for rounded corners
         padding: 10, // Add padding for space around the button
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        margin: 10
     },
     submitContainer: {
         width: 225,
@@ -138,9 +139,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 5,
     },
-    answer: {
+    description: {
         width: 325,
-        padding: 5
+        padding: 5,
+        margin: 2,
+        textAlign: 'center'
     },
     slider: {
         width: 325,
