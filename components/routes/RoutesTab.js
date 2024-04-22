@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RoutesList from './RoutesList';
+import RouteInfo from './RouteInfo';
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,7 @@ export default function RoutestTab() {
             initialRouteName="Routes"
         >
             <Stack.Screen name="Routes" component={RoutesList} />
+            <Stack.Screen name="RouteInfo" component={RouteInfo} />
         </Stack.Navigator>
     );
 }
