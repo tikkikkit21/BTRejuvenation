@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         alignItems: 'center',
-        margin: 10
+        margin: 10,
+        width: '80%'
     },
     question: {
         textAlign: 'left',  // Align questions on left side of screen
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     },
     answer: {
         margin: 5,
-        width: "95%",
+        width: '95%',
         padding: 5,
         borderColor: '#000',
         borderWidth: 1,
