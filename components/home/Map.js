@@ -8,6 +8,7 @@ import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
+import { getCurrentRoutes, routeColorMap } from '../../backend/routeController';
 
 export default function Map({ navigation }) {
     const [mapRegion, setMapRegion] = useState({
@@ -19,6 +20,8 @@ export default function Map({ navigation }) {
     const [buses, setBuses] = useState([]);
     const [stops, setStops] = useState([]);
     const [route, setRoute] = useState();
+    const [stopColor, setStopColor] = useState('black');
+    //const [selectedBus, setSelectedBus] = useState(''); might use in future for navigation
     const [isOnCooldown, setIsOnCooldown] = useState(false);
 
     const refreshTimer = useRef(null);
@@ -28,6 +31,14 @@ export default function Map({ navigation }) {
 
     // automatically refresh bus locations every 10s
     useEffect(() => {
+
+        async function populateColorMap(){
+            routes = await getCurrentRoutes();
+            //console.log(routeColorMap);
+        }
+        populateColorMap();
+
+
         loadBuses();
         refreshTimer.current = setInterval(() => {
             loadBuses();
@@ -72,13 +83,17 @@ export default function Map({ navigation }) {
 
     // fetches stop data for a particular bus
     async function handleMarkerSelect(busCode) {
+        //setSelectedBus(busCode);
+        setStopColor(routeColorMap[busCode]);
         const stops = await getStops(busCode);
         setStops(stops);
+        
+        
     }
 
     // redraw route only when stops change
     useEffect(() => {
-        setRoute(createRoute(stops));
+        setRoute(createRoute(stops, stopColor));
     }, [stops]);
 
     return (
@@ -90,7 +105,7 @@ export default function Map({ navigation }) {
                 showsUserLocation={true}
             >
                 {createMarkers(buses, handleMarkerSelect)}
-                {createStops(stops)}
+                {createStops(stops, stopColor)}
                 {route}
             </MapView>
             <View style={styles.refreshButton}>
@@ -129,7 +144,7 @@ export function createMarkers(buses, handleSelect, color) {
                 onSelect={handleSelect ? () => { handleSelect(busObj.RouteShortName) } : null}
             >
                 <View>
-                    <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : 'black'} />
+                    <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : '#'+ routeColorMap[busObj.RouteShortName]} />
                 </View>
             </Marker>
         )

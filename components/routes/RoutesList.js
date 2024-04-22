@@ -7,13 +7,17 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
 import { getAllStops, getScheduledRoutes } from '../../backend/routeController';
 import Map from '../home/Map';
+import { deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
 
 export default function RoutesList() {
     const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
     const [selectedStop, selectStop] = useState("");
-    const [placeHolder, setPlaceholder] = useState("")
+    const [placeHolder, setPlaceholder] = useState("");
+    const [favorites, setFavorites] = useState([]);
+    const [heartColor, setHeartColor] = useState('black');
+
     const navigation = useNavigation();
 
 
@@ -45,7 +49,58 @@ export default function RoutesList() {
         }
 
         fetchAllRoutes()
+
+        async function getFavorites(){
+
+            favs = await getFavoriteRoutes();
+            //console.log(favs)
+
+            setFavorites(favs);
+        }
+        getFavorites();
+
+        
     }, []);
+
+    useEffect(() =>{
+        async function getFavorites(){
+
+            favs = await getFavoriteRoutes();
+            //console.log(favs)
+
+            setFavorites(favs);
+        }
+        getFavorites();
+
+    }, [favorites]);
+
+    function isFavorite(route){
+        //console.log(`is favorite ${favorites}` );
+        if(favorites.includes(route) > 0){
+            setHeartColor('red');
+            return true;
+        }
+        return false;
+    }
+
+    async function onHeartPress(route) {
+        //const newColor = isFavorite(route) ? 'black' : 'red';
+    
+        if (isFavorite(route)) {
+            await deleteFavoriteRoute(route);
+            alert(`${route} removed from favorites`);
+        } else {
+            await saveFavoriteRoutes(route);
+            alert(`${route} added to favorites`);
+
+            favs = await getFavoriteRoutes();
+            setFavorites(favs);
+            
+        }
+    
+        //setHeartColor(newColor);
+    }
+
 
     const handleStopChange = (itemValue) => {
         setPlaceholder(itemValue.label)
@@ -76,6 +131,8 @@ export default function RoutesList() {
             routeColor: color
         });
     };
+
+
     return (
         <View style={styles.container}>
             <MapViewMemo />
@@ -111,8 +168,8 @@ export default function RoutesList() {
                                     </View>
                                 </View>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <TouchableOpacity style={{ marginRight: 15 }}>
-                                        <FontAwesome6 name="heart" size={22} />
+                                    <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(item.RouteShortName)}>
+                                        <FontAwesome6 name="heart" size={22}  style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }}/>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
                                         <AntDesign name="right" size={22} />

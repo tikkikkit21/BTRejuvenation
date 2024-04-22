@@ -4,6 +4,8 @@ import { formatTextProperty } from "./util";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
+export const routeColorMap = {};
+
 /**
  * Gets scheduled routes for a particular stop or every one
  * 
@@ -50,4 +52,29 @@ export async function getNextTrip(route){
     return trip;
 
 }
+
+export async function getCurrentRoutes(){
+    const { data } = await axios.get(`${ROOT}/GetCurrentRoutes`);
+    const json = xml2js(data, { compact: true });
+
+    let routes = json.DocumentElement.CurrentRoutes
+
+    routes = routes.map(route => formatTextProperty(route));
+
+    populateMap(routes);
+
+    return routes;
+    
+    
+}
+
+
+function populateMap(routes){
+
+    routes.forEach(route => {
+        routeColorMap[route.RouteShortName] = route.RouteColor;
+    });
+    
+}
+
 
