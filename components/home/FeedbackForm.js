@@ -64,12 +64,6 @@ export default function FeedbackForm({ route, navigation }) {
                 value={routeName}
                 handleChangeText={setRouteName}
             />
-            <FormTextInput
-                question={"Full Name"}
-                placeholder={"Enter your full name"}
-                value={fullName}
-                handleChangeText={setFullName}
-            />
             <FormSliderInput
                 question="Rate your travel experience"
                 value={sliderValue}
@@ -78,6 +72,20 @@ export default function FeedbackForm({ route, navigation }) {
             <FormTextInput
                 question="Comments"
                 placeholder="Enter in any additional comments"
+                value={comments}
+                handleChangeText={setComments}
+            />
+            <Text style={styles.question}>Contact Info</Text>
+            <Text style={styles.answer}>Provide your contact info if you'd like to be entered into sweepstakes</Text>
+            <FormTextInput
+                question={"Full Name"}
+                placeholder={"Enter your full name"}
+                value={fullName}
+                handleChangeText={setFullName}
+            />
+            <FormTextInput
+                question="Contact"
+                placeholder="Please provide your email or phone number"
                 value={comments}
                 handleChangeText={setComments}
             />
