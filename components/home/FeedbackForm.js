@@ -7,11 +7,13 @@ import { submitFeedback } from '../../backend/feedbackController';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function FeedbackForm({ route, navigation }) {
-    // Default Slider value
-    const [sliderValue, setSliderValue] = useState(5);
+    // State variables for sliders
+    const [timeRating, setTimeRating] = useState(5);
+    const [cleanRating, setCleanRating] = useState(5);
+    const [overallRating, setOverallRating] = useState(5);
     // State variables for behind-the-scenes data
     const [busID, setBusID] = useState("");
-    // State variable for the route the user took
+    // State variables for form
     const [routeName, setRouteName] = useState('');
     const [comments, setComments] = useState('');
     const [fullName, setFullName] = useState('');
@@ -23,7 +25,9 @@ export default function FeedbackForm({ route, navigation }) {
             time: Date.now(),
             route: routeName,
             bus_id: busID,
-            rating: sliderValue,
+            rating_time: timeRating,
+            rating_clean: cleanRating,
+            rating_overall: overallRating,
             comments: comments,
             name: fullName,
             contact: contact
@@ -72,9 +76,19 @@ export default function FeedbackForm({ route, navigation }) {
                     handleChangeText={setRouteName}
                 />
                 <FormSliderInput
-                    question="Rate your travel experience"
-                    value={sliderValue}
-                    handleSliderChange={setSliderValue}
+                    question="Rate the bus' timeliness"
+                    value={timeRating}
+                    handleSliderChange={setTimeRating}
+                />
+                <FormSliderInput
+                    question="Rate the bus' cleanliness and comfort"
+                    value={cleanRating}
+                    handleSliderChange={setCleanRating}
+                />
+                <FormSliderInput
+                    question="Rate your overall travel experience"
+                    value={overallRating}
+                    handleSliderChange={setOverallRating}
                 />
                 <FormTextInput
                     question="Comments"
