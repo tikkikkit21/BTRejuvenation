@@ -11,7 +11,7 @@ import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
 
 function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
-
+    const [stopColor, setStopColor] = useState('black');
     const refreshTimer = useRef(null);
 
     // ask for user location
@@ -20,7 +20,7 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
     // automatically refresh bus locations every 10s
     useEffect(() => {
 
-        async function populateColorMap(){
+        async function populateColorMap() {
             routes = await getScheduledRoutes();
             //console.log(routeColorMap);
         }
@@ -75,8 +75,8 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
         setStopColor(routeColorMap[busCode]);
         const stops = await getStops(busCode);
         setStops(stops);
-        
-        
+
+
     }
 
     // redraw route only when stops change
@@ -132,7 +132,7 @@ export function createMarkers(buses, handleSelect, color) {
                 onSelect={handleSelect ? () => { handleSelect(busObj.RouteShortName) } : null}
             >
                 <View>
-                    <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : '#'+ routeColorMap[busObj.RouteShortName]} />
+                    <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : '#' + routeColorMap[busObj.RouteShortName]} />
                 </View>
             </Marker>
         )
@@ -185,7 +185,7 @@ export function createRoute(stops, color) {
                 waypoints={mc.slice(1, mc.length - 1)}
                 apikey={process.env.GOOGLE_MAPS_API_KEY}
                 strokeWidth={2}
-                strokeColor= {routeColor}
+                strokeColor={routeColor}
             />
         );
     });
