@@ -47,6 +47,7 @@ export async function getFavoriteRoutes() {
 export async function addFavoriteRoute(routeCode) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
+        //console.log(value);
         const favoriteRoutes = value !== null
             ? JSON.parse(value)
             : [];
@@ -69,6 +70,7 @@ export async function addFavoriteRoute(routeCode) {
 export async function deleteFavoriteRoute(routeCode) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
+        
         if (value !== null) {
             let favoriteRoutes = JSON.parse(value);
             favoriteRoutes = favoriteRoutes.filter(route => route !== routeCode);
