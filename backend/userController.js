@@ -239,12 +239,13 @@ export async function getSuggestion(data) {
     // not enough data to predict
     if (records.length < 5) return false;
 
-    // algorithm goes brrrrrrrrrrrr
+    // find all similar records to procided data
     const similarRecords = records.filter(record => {
         record.time = new Date(record.time);
         return getSimilarity(data, record) <= 1.0;
     });
 
+    // record each unique suggested route and their "votes"
     const routes = {};
     similarRecords.forEach(record => {
         if (!routes[record.route]) {
@@ -254,6 +255,7 @@ export async function getSuggestion(data) {
         routes[record.route]++;
     });
 
+    // find most frequent route
     let maxCount = 0;
     let maxRoute = "";
     for (const route in routes) {
@@ -263,9 +265,8 @@ export async function getSuggestion(data) {
         }
     }
 
-    console.log("max", maxCount, maxRoute);
-
-    if ((maxCount * 1.0) / records.length > 0.2) {
+    // if route is suggested by at least 20% of all records, we accept
+    if ((maxCount * 1.0) / records.length >= 0.2) {
         return maxRoute;
     }
 
