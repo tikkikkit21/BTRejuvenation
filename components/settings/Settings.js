@@ -81,7 +81,10 @@ export default function Settings() {
             </View>
             <Text style={styles.header}>Links</Text>
             <View style={styles.section}>
-
+                <Text>Link 1</Text>
+                <Text>Link 2</Text>
+                <Text>Link 3</Text>
+                <Text>Link 4</Text>
             </View>
             <Text style={styles.header}>Feedback</Text>
             <View style={styles.section}>
