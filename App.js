@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useEffect } from 'react';
-=======
-import { React, useState, useMemo } from 'react';
->>>>>>> main
+import React, { useEffect, useState, useMemo } from 'react';
 
 import { Ionicons, FontAwesome5, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
