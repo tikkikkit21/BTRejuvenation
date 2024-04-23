@@ -195,10 +195,13 @@ export async function saveUsageDataRecord(data) {
             throw new TypeError("Data record missing a field, see JSDoc for argument structure");
         }
 
-        const records = await AsyncStorage.getItem(USAGE_DATA_KEY) || [];
+        const storedRecords = await AsyncStorage.getItem(USAGE_DATA_KEY);
+        const records = storedRecords
+            ? JSON.parse(storedRecords)
+            : [];
         records.push(data);
-        await AsyncStorage.setItem(USAGE_DATA_KEY, JSON.stringify(records));
 
+        await AsyncStorage.setItem(USAGE_DATA_KEY, JSON.stringify(records));
         return true;
     } catch (e) {
         console.error(e);
