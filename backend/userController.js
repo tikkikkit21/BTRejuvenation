@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FAVORITE_ROUTES_KEY = "favorite-routes";
 const FAVORITE_STOPS_KEY = "favorite-stops";
-const TRACK_APP_USAGE_KEY = "track-app-usage"
+const TRACK_APP_USAGE_KEY = "track-app-usage";
+const USAGE_DATA_KEY = "usage-data"
 
 /* Favorite routes */
 
@@ -178,4 +179,29 @@ export async function setTrackingPermission(canTrack) {
 export async function getTrackingPermission() {
     const canTrack = await AsyncStorage.getItem(TRACK_APP_USAGE_KEY);
     return canTrack || false;
+}
+
+/**
+ * Save a record of user usage
+ * @param {Object} data data record
+ * @param {string} data.route route the user looked at
+ * @param {{long: Number, lat: Number}} data.coords location of user
+ * @param {Date} data.time time the user checked route
+ * @returns {boolean} whether saving was successful or not
+ */
+export async function saveUsageDataRecord(data) {
+    try {
+        if (!data.time || !data.coords || !data.time) {
+            throw new TypeError("Data record missing a field, see JSDoc for argument structure");
+        }
+
+        const records = await AsyncStorage.getItem(USAGE_DATA_KEY) || [];
+        records.push(data);
+        await AsyncStorage.setItem(USAGE_DATA_KEY, JSON.stringify(records));
+
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
 }
