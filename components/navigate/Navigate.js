@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
+import { getConnectedRoutes } from '../../backend/navigationController';
 
 function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
 
@@ -25,6 +26,9 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
 
     // State to determine when to display more options
     const [showMoreOptions, setShowMoreOptions] = useState(false);
+
+    // State to hold routes navigation data
+    const [routeData, setRouteData] = useState(null);
 
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
@@ -67,6 +71,19 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
     // Event handler for BottomSheet animation
     const handleAnimateBottomSheet = (param) => {
         setBottomSheetIndex(param);
+    };
+
+    // Handles when 'search' button is clicked
+    const handleRouteSearch = async () => {
+        // something
+        try {
+            const result = await getConnectedRoutes(startDestination, endDestination);
+            setRouteData(result);
+            console.log('Results: ', result);
+        } catch (error) {
+            console.log('ERROR Fetching Data:', error);
+            console.log(result);
+        }
     };
     
 
@@ -146,6 +163,16 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                 </View>
               )
               }
+            {/* If destination fields are filled, show Search button */}
+            {startDestination && endDestination && (
+                <TouchableOpacity
+                    style={styles.searchButton}
+                    onPress={handleRouteSearch}
+                    underlayColor='white'
+                >
+                    <Text style={styles.searchText}>Search</Text>
+                </TouchableOpacity>
+            )}
           </BottomSheet>
         </View>
     );
@@ -204,32 +231,49 @@ const styles = StyleSheet.create({
       paddingLeft: 25
   },
   moreButtonText: {
-    color: 'blue',
-    fontSize: 16
+      color: 'blue',
+      fontSize: 16
   },
   whenInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    width: '90%',
-    marginLeft: 20,
-    padding: 10,
-    paddingHorizontal: 10,
-    backgroundColor: '#75787B',
-    color: 'white',
-    marginBottom: 10 // Add margin bottom to create space
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 10,
+      width: '90%',
+      marginLeft: 20,
+      padding: 10,
+      paddingHorizontal: 10,
+      backgroundColor: '#75787B',
+      color: 'white',
+      marginBottom: 10 // Add margin bottom to create space
   },
   priorityInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    width: '90%',
-    marginLeft: 20,
-    padding: 10,
-    paddingHorizontal: 10,
-    backgroundColor: '#75787B',
-    color: 'white',
-    marginBottom: 10 // Add margin bottom to create space
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 10,
+      width: '90%',
+      marginLeft: 20,
+      padding: 10,
+      paddingHorizontal: 10,
+      backgroundColor: '#75787B',
+      color: 'white',
+      marginBottom: 10 // Add margin bottom to create space
+  },
+  searchButton: {
+      marginRight: 20,
+      marginLeft: 20,
+      marginBottom: 10,
+      padding: 10,
+      paddingHorizontal: 10,
+      backgroundColor: '#A40046',
+      borderRadius: 10,
+      borderColor: '#fff'
+  },
+  searchText:{
+      color: '#fff',
+      textAlign: 'center',
+      paddingLeft: 10,
+      paddingRight: 10,
+      fontSize: 16
   }
 });
 
