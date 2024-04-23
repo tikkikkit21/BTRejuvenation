@@ -1,6 +1,6 @@
 import axios from "axios";
 import { xml2js } from "xml-js";
-import { formatTextProperty } from "./util";
+import { formatTextProperty } from "./apiUtil";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
@@ -46,7 +46,7 @@ export async function getAllStops() {
     return stops;
 }
 
-export async function getNextTrip(route){
+export async function getNextTrip(route) {
     trips = 1;
     const { data } = await axios.get(`${ROOT}/GetArrivalAndDepartureTimesForRoutes?routeShortNames=${route}&noOfTrips=${trips}&serviceDate=`);
     const json = xml2js(data, { compact: true });
@@ -57,8 +57,7 @@ export async function getNextTrip(route){
 
 }
 
-
-export async function getCurrentRoutes(){
+export async function getCurrentRoutes() {
     const { data } = await axios.get(`${ROOT}/GetCurrentRoutes`);
     const json = xml2js(data, { compact: true });
 
@@ -67,17 +66,15 @@ export async function getCurrentRoutes(){
     routes = routes.map(route => formatTextProperty(route));
 
     return routes;
-    
-    
+
+
 }
 
 
-function populateMap(routes){
+function populateMap(routes) {
 
     routes.forEach(route => {
         routeColorMap[route.RouteShortName] = route.RouteColor;
     });
-    
+
 }
-
-

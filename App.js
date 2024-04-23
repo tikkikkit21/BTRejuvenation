@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import React, { useEffect } from 'react';
+=======
 import { React, useState, useMemo } from 'react';
+>>>>>>> main
 
 import { Ionicons, FontAwesome5, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,9 +13,25 @@ import FavoritesTab from './components/favorites/FavoritesTab';
 import RoutesTab from './components/routes/RoutesTab';
 import NavigateTab from './components/navigate/NavigateTab';
 
+import { getSuggestedRoute } from './backend/userController';
+
 const Tab = createBottomTabNavigator();
+const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37.22823553939222, long: -80.42348272720925 } };
 
 export default function App() {
+    // fetch suggestion
+    async function fetchSuggestedRoute() {
+        const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
+        console.log("suggestedRoute:", suggestedRoute);
+
+        if (suggestedRoute !== null) {
+            // do something in frontend
+        }
+    }
+
+    useEffect(() => {
+        fetchSuggestedRoute();
+    }, []);
 
     // States for the Map component
     const [mapRegion, setMapRegion] = useState({
@@ -79,51 +99,51 @@ export default function App() {
                 <Tab.Screen name="NavigateTab">
                     {(props) => (
                         <NavigateTab
-                        {...props}
-                        mapRegion={mapRegion}
-                        setMapRegion={setMapRegion}
-                        buses={buses}
-                        setBuses={setBuses}
-                        stops={stops}
-                        setStops={setStops}
-                        route={route}
-                        setRoute={setRoute}
-                        isOnCooldown={isOnCooldown}
-                        setIsOnCooldown={setIsOnCooldown}
+                            {...props}
+                            mapRegion={mapRegion}
+                            setMapRegion={setMapRegion}
+                            buses={buses}
+                            setBuses={setBuses}
+                            stops={stops}
+                            setStops={setStops}
+                            route={route}
+                            setRoute={setRoute}
+                            isOnCooldown={isOnCooldown}
+                            setIsOnCooldown={setIsOnCooldown}
                         />
                     )}
                 </Tab.Screen>
                 <Tab.Screen name="RoutesTab">
                     {(props) => (
                         <RoutesTab
-                        {...props}
-                        mapRegion={mapRegion}
-                        setMapRegion={setMapRegion}
-                        buses={buses}
-                        setBuses={setBuses}
-                        stops={stops}
-                        setStops={setStops}
-                        route={route}
-                        setRoute={setRoute}
-                        isOnCooldown={isOnCooldown}
-                        setIsOnCooldown={setIsOnCooldown}
+                            {...props}
+                            mapRegion={mapRegion}
+                            setMapRegion={setMapRegion}
+                            buses={buses}
+                            setBuses={setBuses}
+                            stops={stops}
+                            setStops={setStops}
+                            route={route}
+                            setRoute={setRoute}
+                            isOnCooldown={isOnCooldown}
+                            setIsOnCooldown={setIsOnCooldown}
                         />
                     )}
                 </Tab.Screen>
                 <Tab.Screen name="FavoritesTab">
                     {(props) => (
                         <FavoritesTab
-                        {...props}
-                        mapRegion={mapRegion}
-                        setMapRegion={setMapRegion}
-                        buses={buses}
-                        setBuses={setBuses}
-                        stops={stops}
-                        setStops={setStops}
-                        route={route}
-                        setRoute={setRoute}
-                        isOnCooldown={isOnCooldown}
-                        setIsOnCooldown={setIsOnCooldown}
+                            {...props}
+                            mapRegion={mapRegion}
+                            setMapRegion={setMapRegion}
+                            buses={buses}
+                            setBuses={setBuses}
+                            stops={stops}
+                            setStops={setStops}
+                            route={route}
+                            setRoute={setRoute}
+                            isOnCooldown={isOnCooldown}
+                            setIsOnCooldown={setIsOnCooldown}
                         />
                     )}
                 </Tab.Screen>
