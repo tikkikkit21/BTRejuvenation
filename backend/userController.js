@@ -5,6 +5,7 @@ const FAVORITE_STOPS_KEY = "favorite-stops";
 const TRACK_APP_USAGE_KEY = "track-app-usage";
 const USAGE_DATA_KEY = "usage-data";
 const DARK_MODE_KEY = "dark-mode";
+const REFRESH_FREQUENCY_KEY = "refresh-frequency";
 
 /* Favorite routes */
 
@@ -328,4 +329,23 @@ export async function getDarkModeSetting() {
     return value
         ? value === "t"
         : false;
+}
+
+/**
+ * Change user's refresh frequency setting
+ * @param {number} frequency refresh frequency in seconds
+ */
+export async function setRefreshFrequencySetting(frequency) {
+    await AsyncStorage.setItem(REFRESH_FREQUENCY_KEY, frequency.toString());
+}
+
+/**
+ * Get user's refresh frequency setting
+ * @returns {number} refresh frequency in seconds
+ */
+export async function getRefreshFrequencySetting() {
+    const value = await AsyncStorage.getItem(REFRESH_FREQUENCY_KEY);
+    return value
+        ? Number(value)
+        : 30;
 }
