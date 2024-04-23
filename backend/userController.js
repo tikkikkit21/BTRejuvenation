@@ -223,9 +223,13 @@ export async function clearUsageData() {
     }
 }
 
-const testData = [
-    { time: new Date(), coords: { lat: 37.228470, long: -80.423059 }, route: "HWA" }
-]
+// const testData = [
+//     { time: new Date("2024-03-16T12:00:00"), coords: { lat: 37.228517, long: -80.423222 }, route: "HWA" },
+//     { time: new Date("2024-03-24T11:56:00"), coords: { lat: 37.228585, long: -80.423029 }, route: "HWA" },
+//     { time: new Date("2024-04-01T12:02:00"), coords: { lat: 37.228382, long: -80.423062 }, route: "HWA" },
+//     { time: new Date("2024-04-13T12:01:00"), coords: { lat: 37.228503, long: -80.422928 }, route: "CRC" },
+//     { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37.228362, long: -80.423100 }, route: "CRC" }
+// ]
 
 /**
  * Get a suggested route given current user behavior
@@ -235,18 +239,28 @@ const testData = [
  * @returns {string} predicted route code (ex: "HWA") or null if none
  */
 export async function getSuggestion(data) {
-    // const records = await AsyncStorage.getItem(USAGE_DATA_KEY) || [];
-    const records = testData
+    const storedRecords = await AsyncStorage.getItem(USAGE_DATA_KEY);
+    const records = storedRecords
+        ? JSON.parse(storedRecords)
+        : [];
 
     // not enough data to predict
-    // if (records.length < 5) return false;
+    if (records.length < 5) return false;
 
     // algorithm goes brrrrrrrrrrrr
+    const similarRecords = records.filter(record => {
+        record.time = new Date(record.time);
+        return getSimilarity(data, record) <= 1.0;
+    });
+
+    console.log("similarRecords:", similarRecords);
+
+
     // const similarCount = getSimilarData(data);
     // const similarPercent = (similarCount * 1.0) / records.length;
-    const testRecord = { time: new Date(), coords: { lat: 37.22823553939222, long: -80.42348272720925 } }
-    print(getSimilarity(testData[0], testRecord))
-    print(getSimilarity(testRecord, testData[0]))
+    // const currRecord = { time: new Date(), coords: { lat: 37.22823553939222, long: -80.42348272720925 } }
+    // print(getSimilarity(testData[0], currRecord))
+    // print(getSimilarity(currRecord, testData[0]))
     // return similarPercent > 0.2;
 }
 
@@ -257,24 +271,30 @@ export async function getSuggestion(data) {
  * @returns {Number} how similar
  */
 function getSimilarity(data1, data2) {
+    // set date to same
+    data1.time.setDate(data2.time.getDate());
+    data1.time.setMonth(data2.time.getMonth());
+    data1.time.setFullYear(data2.time.getFullYear());
+
     // time difference in seconds
     const timeDiff = Math.abs(data1.time.getTime() - data2.time.getTime()) / 1000;
-    console.log("timeDiff:", timeDiff)
+    // console.log("timeDiff:", timeDiff)
 
     // location Euclidean distance
     const eDist = Math.sqrt(
         (data1.coords.lat - data2.coords.lat) ** 2
         + (data1.coords.long - data2.coords.long) ** 2
     );
-    console.log("eDist:", eDist);
+    // console.log("eDist:", eDist);
 
     // time of 1 is half hour, dist of 1 is 150ft away
     const timeNorm = timeDiff / (60 * 30);
     const distNorm = eDist * 2065.0;
-    console.log("timeNorm:", timeNorm)
+    console.log("timeNorm:", timeNorm);
     console.log("distNorm:", distNorm);
 
     // return average of the 2 similarities (assumes both features are equally
     // important)
+    console.log("avg:", (timeNorm + distNorm) / 2.0);
     return (timeNorm + distNorm) / 2.0;
 }
