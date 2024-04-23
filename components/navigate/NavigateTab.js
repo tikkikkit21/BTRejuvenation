@@ -4,7 +4,7 @@ import Navigate from './Navigate';
 
 const Stack = createStackNavigator();
 
-export default function NavigateTab() {
+export default function NavigateTab(props) {
     return (
         <Stack.Navigator
             screenOptions={{
@@ -13,7 +13,11 @@ export default function NavigateTab() {
             }}
             initialRouteName="Navigate"
         >
-            <Stack.Screen name="Navigate" component={Navigate} />
+            <Stack.Screen name="Navigate">
+                {(navigationProps) => (
+                    <Navigate {...navigationProps} {...props} />
+                )}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 }
