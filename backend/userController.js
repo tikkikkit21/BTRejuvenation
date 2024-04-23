@@ -253,15 +253,33 @@ export async function getSuggestion(data) {
         return getSimilarity(data, record) <= 1.0;
     });
 
-    console.log("similarRecords:", similarRecords);
+    // console.log("similarRecords:", similarRecords);
 
+    const routes = {};
+    similarRecords.forEach(record => {
+        if (!routes[record.route]) {
+            routes[record.route] = 0;
+        }
 
-    // const similarCount = getSimilarData(data);
-    // const similarPercent = (similarCount * 1.0) / records.length;
-    // const currRecord = { time: new Date(), coords: { lat: 37.22823553939222, long: -80.42348272720925 } }
-    // print(getSimilarity(testData[0], currRecord))
-    // print(getSimilarity(currRecord, testData[0]))
-    // return similarPercent > 0.2;
+        routes[record.route]++;
+    });
+
+    let maxCount = 0;
+    let maxRoute = "";
+    for (const route in routes) {
+        if (routes[route] > maxCount) {
+            maxCount = routes[route];
+            maxRoute = route;
+        }
+    }
+
+    console.log("max", maxCount, maxRoute);
+
+    if ((maxCount * 1.0) / records.length > 0.2) {
+        return maxRoute;
+    }
+
+    return null;
 }
 
 /**
@@ -290,11 +308,11 @@ function getSimilarity(data1, data2) {
     // time of 1 is half hour, dist of 1 is 150ft away
     const timeNorm = timeDiff / (60 * 30);
     const distNorm = eDist * 2065.0;
-    console.log("timeNorm:", timeNorm);
-    console.log("distNorm:", distNorm);
+    // console.log("timeNorm:", timeNorm);
+    // console.log("distNorm:", distNorm);
 
     // return average of the 2 similarities (assumes both features are equally
     // important)
-    console.log("avg:", (timeNorm + distNorm) / 2.0);
+    // console.log("avg:", (timeNorm + distNorm) / 2.0);
     return (timeNorm + distNorm) / 2.0;
 }
