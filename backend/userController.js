@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const FAVORITE_ROUTES_KEY = "favorite-routes";
 const FAVORITE_STOPS_KEY = "favorite-stops";
 const TRACK_APP_USAGE_KEY = "track-app-usage";
-const USAGE_DATA_KEY = "usage-data"
+const USAGE_DATA_KEY = "usage-data";
+const DARK_MODE_KEY = "dark-mode";
 
 /* Favorite routes */
 
@@ -72,7 +73,7 @@ export async function addFavoriteRoute(routeCode) {
 export async function deleteFavoriteRoute(routeCode) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
-        
+
         if (value !== null) {
             let favoriteRoutes = JSON.parse(value);
             favoriteRoutes = favoriteRoutes.filter(route => route !== routeCode);
@@ -163,6 +164,7 @@ export async function deleteFavoriteStop(stopCode) {
     }
 }
 
+/** AI stuff */
 /**
  * Set whether or not to track user app usage
  * @param {boolean} canTrack user setting whether to track app usage
@@ -303,4 +305,22 @@ function getSimilarity(data1, data2) {
     // return average of the 2 similarities (assumes both features are equally
     // important)
     return (timeNorm + distNorm) / 2.0;
+}
+
+/** User settings */
+/**
+ * Change user's dark mode preference
+ * @param {boolean} mode true for dark mode, false for light mode
+ */
+export async function setDarkMode(mode) {
+    await AsyncStorage.setItem(DARK_MODE_KEY, mode ? "t" : "f");
+}
+
+/**
+ * Get user's dark mode preference
+ * @returns {boolean} tru for dark mode, false for light mode
+ */
+export async function getDarkMode() {
+    const value = await AsyncStorage.getItem(DARK_MODE_KEY);
+    return value === "t"
 }
