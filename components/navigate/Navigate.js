@@ -106,9 +106,10 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                 index={bottomSheetIndex}
                 snapPoints={snapPoints}
                 backgroundStyle={{backgroundColor: '#FFFFFF'}}
-                onChange={handleAnimateBottomSheet}
+                onChange={handleAnimateBottomSheet} // Handles the BottomSheet index when changed
             >
-            <View style={styles.inputContainer}>
+            {/* Displays Start Destination input */}
+            <View style={styles.destinationContainer}>
                 <FontAwesome6 name='location-crosshairs' size={15} color='white'/>
                 <View style={styles.textInputContainer}>
                     <BottomSheetTextInput
@@ -119,12 +120,14 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                     />
                 </View>
             </View>
+            {/* Displays the Swap button */}
             <View style={styles.swapButtonContainer}>
                 <TouchableOpacity onPress={handleSwapDestinations}>
                     <Fontisto name="arrow-swap" size={22} style={styles.swapButton}/>
                 </TouchableOpacity>
             </View>
-            <View style={styles.inputContainer}>
+            {/* Displays End Destination input */}
+            <View style={styles.destinationContainer}>
                 <Entypo name='location' size={15} color='white'/>
                 <View style={styles.textInputContainer}>
                     <BottomSheetTextInput
@@ -135,14 +138,16 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                     />
                 </View>
             </View>
+            {/* Displays the More Options button */}
             <View style={styles.moreButtonContainer}>
                 <TouchableOpacity onPress={handleMoreOptions}>
                     <Text style={styles.moreButtonText}>More Options</Text>
                 </TouchableOpacity>
             </View>
-              {showMoreOptions && (
+              {showMoreOptions && (     // Displays more options if button is clicked
                 <View>
-                    <View style={styles.whenInputContainer}>
+                    {/* Displays the When option */}
+                    <View style={styles.moreOptionsContainer}>
                         <Ionicons name="time-outline" size={15} color='white'/>
                         <View style={styles.textInputContainer}>
                             <BottomSheetTextInput
@@ -151,7 +156,8 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                             />
                         </View>
                     </View>
-                    <View style={styles.priorityInputContainer}>
+                    {/* Displays the Priority option */}
+                    <View style={styles.moreOptionsContainer}>
                         <MaterialCommunityIcons name="priority-high" size={15} color='white'/>
                         <View style={styles.textInputContainer}>
                             <BottomSheetTextInput
@@ -167,7 +173,7 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
             {startDestination && endDestination && (
                 <TouchableOpacity
                     style={styles.searchButton}
-                    onPress={handleRouteSearch}
+                    onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
                     underlayColor='white'
                 >
                     <Text style={styles.searchText}>Search</Text>
@@ -186,12 +192,6 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: 'white'
   },
-  containerHeadline: {
-      fontSize: 20,
-      fontWeight: '600',
-      padding: 20,
-      color: 'white'
-  },
   swapButtonContainer: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   swapButton: {
       transform: [{ rotate: '90deg' }]
   },
-  inputContainer: {
+  destinationContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 10,
@@ -234,19 +234,7 @@ const styles = StyleSheet.create({
       color: 'blue',
       fontSize: 16
   },
-  whenInputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 10,
-      width: '90%',
-      marginLeft: 20,
-      padding: 10,
-      paddingHorizontal: 10,
-      backgroundColor: '#75787B',
-      color: 'white',
-      marginBottom: 10 // Add margin bottom to create space
-  },
-  priorityInputContainer: {
+  moreOptionsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 10,
