@@ -41,38 +41,53 @@ export default function Settings() {
 
     return (
         <View style={styles.container} >
-            <View style={styles.setting}>
-                <Switch
-                    trackColor={{ false: '#fff', true: '#000' }}
-                    thumbColor={'#fff'}
-                    onValueChange={toggleDarkMode}
-                    value={darkMode}
-                    style={styles.switch}
-                />
-                <Text>Toggle Dark Mode</Text>
+            <Text style={styles.header}>General</Text>
+            <View style={styles.section}>
+                <View style={styles.setting}>
+                    <Switch
+                        trackColor={{ false: '#fff', true: '#000' }}
+                        thumbColor={'#fff'}
+                        onValueChange={toggleDarkMode}
+                        value={darkMode}
+                        style={styles.switch}
+                    />
+                    <Text>Toggle Dark Mode</Text>
+                </View>
             </View>
-            <View style={styles.setting}>
-                <Switch
-                    trackColor={{ false: '#fff', true: '#000' }}
-                    thumbColor={'#fff'}
-                    onValueChange={toggleUsageTracking}
-                    value={usageTracking}
-                    style={styles.switch}
-                />
-                <Text>Toggle Usage Tracking*</Text>
+            <Text style={styles.header}>Data Usage</Text>
+            <View style={styles.section}>
+                <View style={styles.setting}>
+                    <Switch
+                        trackColor={{ false: '#fff', true: '#000' }}
+                        thumbColor={'#fff'}
+                        onValueChange={toggleUsageTracking}
+                        value={usageTracking}
+                        style={styles.switch}
+                    />
+                    <Text>Toggle Usage Tracking*</Text>
+                </View>
+                <View>
+                    <Text style={styles.small}>*BT app can track your app usage for smart route suggestions</Text>
+                </View>
+                <Text>Delete saved usage data</Text>
+                <View style={styles.setting}>
+                    <TouchableOpacity onPress={clearUsageData}>
+                        <View style={styles.button}>
+                            <FontAwesome6 name="trash" size={24} color="red" />
+                            <Text>Delete</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View>
-                <Text style={styles.small}>*BT app can track your app usage for smart route suggestions</Text>
+            <Text style={styles.header}>Links</Text>
+            <View style={styles.section}>
+
             </View>
-            <Text>Delete saved usage data</Text>
-            <View style={styles.setting}>
-                <TouchableOpacity onPress={clearUsageData}>
-                    <View style={styles.button}>
-                        <FontAwesome6 name="trash" size={24} color="red" />
-                        <Text>Delete</Text>
-                    </View>
-                </TouchableOpacity>
+            <Text style={styles.header}>Feedback</Text>
+            <View style={styles.section}>
+
             </View>
+
         </View>
     );
 }
@@ -82,6 +97,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         padding: 25
+    },
+    header: {
+        fontSize: 20
+    },
+    section: {
+
     },
     setting: {
         margin: 5,
