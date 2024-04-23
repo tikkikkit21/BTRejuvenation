@@ -185,7 +185,7 @@ export async function getTrackingPermission() {
  * Save a record of user usage
  * @param {Object} data data record
  * @param {string} data.route route the user looked at
- * @param {{long: Number, lat: Number}} data.coords location of user
+ * @param {{lat: Number, long: Number}} data.coords location of user
  * @param {Date} data.time time the user checked route
  * @returns {boolean} whether saving was successful or not
  */
@@ -218,4 +218,60 @@ export async function clearUsageData() {
         console.error(e);
         return false;
     }
+}
+
+const testData = [
+    { time: new Date(), coords: { lat: 37.228470, long: -80.423059 }, route: "HWA" }
+]
+
+/**
+ * Get a suggested route given current user behavior
+ * @param {Object} data data record
+ * @param {{lat: Number, long: Number}} data.coords location of user
+ * @param {Date} data.time time the user checked route
+ * @returns {string} predicted route code (ex: "HWA") or null if none
+ */
+export async function getSuggestion(data) {
+    // const records = await AsyncStorage.getItem(USAGE_DATA_KEY) || [];
+    const records = testData
+
+    // not enough data to predict
+    // if (records.length < 5) return false;
+
+    // algorithm goes brrrrrrrrrrrr
+    // const similarCount = getSimilarData(data);
+    // const similarPercent = (similarCount * 1.0) / records.length;
+    const testRecord = { time: new Date(), coords: { lat: 37.22823553939222, long: -80.42348272720925 } }
+    print(getSimilarity(testData[0], testRecord))
+    print(getSimilarity(testRecord, testData[0]))
+    // return similarPercent > 0.2;
+}
+
+/**
+ * Calculates how similar 2 data records are where 0 is identical, 1 is max
+ * difference to consider the record. The lower the result, the more similar
+ * they are
+ * @returns {Number} how similar
+ */
+function getSimilarity(data1, data2) {
+    // time difference in seconds
+    const timeDiff = Math.abs(data1.time.getTime() - data2.time.getTime()) / 1000;
+    console.log("timeDiff:", timeDiff)
+
+    // location Euclidean distance
+    const eDist = Math.sqrt(
+        (data1.coords.lat - data2.coords.lat) ** 2
+        + (data1.coords.long - data2.coords.long) ** 2
+    );
+    console.log("eDist:", eDist);
+
+    // time of 1 is half hour, dist of 1 is 150ft away
+    const timeNorm = timeDiff / (60 * 30);
+    const distNorm = eDist * 2065.0;
+    console.log("timeNorm:", timeNorm)
+    console.log("distNorm:", distNorm);
+
+    // return average of the 2 similarities (assumes both features are equally
+    // important)
+    return (timeNorm + distNorm) / 2.0;
 }
