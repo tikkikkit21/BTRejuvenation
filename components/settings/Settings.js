@@ -1,9 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Switch } from 'react-native';
+import { getDarkModeSetting, setDarkModeSetting } from '../../backend/userController';
 
 export default function Settings() {
     const [darkMode, setDarkMode] = useState(false);
-    const toggleSwitch = () => setDarkMode(previousState => !previousState);
+
+    // fetch user setting
+    useEffect(() => {
+        async function getUserSetting() {
+            const setting = await getDarkModeSetting();
+            setDarkMode(setting);
+        }
+
+        getUserSetting();
+    }, []);
+
+    // handle switch toggled
+    function toggleSwitch(props) {
+        console.log("props:", props)
+        setDarkMode(!darkMode);
+        setDarkModeSetting(props);
+    }
 
     return (
         <View style={styles.container} >

@@ -312,7 +312,7 @@ function getSimilarity(data1, data2) {
  * Change user's dark mode preference
  * @param {boolean} mode true for dark mode, false for light mode
  */
-export async function setDarkMode(mode) {
+export async function setDarkModeSetting(mode) {
     await AsyncStorage.setItem(DARK_MODE_KEY, mode ? "t" : "f");
 }
 
@@ -320,7 +320,7 @@ export async function setDarkMode(mode) {
  * Get user's dark mode preference
  * @returns {boolean} tru for dark mode, false for light mode
  */
-export async function getDarkMode() {
+export async function getDarkModeSetting() {
     const value = await AsyncStorage.getItem(DARK_MODE_KEY);
     return value === "t"
 }
