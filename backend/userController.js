@@ -164,7 +164,7 @@ export async function deleteFavoriteStop(stopCode) {
  * Set whether or not to track user app usage
  * @param {boolean} canTrack user setting whether to track app usage
  */
-export async function setAppUsageTracking(canTrack) {
+export async function setTrackingPermission(canTrack) {
     if (typeof canTrack !== "boolean") {
         throw new TypeError("canTrack must be a boolean");
     }
@@ -175,7 +175,7 @@ export async function setAppUsageTracking(canTrack) {
  * Get user setting whether to track app usage
  * @returns {boolean} whether or not to track usage
  */
-export async function getAppUsageTracking() {
+export async function getTrackingPermission() {
     const canTrack = await AsyncStorage.getItem(TRACK_APP_USAGE_KEY);
     return canTrack || false;
 }
