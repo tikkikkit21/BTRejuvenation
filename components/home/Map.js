@@ -11,7 +11,7 @@ import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
 
 function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
-    const [stopColor, setStopColor] = useState('black');
+    const [stopColor, setStopColor] = useState();
     const refreshTimer = useRef(null);
 
     // ask for user location
