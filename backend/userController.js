@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FAVORITE_ROUTES_KEY = "favorite-routes";
 const FAVORITE_STOPS_KEY = "favorite-stops";
+const TRACK_APP_USAGE_KEY = "track-app-usage"
 
 /* Favorite routes */
 
@@ -157,4 +158,24 @@ export async function deleteFavoriteStop(stopCode) {
         console.error(error);
         return false;
     }
+}
+
+/**
+ * Set whether or not to track user app usage
+ * @param {boolean} canTrack user setting whether to track app usage
+ */
+export async function setAppUsageTracking(canTrack) {
+    if (typeof canTrack !== "boolean") {
+        throw new TypeError("canTrack must be a boolean");
+    }
+    await AsyncStorage.setItem(TRACK_APP_USAGE_KEY, canTrack);
+}
+
+/**
+ * Get user setting whether to track app usage
+ * @returns {boolean} whether or not to track usage
+ */
+export async function getAppUsageTracking() {
+    const canTrack = await AsyncStorage.getItem(TRACK_APP_USAGE_KEY);
+    return canTrack || false;
 }
