@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Map from './Map';
 import FeedbackForm from './FeedbackForm';
@@ -6,7 +6,7 @@ import QRScanner from './QRScanner';
 
 const Stack = createStackNavigator();
 
-function HomeTab() {
+function HomeTab({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
     return (
         <Stack.Navigator
             screenOptions={{
@@ -15,7 +15,23 @@ function HomeTab() {
             }}
             initialRouteName="Map"
         >
-            <Stack.Screen name="Blacksburg Transit" component={Map} />
+            <Stack.Screen name="Blacksburg Transit">
+                {(props) => (
+                    <Map
+                        {...props}
+                        mapRegion={mapRegion}
+                        setMapRegion={setMapRegion}
+                        buses={buses}
+                        setBuses={setBuses}
+                        stops={stops}
+                        setStops={setStops}
+                        route={route}
+                        setRoute={setRoute}
+                        isOnCooldown={isOnCooldown}
+                        setIsOnCooldown={setIsOnCooldown}
+                    />
+                )}
+            </Stack.Screen>
             <Stack.Screen name="Feedback" component={FeedbackForm} />
             <Stack.Screen name="QR Scanner" component={QRScanner} />
         </Stack.Navigator>

@@ -9,7 +9,7 @@ import { getAllStops, getCurrentRoutes, getScheduledRoutes } from '../../backend
 import Map from '../home/Map';
 import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
 
-export default function RoutesList() {
+function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBusStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
     const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
@@ -138,7 +138,18 @@ export default function RoutesList() {
 
     return (
         <View style={styles.container}>
-            <MapViewMemo />
+            <MapViewMemo 
+                mapRegion={mapRegion}
+                setMapRegion={setMapRegion}
+                buses={buses}
+                setBuses={setBuses}
+                stops={busStops}
+                setStops={setBusStops}
+                route={route}
+                setRoute={setRoute}
+                isOnCooldown={isOnCooldown}
+                setIsOnCooldown={setIsOnCooldown}
+            />
             <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
@@ -189,3 +200,8 @@ export default function RoutesList() {
 
 // Memoized Map component to avoid unnecessary rerendering.
 const MapViewMemo = React.memo(Map);
+
+// Memoize RoutesList component
+const MemoizedRoutesList = React.memo(RoutesList);
+
+export default MemoizedRoutesList;
