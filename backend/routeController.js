@@ -11,6 +11,7 @@ export const routeColorMap = {};
  * 
  * @param {number} stopCode stop code number (1000-2303), empty will return all routes
  * @returns list of bus routes that serve the stop
+ * 
  */
 export async function getScheduledRoutes(stopCode = "") {
     // leaving servicedate as blank because it auto-searches for today's date
@@ -25,8 +26,11 @@ export async function getScheduledRoutes(stopCode = "") {
 
     scheduledStops = scheduledStops.map(stop => formatTextProperty(stop));
 
+    populateMap(scheduledStops);
+
     return scheduledStops;
 }
+
 
 /**
  * Fetches every stop
@@ -60,8 +64,6 @@ export async function getCurrentRoutes() {
     let routes = json.DocumentElement.CurrentRoutes
 
     routes = routes.map(route => formatTextProperty(route));
-
-    populateMap(routes);
 
     return routes;
 

@@ -8,7 +8,7 @@ import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
-import { getCurrentRoutes, routeColorMap } from '../../backend/routeController';
+import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
 
 export default function Map({ navigation }) {
     const [mapRegion, setMapRegion] = useState({
@@ -33,7 +33,7 @@ export default function Map({ navigation }) {
     useEffect(() => {
 
         async function populateColorMap(){
-            routes = await getCurrentRoutes();
+            routes = await getScheduledRoutes();
             //console.log(routeColorMap);
         }
         populateColorMap();
