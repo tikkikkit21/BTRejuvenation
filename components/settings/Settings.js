@@ -71,6 +71,7 @@ export default function Settings() {
             </View>
             <Text style={styles.header}>Data Usage</Text>
             <View style={styles.section}>
+                <Text>BT app can track your app usage for smart route suggestions. Data is only stored locally in your device and can never be access by the BT company</Text>
                 <View style={styles.inlineSetting}>
                     <Switch
                         trackColor={{ false: '#fff', true: '#000' }}
@@ -79,17 +80,13 @@ export default function Settings() {
                         value={usageTracking}
                         style={styles.switch}
                     />
-                    <Text>Toggle Usage Tracking*</Text>
+                    <Text>Enable Usage Tracking</Text>
                 </View>
-                <View>
-                    <Text style={styles.small}>*BT app can track your app usage for smart route suggestions</Text>
-                </View>
-                <Text>Delete saved usage data</Text>
-                <View style={styles.inlineSetting}>
-                    <TouchableOpacity onPress={clearUsageData}>
-                        <View style={styles.button}>
+                <View style={styles.setting}>
+                    <TouchableOpacity style={styles.button} onPress={clearUsageData}>
+                        <View style={styles.buttonLabel}>
                             <FontAwesome6 name="trash" size={24} color="red" />
-                            <Text>Delete</Text>
+                            <Text style={styles.buttonText}>Delete saved usage data</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -125,11 +122,11 @@ const styles = StyleSheet.create({
     },
     setting: {
         margin: 5,
-        padding: 5,
+        margin: 5,
     },
     inlineSetting: {
         margin: 5,
-        padding: 5,
+        margin: 5,
         flexDirection: 'row',
         alignItems: 'center'
     },
@@ -140,12 +137,19 @@ const styles = StyleSheet.create({
         fontSize: 10
     },
     button: {
-        flexDirection: 'row',
-        alignItems: 'center',
         borderColor: "#000",
         borderWidth: 1,
         borderRadius: 15,
         padding: 15,
-        // position: "absolute"
+        width: "auto",
+        margin: 15
+    },
+    buttonText: {
+        marginLeft: 10
+    },
+    buttonLabel: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: "center"
     }
 });
