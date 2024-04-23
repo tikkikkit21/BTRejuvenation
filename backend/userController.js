@@ -230,7 +230,7 @@ export async function clearUsageData() {
  * @param {Date} data.time time the user checked route
  * @returns {string} predicted route code (ex: "HWA") or null if none
  */
-export async function getSuggestion(data) {
+export async function getSuggestedRoute(data) {
     const storedRecords = await AsyncStorage.getItem(USAGE_DATA_KEY);
     const records = storedRecords
         ? JSON.parse(storedRecords)

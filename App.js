@@ -9,7 +9,7 @@ import FavoritesTab from './components/favorites/FavoritesTab';
 import RoutesTab from './components/routes/RoutesTab';
 import NavigateTab from './components/navigate/NavigateTab';
 
-import { getSuggestion } from './backend/userController';
+import { getSuggestedRoute } from './backend/userController';
 
 const Tab = createBottomTabNavigator();
 const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37.22823553939222, long: -80.42348272720925 } };
@@ -17,7 +17,7 @@ const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37
 export default function App() {
     // fetch suggestion
     async function fetchSuggestedRoute() {
-        const suggestedRoute = await getSuggestion(TEST_LOCATION);
+        const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
         console.log("suggestedRoute:", suggestedRoute);
     }
 
