@@ -173,7 +173,7 @@ export async function setTrackingPermission(canTrack) {
     if (typeof canTrack !== "boolean") {
         throw new TypeError("canTrack must be a boolean");
     }
-    await AsyncStorage.setItem(TRACK_APP_USAGE_KEY, canTrack);
+    await AsyncStorage.setItem(TRACK_APP_USAGE_KEY, canTrack ? "t" : "f");
 }
 
 /**
@@ -182,7 +182,9 @@ export async function setTrackingPermission(canTrack) {
  */
 export async function getTrackingPermission() {
     const canTrack = await AsyncStorage.getItem(TRACK_APP_USAGE_KEY);
-    return canTrack || false;
+    return canTrack
+        ? canTrack === "t"
+        : false;
 }
 
 /**
@@ -322,5 +324,7 @@ export async function setDarkModeSetting(mode) {
  */
 export async function getDarkModeSetting() {
     const value = await AsyncStorage.getItem(DARK_MODE_KEY);
-    return value === "t"
+    return value
+        ? value === "t"
+        : false;
 }
