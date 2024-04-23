@@ -205,3 +205,17 @@ export async function saveUsageDataRecord(data) {
         return false;
     }
 }
+
+/**
+ * Clears storage of all data records
+ * @returns {boolean} whether deleting was successful or not
+ */
+export async function clearUsageData() {
+    try {
+        await AsyncStorage.setItem(USAGE_DATA_KEY, JSON.stringify([]));
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
