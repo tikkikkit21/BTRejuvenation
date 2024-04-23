@@ -2,21 +2,31 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../../styles/Route.style';
+import { useNavigation } from '@react-navigation/native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
-import { getAllStops, getScheduledRoutes } from '../../backend/routeController';
+import { getAllStops, getCurrentRoutes, getScheduledRoutes } from '../../backend/routeController';
 import Map from '../home/Map';
+import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
 
 function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBusStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
     const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
     const [selectedStop, selectStop] = useState("");
-    const [placeHolder, setPlaceholder] = useState("")
+    const [placeHolder, setPlaceholder] = useState("");
+    const [favorites, setFavorites] = useState([]);
+    const [heartColor, setHeartColor] = useState('black');
+
+    const navigation = useNavigation();
+
+    //TODO: Create a method that uses the favorites useState to check to see if 
+    //there is a favorite for this user, instead of calling async every time
 
     useEffect(() => {
 
         setPlaceholder("Filter By Route")
+        
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
@@ -31,7 +41,10 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
         async function fetchAllRoutes() {
             try {
-                const routeLocal = await getScheduledRoutes();
+                /**
+                 * change to GetCurrentRoutes
+                 */
+                const routeLocal = await getCurrentRoutes();
                 setRoutes(routeLocal);
             } catch (error) {
                 console.error('Error fetching stops:', error);
@@ -39,7 +52,58 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         }
 
         fetchAllRoutes()
+
+        async function getFavorites(){
+
+            favs = await getFavoriteRoutes();
+            //console.log(favs)
+
+            setFavorites(favs);
+        }
+        getFavorites();
+
+        
     }, []);
+
+    useEffect(() =>{
+        async function getFavorites(){
+
+            favs = await getFavoriteRoutes();
+            //console.log(favs)
+
+            setFavorites(favs);
+        }
+        getFavorites();
+
+    }, [favorites]);
+
+    function isFavorite(route){
+        //console.log(`is favorite ${favorites}` );
+        if(favorites.includes(route) > 0){
+            setHeartColor('red');
+            return true;
+        }
+        return false;
+    }
+
+    async function onHeartPress(route) {
+        //const newColor = isFavorite(route) ? 'black' : 'red';
+    
+       // saveFavoriteRoutes([]);
+        if (isFavorite(route)) {
+            await deleteFavoriteRoute(route);
+            alert(`${route} removed from favorites`);
+        } else {
+            await addFavoriteRoute(route);
+            alert(`${route} added to favorites`);
+
+            favs = await getFavoriteRoutes();
+            setFavorites(favs);
+            
+        }
+    
+    }
+
 
     const handleStopChange = (itemValue) => {
         setPlaceholder(itemValue.label)
@@ -48,6 +112,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
         async function fetchScheduledRoutes() {
             try {
+                
                 const routesLocal = await getScheduledRoutes(stopCode);
                 setRoutes(routesLocal)
             } catch (error) {
@@ -61,6 +126,15 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
+
+    const handleRouteInfoClick = (shortName, fullName, color) => {
+        navigation.navigate('RouteInfo', {
+            routeShortName: shortName,
+            routeName: fullName,
+            routeColor: color
+        });
+    };
+
 
     return (
         <View style={styles.container}>
@@ -104,11 +178,17 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                                     <View style={{ marginLeft: 10 }}>
                                         <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
                                         <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
+                                       
                                     </View>
                                 </View>
-                                <TouchableOpacity>
-                                    <AntDesign name="right" size={20} color={'#' + item.RouteColor} />
-                                </TouchableOpacity>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(item.RouteShortName)}>
+                                        <FontAwesome6 name="heart" size={22}  style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }}/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
+                                        <AntDesign name="right" size={22} />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
                     )}

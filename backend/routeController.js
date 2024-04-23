@@ -4,11 +4,14 @@ import { formatTextProperty } from "./util";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
+export const routeColorMap = {};
+
 /**
  * Gets scheduled routes for a particular stop or every one
  * 
  * @param {number} stopCode stop code number (1000-2303), empty will return all routes
  * @returns list of bus routes that serve the stop
+ * 
  */
 export async function getScheduledRoutes(stopCode = "") {
     // leaving servicedate as blank because it auto-searches for today's date
@@ -23,8 +26,11 @@ export async function getScheduledRoutes(stopCode = "") {
 
     scheduledStops = scheduledStops.map(stop => formatTextProperty(stop));
 
+    populateMap(scheduledStops);
+
     return scheduledStops;
 }
+
 
 /**
  * Fetches every stop
@@ -39,3 +45,39 @@ export async function getAllStops() {
 
     return stops;
 }
+
+export async function getNextTrip(route){
+    trips = 1;
+    const { data } = await axios.get(`${ROOT}/GetArrivalAndDepartureTimesForRoutes?routeShortNames=${route}&noOfTrips=${trips}&serviceDate=`);
+    const json = xml2js(data, { compact: true });
+    let trip = json.DocumentElement.DeparturesForRoute;
+    trip = trip.map(stop => formatTextProperty(stop));
+
+    return trip;
+
+}
+
+
+export async function getCurrentRoutes(){
+    const { data } = await axios.get(`${ROOT}/GetCurrentRoutes`);
+    const json = xml2js(data, { compact: true });
+
+    let routes = json.DocumentElement.CurrentRoutes
+
+    routes = routes.map(route => formatTextProperty(route));
+
+    return routes;
+    
+    
+}
+
+
+function populateMap(routes){
+
+    routes.forEach(route => {
+        routeColorMap[route.RouteShortName] = route.RouteColor;
+    });
+    
+}
+
+

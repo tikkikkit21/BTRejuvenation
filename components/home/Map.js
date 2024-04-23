@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-import MapView, { MapCallout, Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
 import { FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
+import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
 
 function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
-    
+
     const refreshTimer = useRef(null);
 
     // ask for user location
@@ -19,6 +19,14 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
 
     // automatically refresh bus locations every 10s
     useEffect(() => {
+
+        async function populateColorMap(){
+            routes = await getScheduledRoutes();
+            //console.log(routeColorMap);
+        }
+        populateColorMap();
+
+
         loadBuses();
         refreshTimer.current = setInterval(() => {
             loadBuses();
@@ -63,13 +71,17 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
 
     // fetches stop data for a particular bus
     async function handleMarkerSelect(busCode) {
+        //setSelectedBus(busCode);
+        setStopColor(routeColorMap[busCode]);
         const stops = await getStops(busCode);
         setStops(stops);
+        
+        
     }
 
     // redraw route only when stops change
     useEffect(() => {
-        setRoute(createRoute(stops));
+        setRoute(createRoute(stops, stopColor));
     }, [stops]);
 
     return (
@@ -81,7 +93,7 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
                 showsUserLocation={true}
             >
                 {createMarkers(buses, handleMarkerSelect)}
-                {createStops(stops)}
+                {createStops(stops, stopColor)}
                 {route}
             </MapView>
             <View style={styles.refreshButton}>
@@ -104,7 +116,7 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
 }
 
 // creates bus icons for each bus in the bus data
-function createMarkers(buses, handleSelect) {
+export function createMarkers(buses, handleSelect, color) {
     return buses.map(busObj => {
         return (
             <Marker
@@ -116,10 +128,11 @@ function createMarkers(buses, handleSelect) {
                 title={busObj.RouteShortName}
                 description={`Last stop: ${busObj.LastStopName}`}
                 pointerEvents="auto"
-                onSelect={() => { handleSelect(busObj.RouteShortName) }}
+                // For the route tab the handleseelct is not necesary, as we know bus info already
+                onSelect={handleSelect ? () => { handleSelect(busObj.RouteShortName) } : null}
             >
                 <View>
-                    <FontAwesome6 name="bus-simple" size={30} color="black" />
+                    <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : '#'+ routeColorMap[busObj.RouteShortName]} />
                 </View>
             </Marker>
         )
@@ -127,7 +140,7 @@ function createMarkers(buses, handleSelect) {
 }
 
 // creates circles for each stop
-function createStops(stops) {
+export function createStops(stops, color) {
     return stops.map(stopObj =>
         <Marker
             key={stopObj.StopCode}
@@ -140,14 +153,15 @@ function createStops(stops) {
             pointerEvents="auto"
         >
             <View>
-                <Octicons name="dot-fill" size={30} color="red" />
+                <Octicons name="dot-fill" size={30} color={color ? '#' + color : 'red'} />
             </View>
         </Marker>
     )
 }
 
 // uses Google Maps API to trace the route between stops (not perfect)
-function createRoute(stops) {
+export function createRoute(stops, color) {
+    const routeColor = color ? '#' + color : '#ff0000';
     const coords = stops.map(stop => {
         return {
             latitude: Number(stop.Latitude),
@@ -171,7 +185,7 @@ function createRoute(stops) {
                 waypoints={mc.slice(1, mc.length - 1)}
                 apikey={process.env.GOOGLE_MAPS_API_KEY}
                 strokeWidth={2}
-                strokeColor="#ff0000"
+                strokeColor= {routeColor}
             />
         );
     });
@@ -216,7 +230,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#A40046',
         padding: 15,
         borderRadius: 15
-    }
+    },
 });
 
 // Memoize Map component
