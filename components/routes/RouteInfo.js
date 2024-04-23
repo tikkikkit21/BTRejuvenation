@@ -149,38 +149,6 @@ export default function RouteInfo({ route }) {
             </BottomSheet>
         </View>
     );
-
-
-  
-    /**
-     * need a function to plot the route, highlight the route
-     * similar to that of before
-     */
-
-
-    /**
-     * make a useeffect to store the routes trips
-     * 
-     */
-
-    /**
-     * useEffect for bus information:
-     * capacity
-     * color
-     * last stop
-     */
-
-    /**
-     * have a slider for 2 busses
-     * bus 1: information
-     * bus 2: information
-     * 
-     * or a dropdown for which bus info they would like to see
-     * 
-     * Upcoming Route (1):
-     * 
-     * Upcoming Route (2);
-     */
 }
 
 
@@ -192,7 +160,7 @@ const styles = StyleSheet.create({
     busInfoContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        height: 70, // Adjust the height as needed
+        height: 70,
     },
     flatListItem: {
         width: '100%',

@@ -20,10 +20,13 @@ export default function RoutesList() {
 
     const navigation = useNavigation();
 
+    //TODO: Create a method that uses the favorites useState to check to see if 
+    //there is a favorite for this user, instead of calling async every time
 
     useEffect(() => {
 
         setPlaceholder("Filter By Route")
+        
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
@@ -86,7 +89,7 @@ export default function RoutesList() {
     async function onHeartPress(route) {
         //const newColor = isFavorite(route) ? 'black' : 'red';
     
-        saveFavoriteRoutes([]);
+       // saveFavoriteRoutes([]);
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
             alert(`${route} removed from favorites`);
