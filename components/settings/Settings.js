@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Switch } from 'react-native';
-import { getDarkModeSetting, setDarkModeSetting, getTrackingPermission, setTrackingPermission } from '../../backend/userController';
+import { Text, View, StyleSheet, Switch, TouchableOpacity } from 'react-native';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { getDarkModeSetting, setDarkModeSetting, getTrackingPermission, setTrackingPermission, clearUsageData } from '../../backend/userController';
 
 export default function Settings() {
     const [darkMode, setDarkMode] = useState(false);
@@ -63,6 +64,15 @@ export default function Settings() {
             <View>
                 <Text style={styles.small}>*BT app can track your app usage for smart route suggestions</Text>
             </View>
+            <Text>Delete saved usage data</Text>
+            <View style={styles.setting}>
+                <TouchableOpacity onPress={clearUsageData}>
+                    <View style={styles.button}>
+                        <FontAwesome6 name="trash" size={24} color="red" />
+                        <Text>Delete</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -84,5 +94,14 @@ const styles = StyleSheet.create({
     },
     small: {
         fontSize: 10
+    },
+    button: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: "#000",
+        borderWidth: 1,
+        borderRadius: 15,
+        padding: 15,
+        position: "absolute"
     }
 });
