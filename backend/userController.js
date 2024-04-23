@@ -239,7 +239,7 @@ export async function getSuggestion(data) {
     // not enough data to predict
     if (records.length < 5) return false;
 
-    // find all similar records to procided data
+    // find all similar records to provided data
     const similarRecords = records.filter(record => {
         record.time = new Date(record.time);
         return getSimilarity(data, record) <= 1.0;
