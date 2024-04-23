@@ -223,14 +223,6 @@ export async function clearUsageData() {
     }
 }
 
-// const testData = [
-//     { time: new Date("2024-03-16T12:00:00"), coords: { lat: 37.228517, long: -80.423222 }, route: "HWA" },
-//     { time: new Date("2024-03-24T11:56:00"), coords: { lat: 37.228585, long: -80.423029 }, route: "HWA" },
-//     { time: new Date("2024-04-01T12:02:00"), coords: { lat: 37.228382, long: -80.423062 }, route: "HWA" },
-//     { time: new Date("2024-04-13T12:01:00"), coords: { lat: 37.228503, long: -80.422928 }, route: "CRC" },
-//     { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37.228362, long: -80.423100 }, route: "CRC" }
-// ]
-
 /**
  * Get a suggested route given current user behavior
  * @param {Object} data data record
@@ -252,8 +244,6 @@ export async function getSuggestion(data) {
         record.time = new Date(record.time);
         return getSimilarity(data, record) <= 1.0;
     });
-
-    // console.log("similarRecords:", similarRecords);
 
     const routes = {};
     similarRecords.forEach(record => {
@@ -296,23 +286,18 @@ function getSimilarity(data1, data2) {
 
     // time difference in seconds
     const timeDiff = Math.abs(data1.time.getTime() - data2.time.getTime()) / 1000;
-    // console.log("timeDiff:", timeDiff)
 
     // location Euclidean distance
     const eDist = Math.sqrt(
         (data1.coords.lat - data2.coords.lat) ** 2
         + (data1.coords.long - data2.coords.long) ** 2
     );
-    // console.log("eDist:", eDist);
 
     // time of 1 is half hour, dist of 1 is 150ft away
     const timeNorm = timeDiff / (60 * 30);
     const distNorm = eDist * 2065.0;
-    // console.log("timeNorm:", timeNorm);
-    // console.log("distNorm:", distNorm);
 
     // return average of the 2 similarities (assumes both features are equally
     // important)
-    // console.log("avg:", (timeNorm + distNorm) / 2.0);
     return (timeNorm + distNorm) / 2.0;
 }
