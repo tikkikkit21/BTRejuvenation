@@ -49,7 +49,7 @@ export default function Alerts({ navigation, route }) {
 
     const alertViews = alerts.map(alert => {
         return (
-            <TouchableOpacity onPress={() => goToAlert(alert)}>
+            <TouchableOpacity key={alert.AlertID} onPress={() => goToAlert(alert)}>
                 <View style={styles.alertSection}>
                     <View style={styles.alertText}>
                         {iconDict[alert.AlertCausesID] || iconDict[9]}
