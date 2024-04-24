@@ -6,6 +6,9 @@ const GMAPS_ROOT = "https://maps.googleapis.com/maps/api/directions";
 /**
  * Takes an origin and destination and finds connected BT bus routes between the
  * two
+ * 
+ * NOTE: Only supports representing 1 main bus line, not connecting busses.
+ * 
  * @param {string} origin origin address or coordinates in string format
  * @param {*} destination dest address or coordinates in string format
  * @returns an array of trip legs with the following properties:
@@ -20,13 +23,13 @@ export async function getConnectedRoutes(origin, destination) {
     const test = `json?origin=${'Torgersen Hall'}&destination=${'401 Laurence Ln'}&key=${APIKEY}&mode=transit`;
     const { data } = await axios.get(`${GMAPS_ROOT}/${test}`);
 
-    const originalSteps = data.routes[0].legs[0].steps;
+    const tripSteps = data.routes[0].legs[0].steps;
 
-    const totalDuration = getTotalDuration(originalSteps);
-    const totalDistance = getTotalDistance(originalSteps);
-    console.log("Total Distance: ", totalDistance);
+    const totalDuration = getTotalDuration(tripSteps);
+    const totalDistance = getTotalDistance(tripSteps);
+    const mainBusLine = getBusLine(tripSteps);
     
-    return originalSteps.map(step => {
+    return tripSteps.map(step => {
         return {
             points: decodeCoords(step.polyline.points),
             // Check if step has transit_details and line properties before accessing them
@@ -35,7 +38,8 @@ export async function getConnectedRoutes(origin, destination) {
             distance: step.distance,
             instructions: step.html_instructions,
             totalDuration: totalDuration,
-            totalDistance: totalDistance
+            totalDistance: totalDistance,
+            mainBusLine: mainBusLine
         };
     });
 
@@ -152,16 +156,12 @@ function getTotalDistance(legs) {
  * @param {*} leg Contains trip information from origin to end destination.
  * @returns The bus line for the trip.
  */
-function getBusLine(leg) {
-    if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
-        return leg.transit_details.line.short_name;
-    } else if (leg.steps) {
-        // If there are steps, iterate through them to find the transit step
-        for (const step of leg.steps) {
-            if (step.travel_mode === "TRANSIT" && step.transit_details && step.transit_details.line) {
-                return step.transit_details.line.short_name;
-            }
+function getBusLine(legs) {
+    for (const leg of legs) {
+        if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
+            return leg.transit_details.line.short_name;
         }
     }
     return "N/A";
 }
+

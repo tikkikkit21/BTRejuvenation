@@ -5,6 +5,7 @@ import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
 import { getConnectedRoutes } from '../../backend/navigationController';
+import { RouteOption } from './NavigateComponents';
 
 function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
 
@@ -41,6 +42,7 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
             // Reset destinations
             setStartDestination('');
             setEndDestination('');
+            setRouteData(null);
             // Resets show more options
             setShowMoreOptions(false);
         }
@@ -177,16 +179,23 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                 >
                     <Text style={styles.searchText}>Search</Text>
                 </TouchableOpacity>
-                {/*)}*/}
+                {/* )} */}
                 {routeData && (
                     <View>
-                        <View>
-                            <Text>{routeData[0].totalDuration ? routeData[0].totalDuration : "huh"}</Text>
-                        </View>
-                        <View>
-                            <Text>{routeData[0].totalDistance ? routeData[0].totalDistance : "huh"}</Text>
-                        </View>
+                        <RouteOption 
+                            busLine={routeData[0].mainBusLine}
+                            tripDuration={routeData[0].totalDuration}
+                            tripDistance={routeData[0].totalDistance}
+                        />
                     </View>
+                    // <View>
+                    //     <View>
+                    //         <Text>{routeData[0].totalDuration}</Text>
+                    //     </View>
+                    //     <View>
+                    //         <Text>{routeData[0].totalDistance}</Text>
+                    //     </View>
+                    // </View>
                 )}
           </BottomSheet>
         </View>
