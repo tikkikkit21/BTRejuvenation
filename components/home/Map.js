@@ -15,10 +15,8 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
     const [stopColor, setStopColor] = useState();
     const refreshTimer = useRef(null);
     const darkMode = useSelector(state => state.darkMode.isEnabled);
+    console.log("darKmode:", darkMode)
     const [isDarkMode, setIsDarkMode] = useState(darkMode);
-    console.log("map/darkmode", darkMode);
-    console.log("map/isDarkMode", isDarkMode);
-    console.log("view:", isDarkMode ? "dark" : "light")
 
     // ask for user location
     Location.requestForegroundPermissionsAsync();
@@ -26,7 +24,6 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
     // get dark mode setting
     useEffect(() => {
         setIsDarkMode(darkMode);
-        console.log("changing darkmode:", darkMode)
     }, [darkMode]);
 
     // automatically refresh bus locations every 10s

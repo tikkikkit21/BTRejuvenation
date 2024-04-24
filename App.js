@@ -21,7 +21,6 @@ const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37
 export default function App() {
     const dispatch = useDispatch();
     const darkMode = useSelector(state => state.darkMode.isEnabled);
-    console.log("app/darkmode", darkMode);
 
     // fetch suggestion
     useEffect(() => {

@@ -6,15 +6,20 @@ import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommuni
 import { getDarkModeSetting, setDarkModeSetting, getTrackingPermission, setTrackingPermission, clearUsageData, setRefreshFrequencySetting, getRefreshFrequencySetting } from '../../backend/userController';
 import Link from './Link';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { setDarkMode } from '../../store/darkModeReducer';
+
 export default function Settings({ navigation }) {
-    const [darkMode, setDarkMode] = useState(false);
+    const dispatch = useDispatch();
+    const darkModeRedux = useSelector(state => state.darkMode.isEnabled);
+    const [isDarkMode, setIsDarkMode] = useState(darkModeRedux);
     const [usageTracking, setUsageTracking] = useState(false);
     const [refreshFreq, setRefreshFreq] = useState(30);
 
     // fetch user settings from device storage
     useEffect(() => {
         async function getUserSettings() {
-            setDarkMode(await getDarkModeSetting());
+            setIsDarkMode(await getDarkModeSetting());
             setUsageTracking(await getTrackingPermission());
             setRefreshFreq(await getRefreshFrequencySetting());
         }
@@ -24,8 +29,9 @@ export default function Settings({ navigation }) {
 
     // handle dark mode switch toggled
     function toggleDarkMode(props) {
-        setDarkMode(!darkMode);
+        setIsDarkMode(!isDarkMode);
         setDarkModeSetting(props);
+        dispatch(setDarkMode(props));
     }
 
     // handle usage tracking switch toggled
@@ -54,7 +60,7 @@ export default function Settings({ navigation }) {
                             thumbColor={'#fff'}
                             onValueChange={toggleDarkMode}
                             onSlidingComplete={finishSliderChange}
-                            value={darkMode}
+                            value={isDarkMode}
                             style={styles.switch}
                         />
                         <Text>Toggle Dark Mode</Text>

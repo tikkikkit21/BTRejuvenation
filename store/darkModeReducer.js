@@ -9,6 +9,7 @@ const darkModeSlice = createSlice({
     },
     reducers: {
         setDarkMode(state, action) {
+            console.log("state:", state);
             console.log("action:", action);
             state.isEnabled = action.payload
         }
