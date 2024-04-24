@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
+import * as Linking from 'expo-linking';
+
 import { getDarkModeSetting, setDarkModeSetting, getTrackingPermission, setTrackingPermission, clearUsageData, setRefreshFrequencySetting, getRefreshFrequencySetting } from '../../backend/userController';
+import Link from './Link';
 
 export default function Settings() {
     const [darkMode, setDarkMode] = useState(false);
@@ -83,7 +86,10 @@ export default function Settings() {
                     <Text>Enable Usage Tracking</Text>
                 </View>
                 <View style={styles.setting}>
-                    <TouchableOpacity style={styles.button} onPress={clearUsageData}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={clearUsageData}
+                    >
                         <View style={styles.buttonLabel}>
                             <FontAwesome6 name="trash" size={24} color="red" />
                             <Text style={styles.buttonText}>Delete saved usage data</Text>
@@ -91,18 +97,27 @@ export default function Settings() {
                     </TouchableOpacity>
                 </View>
             </View>
-            <Text style={styles.header}>Links</Text>
-            <View style={styles.section}>
-                <Text>Link 1</Text>
-                <Text>Link 2</Text>
-                <Text>Link 3</Text>
-                <Text>Link 4</Text>
-            </View>
             <Text style={styles.header}>Feedback</Text>
             <View style={styles.section}>
 
             </View>
-
+            <View style={styles.section}>
+                <Link
+                    text="Service Calendar"
+                    url="https://ridebt.org/service-calendar"
+                    icon={<FontAwesome name="calendar" size={24} color="#8F2647" />}
+                />
+                <Link
+                    text="BT Access"
+                    url="https://ridebt.org/bt-access/overview"
+                    icon={<FontAwesome5 name="wheelchair" size={24} color="#8F2647" />}
+                />
+                <Link
+                    text="Contact Us"
+                    url="https://ridebt.org/feedback"
+                    icon={<MaterialIcons name="feedback" size={24} color="#8F2647" />}
+                />
+            </View>
         </View>
     );
 }
