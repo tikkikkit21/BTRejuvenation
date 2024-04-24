@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Map from './Map';
+import Alerts from './Alerts';
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,7 @@ function HomeTab() {
             initialRouteName="Map"
         >
             <Stack.Screen name="Blacksburg Transit" component={Map} />
+            <Stack.Screen name="Alerts" component={Alerts} />
         </Stack.Navigator>
     );
 }

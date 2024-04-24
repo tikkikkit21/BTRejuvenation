@@ -100,7 +100,7 @@ export default function Map({ navigation }) {
 
     // handles alert button
     function handleAlertClick() {
-        console.log("alert button clicked");
+        navigation.navigate("Alerts");
     }
 
     // fetches bus data from backend
