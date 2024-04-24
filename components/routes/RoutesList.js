@@ -38,7 +38,6 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                 updatedStops = [["FAVROUTE", "Favorite Routes"], ...updatedStops];
                 updatedStops = [["", "All Routes"], ...updatedStops];
                 setStops(updatedStops);
-                //console.log(stops);
             } catch (error) {
                 console.error('Error fetching stops:', error);
             }
@@ -63,8 +62,6 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         async function getFavorites() {
 
             favs = await getFavoriteRoutes();
-            //console.log(favs)
-
             setFavorites(favs);
         }
         getFavorites();
@@ -76,17 +73,13 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         async function getFavorites() {
 
             favs = await getFavoriteRoutes();
-            //console.log(favs)
-
             setFavorites(favs);
         }
         getFavorites();
-        //console.log(favorites)
 
     }, [favorites]);
 
     function isFavorite(route) {
-        //console.log(`is favorite ${favorites}` );
         if (favorites.includes(route) > 0) {
             setHeartColor('red');
             return true;
@@ -95,9 +88,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     }
 
     async function onHeartPress(route) {
-        //const newColor = isFavorite(route) ? 'black' : 'red';
 
-        // saveFavoriteRoutes([]);
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
             Toast.show({
@@ -106,7 +97,6 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                 position: "top"
 
             });
-            //alert(`${route} removed from favorites`);
         } else {
             await addFavoriteRoute(route);
             Toast.show({
