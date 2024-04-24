@@ -54,16 +54,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     alertSection: {
-        padding: 5,
-        borderColor: "black",
-        borderWidth: 1,
+        paddingVertical: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
     alertText: {
-        borderColor: "red",
-        borderWidth: 1,
         flexDirection: "row",
         alignItems: "center",
         flex: 1
