@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { getAlerts } from '../../backend/alertController';
 import { MaterialCommunityIcons, Foundation, AntDesign } from '@expo/vector-icons';
+import { StackActions } from '@react-navigation/native';
 
 const iconDict = {
     1: <Foundation name="prohibited" size={30} color="black" />,
@@ -15,8 +16,10 @@ const iconDict = {
     9: <MaterialCommunityIcons name="alert" size={30} color="black" />
 }
 
-export default function Alerts() {
+export default function Alerts({ navigation, route }) {
     const [alerts, setAlerts] = useState([]);
+    const [specificAlert, setSpecificAlert] = useState();
+
     useEffect(() => {
         async function fetchAlerts() {
             const alertsData = await getAlerts();
@@ -27,15 +30,37 @@ export default function Alerts() {
         fetchAlerts();
     }, []);
 
+    useEffect(() => {
+        if (route?.params?.alert) {
+            setSpecificAlert(route.params.alert);
+        }
+    }, []);
+
+    function goToAlert(alert) {
+        navigation.dispatch(StackActions.push("Alerts", { alert }))
+    }
+
     const alertViews = alerts.map(alert => {
-        return <View style={styles.alertSection}>
-            <View style={styles.alertText}>
-                {iconDict[alert.AlertCausesID] || iconDict[9]}
-                <Text style={styles.alertTitle}>{alert.AlertTitle}</Text>
-            </View>
-            <AntDesign name="right" />
-        </View>;
+        return (
+            <TouchableOpacity onPress={() => goToAlert(alert)}>
+                <View style={styles.alertSection}>
+                    <View style={styles.alertText}>
+                        {iconDict[alert.AlertCausesID] || iconDict[9]}
+                        <Text style={styles.alertTitle}>{alert.AlertTitle}</Text>
+                    </View>
+                    <AntDesign name="right" />
+                </View>
+            </TouchableOpacity>
+        );
     });
+
+    if (specificAlert) {
+        return (
+            <ScrollView>
+                <Text>Hi</Text>
+            </ScrollView>
+        );
+    }
 
     return (
         <ScrollView>
