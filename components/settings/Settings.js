@@ -8,6 +8,7 @@ import Link from './Link';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { updateDarkMode } from '../../store/darkModeReducer';
+import { updateRefreshFrequency } from '../../store/refreshFrequencyReducer';
 
 export default function Settings({ navigation }) {
     const dispatch = useDispatch();
@@ -47,6 +48,7 @@ export default function Settings({ navigation }) {
 
     function finishSliderChange(freq) {
         setRefreshFrequencySetting(freq);
+        dispatch(updateRefreshFrequency(freq));
     }
 
     return (
@@ -59,7 +61,6 @@ export default function Settings({ navigation }) {
                             trackColor={{ false: '#fff', true: '#000' }}
                             thumbColor={'#fff'}
                             onValueChange={toggleDarkMode}
-                            onSlidingComplete={finishSliderChange}
                             value={isDarkMode}
                             style={styles.switch}
                         />
@@ -70,6 +71,7 @@ export default function Settings({ navigation }) {
                         <Slider
                             style={styles.slider}
                             onValueChange={handleSliderChange}
+                            onSlidingComplete={finishSliderChange}
                             value={refreshFreq}
                             minimumValue={10}
                             maximumValue={30}

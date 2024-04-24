@@ -16,7 +16,7 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
     const refreshTimer = useRef(null);
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const refreshFreq = useSelector(state => state.refreshFrequency.time);
-    console.log("map/refresh:", refreshFreq);
+    console.log("map/refresh:", refreshFreq, new Date());
     const [isDarkMode, setIsDarkMode] = useState(darkMode);
 
     // ask for user location
