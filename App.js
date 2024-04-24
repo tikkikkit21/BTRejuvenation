@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 
-import { Ionicons, FontAwesome5, Foundation } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5, FontAwesome6, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -11,6 +11,7 @@ import HomeTab from './components/home/HomeTab';
 import FavoritesTab from './components/favorites/FavoritesTab';
 import RoutesTab from './components/routes/RoutesTab';
 import NavigateTab from './components/navigate/NavigateTab';
+import SettingsTab from './components/settings/SettingsTab';
 
 import { getSuggestedRoute } from './backend/userController';
 
@@ -64,7 +65,9 @@ export default function App() {
                             case "RoutesTab":
                                 icon = <FontAwesome5 name='route' size={size} color={color} />
                                 break;
-
+                            case "SettingsTab":
+                                icon = <FontAwesome6 name='gear' size={size} color={color} />
+                                break;
                             default:
                                 console.log("Unknown name:", route.name)
                                 break;
@@ -129,7 +132,7 @@ export default function App() {
                         />
                     )}
                 </Tab.Screen>
-                <Tab.Screen name="FavoritesTab">
+                {/* <Tab.Screen name="FavoritesTab">
                     {(props) => (
                         <FavoritesTab
                             {...props}
@@ -145,7 +148,8 @@ export default function App() {
                             setIsOnCooldown={setIsOnCooldown}
                         />
                     )}
-                </Tab.Screen>
+                </Tab.Screen> */}
+                <Tab.Screen name="SettingsTab" component={SettingsTab} />
             </Tab.Navigator>
         </NavigationContainer>
     </Provider>);
@@ -162,6 +166,8 @@ function getTabBarLabel(routeName) {
             return "Navigate";
         case "RoutesTab":
             return "Routes";
+        case "SettingsTab":
+            return "Settings";
         default:
             return routeName;
     }

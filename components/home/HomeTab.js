@@ -1,8 +1,8 @@
 import { React, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Map from './Map';
-import FeedbackForm from './FeedbackForm';
-import QRScanner from './QRScanner';
+import FeedbackForm from '../settings/FeedbackForm';
+import QRScanner from '../settings/QRScanner';
 
 const Stack = createStackNavigator();
 
@@ -32,8 +32,6 @@ function HomeTab({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, ro
                     />
                 )}
             </Stack.Screen>
-            <Stack.Screen name="Feedback" component={FeedbackForm} />
-            <Stack.Screen name="QR Scanner" component={QRScanner} />
         </Stack.Navigator>
     );
 }
