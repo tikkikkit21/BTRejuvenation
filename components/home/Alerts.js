@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { getAlerts } from '../../backend/alertController';
 
 export default function Alerts() {
@@ -22,9 +22,11 @@ export default function Alerts() {
     });
 
     return (
-        <View style={styles.container}>
-            {alertViews}
-        </View>
+        <ScrollView>
+            <View style={styles.container}>
+                {alertViews}
+            </View>
+        </ScrollView>
     );
 }
 
@@ -35,12 +37,15 @@ const styles = StyleSheet.create({
         padding: 25
     },
     alertSection: {
-        margin: 3
+        margin: 3,
+        padding: 5,
+        borderBottomColor: "black",
+        borderWidth: 1,
     },
     alertTitle: {
-        fontSize: 20
+        fontSize: 15
     },
     alertDescription: {
-
+        fontSize: 10
     }
 });
