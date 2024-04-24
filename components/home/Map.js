@@ -9,13 +9,25 @@ import { FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/ve
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
+import { useSelector } from 'react-redux';
 
 function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
     const [stopColor, setStopColor] = useState();
     const refreshTimer = useRef(null);
+    const darkMode = useSelector(state => state.darkMode.isEnabled);
+    const [isDarkMode, setIsDarkMode] = useState(darkMode);
+    console.log("map/darkmode", darkMode);
+    console.log("map/isDarkMode", isDarkMode);
+    console.log("view:", isDarkMode ? "dark" : "light")
 
     // ask for user location
     Location.requestForegroundPermissionsAsync();
+
+    // get dark mode setting
+    useEffect(() => {
+        setIsDarkMode(darkMode);
+        console.log("changing darkmode:", darkMode)
+    }, [darkMode]);
 
     // automatically refresh bus locations every 10s
     useEffect(() => {
@@ -91,6 +103,7 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
                 region={mapRegion}
                 onRegionChangeComplete={(region) => setMapRegion(region)}
                 showsUserLocation={true}
+                userInterfaceStyle={isDarkMode ? "dark" : "light"}
             >
                 {createMarkers(buses, handleMarkerSelect)}
                 {createStops(stops, stopColor)}
