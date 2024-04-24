@@ -1,8 +1,8 @@
 import { React, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Map from './Map';
-import FeedbackForm from './FeedbackForm';
-import QRScanner from './QRScanner';
+import FeedbackForm from '../settings/FeedbackForm';
+import QRScanner from '../settings/QRScanner';
 
 const Stack = createStackNavigator();
 
