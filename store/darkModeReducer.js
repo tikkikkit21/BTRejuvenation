@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getDarkModeSetting } from "../backend/userController";
 
-const darkmodeSlice = createSlice({
+const darkModeSlice = createSlice({
     name: "darkmode",
     initialState: {
         isEnabled: false,
@@ -31,5 +31,5 @@ export const fetchDarkModeSetting = createAsyncThunk('settings/darkMode', async 
     return await getDarkModeSetting();
 });
 
-export const { setDarkMode } = darkmodeSlice.actions;
-export default darkmodeSlice.reducer;
+export const { setDarkMode } = darkModeSlice.actions;
+export default darkModeSlice.reducer;
