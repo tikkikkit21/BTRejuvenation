@@ -4,6 +4,8 @@ import { Ionicons, FontAwesome5, FontAwesome6, Foundation } from '@expo/vector-i
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import { useSelector, useDispatch } from 'react-redux';
+
 import HomeTab from './components/home/HomeTab';
 import FavoritesTab from './components/favorites/FavoritesTab';
 import RoutesTab from './components/routes/RoutesTab';
@@ -11,23 +13,34 @@ import NavigateTab from './components/navigate/NavigateTab';
 import SettingsTab from './components/settings/SettingsTab';
 
 import { getSuggestedRoute } from './backend/userController';
+import { fetchDarkModeSetting } from './store/darkModeReducer';
+import { fetchRefreshFrequencySetting } from './store/refreshFrequencyReducer';
+import { fetchUsageTrackingSetting } from './store/usageTrackingReducer';
 
 const Tab = createBottomTabNavigator();
 const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37.22823553939222, long: -80.42348272720925 } };
 
 export default function App() {
+    const dispatch = useDispatch();
+
     // fetch suggestion
-    async function fetchSuggestedRoute() {
-        const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
-        console.log("suggestedRoute:", suggestedRoute);
-
-        if (suggestedRoute !== null) {
-            // do something in frontend
-        }
-    }
-
     useEffect(() => {
+        async function fetchSuggestedRoute() {
+            const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
+            console.log("suggestedRoute:", suggestedRoute);
+
+            if (suggestedRoute !== null) {
+                // do something in frontend
+            }
+        }
         fetchSuggestedRoute();
+    }, []);
+
+    // load user settings from backend into Redux
+    useEffect(() => {
+        dispatch(fetchDarkModeSetting());
+        dispatch(fetchRefreshFrequencySetting());
+        dispatch(fetchUsageTrackingSetting());
     }, []);
 
     // States for the Map component
