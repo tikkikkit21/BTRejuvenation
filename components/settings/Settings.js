@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Switch, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Switch, TouchableOpacity, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -44,85 +44,87 @@ export default function Settings({ navigation }) {
     }
 
     return (
-        <View style={styles.container} >
-            <Text style={styles.header}>General</Text>
-            <View style={styles.section}>
-                <View style={styles.inlineSetting}>
-                    <Switch
-                        trackColor={{ false: '#fff', true: '#000' }}
-                        thumbColor={'#fff'}
-                        onValueChange={toggleDarkMode}
-                        onSlidingComplete={finishSliderChange}
-                        value={darkMode}
-                        style={styles.switch}
+        <ScrollView>
+            <View style={styles.container} >
+                <Text style={styles.header}>General</Text>
+                <View style={styles.section}>
+                    <View style={styles.inlineSetting}>
+                        <Switch
+                            trackColor={{ false: '#fff', true: '#000' }}
+                            thumbColor={'#fff'}
+                            onValueChange={toggleDarkMode}
+                            onSlidingComplete={finishSliderChange}
+                            value={darkMode}
+                            style={styles.switch}
+                        />
+                        <Text>Toggle Dark Mode</Text>
+                    </View>
+                    <View style={styles.setting}>
+                        <Text>Change bus refresh frequency: {refreshFreq}s</Text>
+                        <Slider
+                            style={styles.slider}
+                            onValueChange={handleSliderChange}
+                            value={refreshFreq}
+                            minimumValue={10}
+                            maximumValue={30}
+                            step={5}
+                            minimumTrackTintColor="#8F2647"
+                        />
+                    </View>
+                </View>
+                <Text style={styles.header}>Data Usage</Text>
+                <View style={styles.section}>
+                    <Text>BT app can track your app usage for smart route suggestions. Data is only stored locally in your device and can never be access by the BT company</Text>
+                    <View style={styles.inlineSetting}>
+                        <Switch
+                            trackColor={{ false: '#fff', true: '#000' }}
+                            thumbColor={'#fff'}
+                            onValueChange={toggleUsageTracking}
+                            value={usageTracking}
+                            style={styles.switch}
+                        />
+                        <Text>Enable Usage Tracking</Text>
+                    </View>
+                    <View style={styles.setting}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={clearUsageData}
+                        >
+                            <View style={styles.buttonLabel}>
+                                <FontAwesome6 name="trash" size={24} color="red" />
+                                <Text style={styles.buttonText}>Delete saved usage data</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <Text style={styles.header}>Feedback</Text>
+                <View style={styles.section}>
+                    <View style={styles.setting}>
+                        <Text>Scan QR code on bus to access feedback form</Text>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("QR Scanner")}>
+                            <MaterialCommunityIcons name="qrcode-scan" size={75} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={styles.section}>
+                    <Link
+                        text="Service Calendar"
+                        url="https://ridebt.org/service-calendar"
+                        icon={<FontAwesome name="calendar" size={24} color="#8F2647" />}
                     />
-                    <Text>Toggle Dark Mode</Text>
-                </View>
-                <View style={styles.setting}>
-                    <Text>Change bus refresh frequency: {refreshFreq}s</Text>
-                    <Slider
-                        style={styles.slider}
-                        onValueChange={handleSliderChange}
-                        value={refreshFreq}
-                        minimumValue={10}
-                        maximumValue={30}
-                        step={5}
-                        minimumTrackTintColor="#8F2647"
+                    <Link
+                        text="BT Access"
+                        url="https://ridebt.org/bt-access/overview"
+                        icon={<FontAwesome5 name="wheelchair" size={24} color="#8F2647" />}
+                    />
+                    <Link
+                        text="Contact Us"
+                        url="https://ridebt.org/feedback"
+                        icon={<MaterialIcons name="feedback" size={24} color="#8F2647" />}
                     />
                 </View>
             </View>
-            <Text style={styles.header}>Data Usage</Text>
-            <View style={styles.section}>
-                <Text>BT app can track your app usage for smart route suggestions. Data is only stored locally in your device and can never be access by the BT company</Text>
-                <View style={styles.inlineSetting}>
-                    <Switch
-                        trackColor={{ false: '#fff', true: '#000' }}
-                        thumbColor={'#fff'}
-                        onValueChange={toggleUsageTracking}
-                        value={usageTracking}
-                        style={styles.switch}
-                    />
-                    <Text>Enable Usage Tracking</Text>
-                </View>
-                <View style={styles.setting}>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={clearUsageData}
-                    >
-                        <View style={styles.buttonLabel}>
-                            <FontAwesome6 name="trash" size={24} color="red" />
-                            <Text style={styles.buttonText}>Delete saved usage data</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <Text style={styles.header}>Feedback</Text>
-            <View style={styles.section}>
-                <View style={styles.setting}>
-                    <Text>Scan QR code on bus to access feedback form</Text>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("QR Scanner")}>
-                        <MaterialCommunityIcons name="qrcode-scan" size={75} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.section}>
-                <Link
-                    text="Service Calendar"
-                    url="https://ridebt.org/service-calendar"
-                    icon={<FontAwesome name="calendar" size={24} color="#8F2647" />}
-                />
-                <Link
-                    text="BT Access"
-                    url="https://ridebt.org/bt-access/overview"
-                    icon={<FontAwesome5 name="wheelchair" size={24} color="#8F2647" />}
-                />
-                <Link
-                    text="Contact Us"
-                    url="https://ridebt.org/feedback"
-                    icon={<MaterialIcons name="feedback" size={24} color="#8F2647" />}
-                />
-            </View>
-        </View>
+        </ScrollView>
     );
 }
 
