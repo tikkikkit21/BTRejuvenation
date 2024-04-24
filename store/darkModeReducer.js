@@ -4,30 +4,30 @@ import { getDarkModeSetting } from "../backend/userController";
 const darkmodeSlice = createSlice({
     name: "darkmode",
     initialState: {
-        darkmode: false,
+        isEnabled: false,
         loading: false
     },
     reducers: {
         setDarkMode(state, action) {
             console.log("action:", action);
-            state.darkmode = action.payload
+            state.isEnabled = action.payload
         }
     },
     extraReducers: builder => {
-        builder.addCase(getSetting.pending, state => {
+        builder.addCase(fetchDarkModeSetting.pending, state => {
             state.loading = true
         });
-        builder.addCase(getSetting.fulfilled, (state, action) => {
-            state.users = action.payload
+        builder.addCase(fetchDarkModeSetting.fulfilled, (state, action) => {
+            state.isEnabled = action.payload
             state.loading = false
         });
-        builder.addCase(getSetting.rejected, state => {
+        builder.addCase(fetchDarkModeSetting.rejected, state => {
             state.loading = false
         });
     }
 });
 
-const getSetting = createAsyncThunk('settings/darkMode', async () => {
+export const fetchDarkModeSetting = createAsyncThunk('settings/darkMode', async () => {
     return await getDarkModeSetting();
 });
 
