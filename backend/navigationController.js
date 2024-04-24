@@ -20,24 +20,22 @@ export async function getConnectedRoutes(origin, destination) {
     const test = `json?origin=${'Torgersen Hall'}&destination=${'401 Laurence Ln'}&key=${APIKEY}&mode=transit`;
     const { data } = await axios.get(`${GMAPS_ROOT}/${test}`);
 
-    const transitSteps = data.routes[0].legs[0].steps
-        .filter(step => step.travel_mode === "TRANSIT")
-        .filter(step => step.transit_details.line.agencies[0].name === "Blacksburg Transit");
-
     const originalSteps = data.routes[0].legs[0].steps;
 
     const totalDuration = getTotalDuration(originalSteps);
-    console.log("Total: ", totalDuration);
+    const totalDistance = getTotalDistance(originalSteps);
+    console.log("Total Distance: ", totalDistance);
     
     return originalSteps.map(step => {
         return {
-            polyline: decodeCoords(step.polyline),
+            points: decodeCoords(step.polyline.points),
             // Check if step has transit_details and line properties before accessing them
             routeName: step.transit_details && step.transit_details.line ? step.transit_details.line.short_name : null,
             duration: step.duration ? step.duration.text : null,
             distance: step.distance,
             instructions: step.html_instructions,
-            totalDuration: totalDuration
+            totalDuration: totalDuration,
+            totalDistance: totalDistance
         };
     });
 
@@ -112,6 +110,38 @@ function getTotalDuration(legs) {
     }
 
     return formattedDuration.trim();
+}
+
+/**
+ * Function to calculate total distance in trip.
+ * 
+ * @param {*} legs Contains trip information from origin to end destination.
+ * @returns Total distance of trip.
+ */
+function getTotalDistance(legs) {
+    let totalDistanceMiles = 0;
+
+    if (legs && Array.isArray(legs)) {
+        legs.forEach(leg => {
+            if (leg.distance && leg.distance.text) {
+                // Extract the numeric distance value from the text
+                const numericDistance = parseFloat(leg.distance.text.replace(/[^\d.]/g, ''));
+                // Determine the unit of the distance
+                const distanceUnit = leg.distance.text.includes('mi') ? 'miles' : 'feet';
+                // Convert feet to miles if necessary
+                const distanceInMiles = distanceUnit === 'miles' ? numericDistance : numericDistance / 5280;
+                // Add the distance in miles to the total
+                totalDistanceMiles += distanceInMiles;
+            } else {
+                console.error("Distance text not found in the leg object:", leg);
+            }
+        });
+    } else {
+        console.error("Invalid legs data:", legs);
+    }
+
+    // Return the total distance in miles
+    return totalDistanceMiles.toFixed(2) + ' miles';
 }
 
 /**

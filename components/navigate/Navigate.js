@@ -184,7 +184,7 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                             <Text>{routeData[0].totalDuration ? routeData[0].totalDuration : "huh"}</Text>
                         </View>
                         <View>
-                            <Text>{routeData[0].distance.text ? routeData[0].distance.text : "huh"}</Text>
+                            <Text>{routeData[0].totalDistance ? routeData[0].totalDistance : "huh"}</Text>
                         </View>
                     </View>
                 )}
