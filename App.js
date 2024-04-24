@@ -4,6 +4,9 @@ import { Ionicons, FontAwesome5, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import store from './store/store';
+import { Provider } from 'react-redux';
+
 import HomeTab from './components/home/HomeTab';
 import FavoritesTab from './components/favorites/FavoritesTab';
 import RoutesTab from './components/routes/RoutesTab';
@@ -41,7 +44,7 @@ export default function App() {
     const [route, setRoute] = useState();
     const [isOnCooldown, setIsOnCooldown] = useState(false);
 
-    return (
+    return (<Provider store={store}>
         <NavigationContainer>
             <Tab.Navigator
                 screenOptions={({ route }) => ({
@@ -145,7 +148,7 @@ export default function App() {
                 </Tab.Screen>
             </Tab.Navigator>
         </NavigationContainer>
-    );
+    </Provider>);
 }
 
 // Function to get custom tab label based on screen name
