@@ -13,9 +13,10 @@ import { updateRefreshFrequency } from '../../store/refreshFrequencyReducer';
 export default function Settings({ navigation }) {
     const dispatch = useDispatch();
     const darkModeRedux = useSelector(state => state.darkMode.isEnabled);
+    const refreshFreqRedux = useSelector(state => state.refreshFrequency.time);
     const [isDarkMode, setIsDarkMode] = useState(darkModeRedux);
     const [usageTracking, setUsageTracking] = useState(false);
-    const [refreshFreq, setRefreshFreq] = useState(30);
+    const [refreshFreq, setRefreshFreq] = useState(refreshFreqRedux);
 
     // fetch user settings from device storage
     useEffect(() => {
