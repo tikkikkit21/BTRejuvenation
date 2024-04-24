@@ -57,7 +57,10 @@ export default function Alerts({ navigation, route }) {
     if (specificAlert) {
         return (
             <View style={alertStyles.container}>
-                <Text style={alertStyles.alertTitle}>{specificAlert.AlertTitle}</Text>
+                <View style={alertStyles.header}>
+                    <Text style={alertStyles.alertTitle}>{specificAlert.AlertTitle}</Text>
+                    {iconDict[alert.AlertCausesID] || iconDict[9]}
+                </View>
                 <Text style={alertStyles.alertDescription}>{specificAlert.AlertMessage}</Text>
                 {specificAlert.AffectedRoutesTripsStops &&
                     <Text style={styles.alertAffected}>Affected Routes/Stops: {specificAlert.AffectedRoutesTripsStops}</Text>
@@ -106,14 +109,19 @@ const alertStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
+    },
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 5,
+        justifyContent: "space-between"
     },
     alertTitle: {
-        fontSize: 25,
-        paddingVertical: 5
+        fontSize: 25
     },
     alertDescription: {
-        paddingVertical: 20,
-        fontSize: 15
+        paddingVertical: 10,
+        fontSize: 17
     }
 });
