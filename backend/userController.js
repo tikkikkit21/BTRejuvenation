@@ -242,7 +242,6 @@ export async function getSuggestedRoute(data) {
     const records = storedRecords
         ? JSON.parse(storedRecords)
         : [];
-    console.log("records:", records);
 
     // not enough data to predict
     if (records.length < 5) return false;
