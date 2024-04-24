@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../../styles/Route.style';
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
 import { getAllStops, getCurrentRoutes, getScheduledRoutes, getRoutesByCode } from '../../backend/routeController';
@@ -96,10 +97,21 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
        // saveFavoriteRoutes([]);
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
-            alert(`${route} removed from favorites`);
+            Toast.show({
+                type: "success",
+                text1: `${route} removed from favorites`,
+                position: "top"
+
+            });
+            //alert(`${route} removed from favorites`);
         } else {
             await addFavoriteRoute(route);
-            alert(`${route} added to favorites`);
+            Toast.show({
+                type: "success",
+                text1: `${route} added to favorites`,
+                position: "top"
+
+            });
 
             favs = await getFavoriteRoutes();
             setFavorites(favs);
@@ -123,7 +135,12 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
             async function fetchRoutesByCode(){
                 const routesLocal = await getRoutesByCode(favorites);
                 if(routesLocal.length == 0){
-                    alert(`No favorite routes. Press the heart to add a favorite.`);
+                    Toast.show({
+                        type: "success",
+                        text1: `No favorite routes`,
+                        position: "top"
+        
+                    });
 
                 }
                 setRoutes(routesLocal);
@@ -172,6 +189,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                 isOnCooldown={isOnCooldown}
                 setIsOnCooldown={setIsOnCooldown}
             />
+            <Toast />
             <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
@@ -191,6 +209,8 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                     open={open}
                     setOpen={setOpen}
                 />
+                
+
                 <FlatList
                     data={routes}
                     keyExtractor={(item, index) => index.toString()}
@@ -215,6 +235,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                                         </TouchableOpacity>
                                     </View>
                                 </View>
+                                
                             </TouchableOpacity>
                         </View>
                     )}
