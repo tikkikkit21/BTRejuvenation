@@ -3,9 +3,10 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../../styles/Route.style';
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
-import { getAllStops, getCurrentRoutes, getScheduledRoutes } from '../../backend/routeController';
+import { getAllStops, getCurrentRoutes, getScheduledRoutes, getRoutesByCode } from '../../backend/routeController';
 import Map from '../home/Map';
 import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
 import { saveUsageDataRecord } from '../../backend/userController';
@@ -33,9 +34,10 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
-                const updatedStops = [["Stop Number", "All Routes"], ...stopLocal];
+                let updatedStops = [["FAVSTOP", "Favorite Stops"], ...stopLocal];
+                updatedStops = [["FAVROUTE", "Favorite Routes"], ...updatedStops];
+                updatedStops = [["", "All Routes"], ...updatedStops];
                 setStops(updatedStops);
-                //console.log(stops);
             } catch (error) {
                 console.error('Error fetching stops:', error);
             }
@@ -60,8 +62,6 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         async function getFavorites() {
 
             favs = await getFavoriteRoutes();
-            //console.log(favs)
-
             setFavorites(favs);
         }
         getFavorites();
@@ -73,8 +73,6 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         async function getFavorites() {
 
             favs = await getFavoriteRoutes();
-            //console.log(favs)
-
             setFavorites(favs);
         }
         getFavorites();
@@ -82,7 +80,6 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     }, [favorites]);
 
     function isFavorite(route) {
-        //console.log(`is favorite ${favorites}` );
         if (favorites.includes(route) > 0) {
             setHeartColor('red');
             return true;
@@ -91,15 +88,23 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     }
 
     async function onHeartPress(route) {
-        //const newColor = isFavorite(route) ? 'black' : 'red';
 
-        // saveFavoriteRoutes([]);
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
-            alert(`${route} removed from favorites`);
+            Toast.show({
+                type: "success",
+                text1: `${route} removed from favorites`,
+                position: "top"
+
+            });
         } else {
             await addFavoriteRoute(route);
-            alert(`${route} added to favorites`);
+            Toast.show({
+                type: "success",
+                text1: `${route} added to favorites`,
+                position: "top"
+
+            });
 
             favs = await getFavoriteRoutes();
             setFavorites(favs);
@@ -114,17 +119,40 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         selectStop(itemValue);
         stopCode = itemValue.value
 
-        async function fetchScheduledRoutes() {
-            try {
+        if(stopCode == "FAVSTOP"){
+            //navigate to stop component
 
-                const routesLocal = await getScheduledRoutes(stopCode);
-                setRoutes(routesLocal)
-            } catch (error) {
-                console.error('Error fetching stops:', error);
-            }
+            console.log("fav stop")
         }
+        else if (stopCode == "FAVROUTE"){
+            async function fetchRoutesByCode(){
+                const routesLocal = await getRoutesByCode(favorites);
+                if(routesLocal.length == 0){
+                    Toast.show({
+                        type: "success",
+                        text1: `No favorite routes`,
+                        position: "top"
+        
+                    });
 
-        fetchScheduledRoutes();
+                }
+                setRoutes(routesLocal);
+            }
+            fetchRoutesByCode();
+        }
+        else{
+            async function fetchScheduledRoutes() {
+                try {
+                    
+                    const routesLocal = await getScheduledRoutes(stopCode);
+                    setRoutes(routesLocal)
+                } catch (error) {
+                    console.error('Error fetching stops:', error);
+                }
+            }
+    
+            fetchScheduledRoutes();
+        }
 
     };
 
@@ -167,13 +195,13 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                 isOnCooldown={isOnCooldown}
                 setIsOnCooldown={setIsOnCooldown}
             />
+            <Toast />
             <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
                 <DropDownPicker
-                    items={stops.map((stop, index) => ({
-                        label: index === 0 ? stop[1] : `${stop[1]} (#${stop[0]})`,
+                    items={stops.map((stop, index) => ({label: index < 3 ? stop[1] : `${stop[1]} (#${stop[0]})`,
                         value: stop[0]
                     }))}
                     defaultValue={selectedStop}
@@ -187,6 +215,8 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                     open={open}
                     setOpen={setOpen}
                 />
+                
+
                 <FlatList
                     data={routes}
                     keyExtractor={(item, index) => index.toString()}
@@ -211,6 +241,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                                         </TouchableOpacity>
                                     </View>
                                 </View>
+                                
                             </TouchableOpacity>
                         </View>
                     )}
