@@ -40,6 +40,13 @@ export default function Alerts({ navigation, route }) {
         navigation.dispatch(StackActions.push("Alerts", { alert }))
     }
 
+    function processList(listString) {
+        const items = listString.split(",");
+        const newline = "\n • "
+
+        return newline + items.join(newline);
+    }
+
     const alertViews = alerts.map(alert => {
         return (
             <TouchableOpacity onPress={() => goToAlert(alert)}>
@@ -59,11 +66,11 @@ export default function Alerts({ navigation, route }) {
             <View style={alertStyles.container}>
                 <View style={alertStyles.header}>
                     <Text style={alertStyles.alertTitle}>{specificAlert.AlertTitle}</Text>
-                    {iconDict[alert.AlertCausesID] || iconDict[9]}
+                    {iconDict[specificAlert.AlertCausesID] || iconDict[9]}
                 </View>
                 <Text style={alertStyles.alertDescription}>{specificAlert.AlertMessage}</Text>
                 {specificAlert.AffectedRoutesTripsStops &&
-                    <Text style={styles.alertAffected}>Affected Routes/Stops: {specificAlert.AffectedRoutesTripsStops}</Text>
+                    <Text style={styles.alertAffected}>Affected Routes/Stops: {processList(specificAlert.AffectedRoutesTripsStops)}</Text>
                 }
             </View>
         );
@@ -122,6 +129,9 @@ const alertStyles = StyleSheet.create({
     },
     alertDescription: {
         paddingVertical: 10,
+        fontSize: 17
+    },
+    alertAffected: {
         fontSize: 17
     }
 });
