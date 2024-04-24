@@ -9,9 +9,11 @@ import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialComm
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
+import { getAlerts } from '../../backend/alertController';
 import { useSelector } from 'react-redux';
 
 export default function Map({ navigation }) {
+    getAlerts()
     const [mapRegion, setMapRegion] = useState({
         latitude: 37.227468937500895,
         longitude: -80.42357646125542,
@@ -24,6 +26,7 @@ export default function Map({ navigation }) {
     const [stopColor, setStopColor] = useState('black');
     //const [selectedBus, setSelectedBus] = useState(''); might use in future for navigation
     const [isOnCooldown, setIsOnCooldown] = useState(false);
+    const [alerts, setAlerts] = useState([]);
 
     const refreshTimer = useRef(null);
     const darkMode = useSelector(state => state.darkMode.isEnabled);
@@ -56,6 +59,17 @@ export default function Map({ navigation }) {
         return () => {
             clearInterval(refreshTimer.current);
         };
+    }, []);
+
+    // check for alerts
+    useEffect(() => {
+        async function fetchAlerts() {
+            const alertsData = await getAlerts();
+            if (alertsData.length > 0) {
+                setAlerts(alertsData);
+            }
+        }
+        fetchAlerts();
     }, []);
 
     // refresh button has a 5s cooldown, and resets the automatic refresh
@@ -138,11 +152,11 @@ export default function Map({ navigation }) {
                     <Entypo name="direction" size={20} color="white" />
                 </TouchableOpacity>
             </View>
-            <View style={styles.alertButton}>
+            {alerts.length > 0 && <View style={styles.alertButton}>
                 <TouchableOpacity onPress={handleAlertClick}>
                     <FontAwesome5 name="bell" size={20} color="white" />
                 </TouchableOpacity>
-            </View>
+            </View>}
         </View>
     )
 }
