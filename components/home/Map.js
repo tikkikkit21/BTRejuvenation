@@ -101,11 +101,11 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
                     <MaterialCommunityIcons name="restart" size={24} color="white" />
                 </TouchableOpacity>
             </View>
-            <View style={styles.feedbackButton}>
+            {/* <View style={styles.feedbackButton}>
                 <TouchableOpacity onPress={() => navigation.navigate("Feedback")}>
                     <FontAwesome6 name="qrcode" size={20} color="white" />
                 </TouchableOpacity>
-            </View>
+            </View> */}
             <View style={styles.locationButton}>
                 <TouchableOpacity onPress={handleLocationClick}>
                     <Entypo name="direction" size={20} color="white" />
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     },
     locationButton: {
         position: 'absolute',
-        top: 150,
+        top: 80,
         right: 10,
         backgroundColor: '#A40046',
         padding: 15,
