@@ -3,15 +3,18 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Settings from './Settings';
 import FeedbackForm from './FeedbackForm';
 import QRScanner from './QRScanner';
+import { useTheme } from './Themes'; // Import useTheme hook
 
 const Stack = createStackNavigator();
 
 export default function SettingsTab(props) {
+    const { theme } = useTheme(); // Access the theme
+
     return (
         <Stack.Navigator
             screenOptions={{
-                headerStyle: { backgroundColor: '#FFFFFF' },
-                headerTintColor: '#000000'
+                headerStyle: { backgroundColor: theme.headerFooter }, // Use theme color
+                headerTintColor: theme.basicText // Use theme color
             }}
             initialRouteName="Settings"
         >

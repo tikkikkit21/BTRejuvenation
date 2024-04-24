@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateDarkMode } from '../../store/darkModeReducer';
 import { updateRefreshFrequency } from '../../store/refreshFrequencyReducer';
 import { updateUsageTracking } from '../../store/usageTrackingReducer';
+//themes
+import { useTheme } from './Themes';
+
 
 export default function Settings({ navigation }) {
     const dispatch = useDispatch();
@@ -18,6 +21,15 @@ export default function Settings({ navigation }) {
     const darkModeRedux = useSelector(state => state.darkMode.isEnabled);
     const refreshFreqRedux = useSelector(state => state.refreshFrequency.time);
     const usageTrackingRedux = useSelector(state => state.usageTracking.isEnabled);
+    const { toggleTheme } = useTheme();
+
+    // fetch user settings from device storage
+    useEffect(() => {
+        async function getUserSettings() {
+            setDarkMode(await getDarkModeSetting());
+            setUsageTracking(await getTrackingPermission());
+            setRefreshFreq(await getRefreshFrequencySetting());
+        }
 
     // state variables
     const [isDarkMode, setIsDarkMode] = useState(darkModeRedux);
@@ -29,6 +41,8 @@ export default function Settings({ navigation }) {
         setIsDarkMode(!isDarkMode);
         setDarkModeSetting(newDarkMode);
         dispatch(updateDarkMode(newDarkMode));
+
+        toggleTheme();
     }
 
     // handle usage tracking switch toggled
