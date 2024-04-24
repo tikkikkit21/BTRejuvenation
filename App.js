@@ -14,6 +14,8 @@ import SettingsTab from './components/settings/SettingsTab';
 
 import { getSuggestedRoute } from './backend/userController';
 import { fetchDarkModeSetting } from './store/darkModeReducer';
+import { fetchRefreshFrequencySetting } from './store/refreshFrequencyReducer';
+import { fetchUsageTrackingSetting } from './store/usageTrackingReducer';
 
 const Tab = createBottomTabNavigator();
 const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37.22823553939222, long: -80.42348272720925 } };
@@ -38,7 +40,8 @@ export default function App() {
     // load user settings from backend into Redux
     useEffect(() => {
         dispatch(fetchDarkModeSetting());
-        console.log("hi")
+        dispatch(fetchRefreshFrequencySetting());
+        dispatch(fetchUsageTrackingSetting());
     }, []);
 
     // States for the Map component
