@@ -33,8 +33,9 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
-                const updatedStops = [["", "All Routes"], ...stopLocal];
+                const updatedStops = [["Stop Number", "All Routes"], ...stopLocal];
                 setStops(updatedStops);
+                //console.log(stops);
             } catch (error) {
                 console.error('Error fetching stops:', error);
             }
@@ -171,7 +172,10 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
                 <DropDownPicker
-                    items={stops.map(stop => ({ label: stop[1], value: stop[0] }))}
+                    items={stops.map((stop, index) => ({
+                        label: index === 0 ? stop[1] : `${stop[1]} (#${stop[0]})`,
+                        value: stop[0]
+                    }))}
                     defaultValue={selectedStop}
                     placeholder={placeHolder}
                     value={selectedStop}
@@ -188,24 +192,26 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.flatListItem}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 10, marginRight: 10 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />
-                                    <View style={{ marginLeft: 10 }}>
-                                        <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
-                                        <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
+                            <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)} >
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 10, marginRight: 10 }} >
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
+                                            <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
 
+                                        </View>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(item.RouteShortName)}>
+                                            <FontAwesome6 name="heart" size={22} style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
+                                            <AntDesign name="right" size={22} />
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(item.RouteShortName)}>
-                                        <FontAwesome6 name="heart" size={22} style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
-                                        <AntDesign name="right" size={22} />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                            </TouchableOpacity>
                         </View>
                     )}
                 />
