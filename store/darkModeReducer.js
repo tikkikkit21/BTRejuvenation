@@ -32,5 +32,5 @@ export const fetchDarkModeSetting = createAsyncThunk('settings/darkMode', async 
     return await getDarkModeSetting();
 });
 
-export const { updateDarkMode: setDarkMode } = darkModeSlice.actions;
+export const { updateDarkMode } = darkModeSlice.actions;
 export default darkModeSlice.reducer;
