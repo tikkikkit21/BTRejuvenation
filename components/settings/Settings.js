@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, Switch, TouchableOpacity, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { getDarkModeSetting, setDarkModeSetting, getTrackingPermission, setTrackingPermission, clearUsageData, setRefreshFrequencySetting, getRefreshFrequencySetting } from '../../backend/userController';
+import { setDarkModeSetting, setTrackingPermission, clearUsageData, setRefreshFrequencySetting } from '../../backend/userController';
 import Link from './Link';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,46 +13,39 @@ import { updateUsageTracking } from '../../store/usageTrackingReducer';
 
 export default function Settings({ navigation }) {
     const dispatch = useDispatch();
+
+    // Redux storage values
     const darkModeRedux = useSelector(state => state.darkMode.isEnabled);
     const refreshFreqRedux = useSelector(state => state.refreshFrequency.time);
     const usageTrackingRedux = useSelector(state => state.usageTracking.isEnabled);
+
+    // state variables
     const [isDarkMode, setIsDarkMode] = useState(darkModeRedux);
     const [usageTracking, setUsageTracking] = useState(usageTrackingRedux);
     const [refreshFreq, setRefreshFreq] = useState(refreshFreqRedux);
 
-    // fetch user settings from device storage
-    // useEffect(() => {
-    //     async function getUserSettings() {
-    //         setIsDarkMode(await getDarkModeSetting());
-    //         setUsageTracking(await getTrackingPermission());
-    //         setRefreshFreq(await getRefreshFrequencySetting());
-    //     }
-
-    //     getUserSettings();
-    // }, []);
-
     // handle dark mode switch toggled
-    function toggleDarkMode(props) {
+    function toggleDarkMode(newDarkMode) {
         setIsDarkMode(!isDarkMode);
-        setDarkModeSetting(props);
-        dispatch(updateDarkMode(props));
+        setDarkModeSetting(newDarkMode);
+        dispatch(updateDarkMode(newDarkMode));
     }
 
     // handle usage tracking switch toggled
-    function toggleUsageTracking(props) {
+    function toggleUsageTracking(newUsageTracking) {
         setUsageTracking(!usageTracking);
-        setTrackingPermission(props);
-        dispatch(updateUsageTracking(props));
+        setTrackingPermission(newUsageTracking);
+        dispatch(updateUsageTracking(newUsageTracking));
     }
 
     // handle frequency slider change
-    function handleSliderChange(freq) {
-        setRefreshFreq(freq);
+    function handleSliderChange(newFreq) {
+        setRefreshFreq(newFreq);
     }
 
-    function finishSliderChange(freq) {
-        setRefreshFrequencySetting(freq);
-        dispatch(updateRefreshFrequency(freq));
+    function finishSliderChange(newFreq) {
+        setRefreshFrequencySetting(newFreq);
+        dispatch(updateRefreshFrequency(newFreq));
     }
 
     return (

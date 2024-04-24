@@ -9,8 +9,6 @@ const usageTrackingSlice = createSlice({
     },
     reducers: {
         updateUsageTracking(state, action) {
-            console.log("state:", state);
-            console.log("action:", action);
             state.isEnabled = action.payload
         }
     },

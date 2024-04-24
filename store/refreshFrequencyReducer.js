@@ -9,8 +9,6 @@ const refreshFrequencySlice = createSlice({
     },
     reducers: {
         updateRefreshFrequency(state, action) {
-            console.log("state:", state);
-            console.log("action:", action);
             state.time = action.payload
         }
     },
