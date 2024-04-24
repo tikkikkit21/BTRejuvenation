@@ -5,7 +5,7 @@ import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
@@ -84,6 +84,11 @@ export default function Map({ navigation }) {
         })
     }
 
+    // handles alert button
+    function handleAlertClick() {
+        console.log("alert button clicked");
+    }
+
     // fetches bus data from backend
     async function loadBuses() {
         const buses = await getAllBuses();
@@ -131,6 +136,11 @@ export default function Map({ navigation }) {
             <View style={styles.locationButton}>
                 <TouchableOpacity onPress={handleLocationClick}>
                     <Entypo name="direction" size={20} color="white" />
+                </TouchableOpacity>
+            </View>
+            <View style={styles.alertButton}>
+                <TouchableOpacity onPress={handleAlertClick}>
+                    <FontAwesome5 name="bell" size={20} color="white" />
                 </TouchableOpacity>
             </View>
         </View>
@@ -248,6 +258,14 @@ const styles = StyleSheet.create({
     locationButton: {
         position: 'absolute',
         top: 80,
+        right: 10,
+        backgroundColor: '#A40046',
+        padding: 15,
+        borderRadius: 15
+    },
+    alertButton: {
+        position: 'absolute',
+        top: 150,
         right: 10,
         backgroundColor: '#A40046',
         padding: 15,
