@@ -70,7 +70,7 @@ export default function Alerts({ navigation, route }) {
                 </View>
                 <Text style={alertStyles.alertDescription}>{specificAlert.AlertMessage}</Text>
                 {specificAlert.AffectedRoutesTripsStops &&
-                    <Text style={styles.alertAffected}>Affected Routes/Stops: {processList(specificAlert.AffectedRoutesTripsStops)}</Text>
+                    <Text style={alertStyles.alertAffected}>Affected Routes/Stops: {processList(specificAlert.AffectedRoutesTripsStops)}</Text>
                 }
             </View>
         );
