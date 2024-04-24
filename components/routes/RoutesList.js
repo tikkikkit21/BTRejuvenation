@@ -9,6 +9,9 @@ import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@
 import { getAllStops, getCurrentRoutes, getScheduledRoutes, getRoutesByCode } from '../../backend/routeController';
 import Map from '../home/Map';
 import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
+import { saveUsageDataRecord } from '../../backend/userController';
+import * as Location from 'expo-location';
+import { useSelector } from 'react-redux';
 
 function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBusStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
     const [open, setOpen] = useState(false);
@@ -18,7 +21,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     const [placeHolder, setPlaceholder] = useState("");
     const [favorites, setFavorites] = useState([]);
     const [heartColor, setHeartColor] = useState('black');
-
+    const canTrackData = useSelector(state => state.usageTracking.isEnabled);
     const navigation = useNavigation();
 
     //TODO: Create a method that uses the favorites useState to check to see if 
@@ -27,7 +30,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     useEffect(() => {
 
         setPlaceholder("Filter By Route")
-        
+
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
@@ -57,7 +60,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
         fetchAllRoutes()
 
-        async function getFavorites(){
+        async function getFavorites() {
 
             favs = await getFavoriteRoutes();
             //console.log(favs)
@@ -66,11 +69,11 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         }
         getFavorites();
 
-        
+
     }, []);
 
-    useEffect(() =>{
-        async function getFavorites(){
+    useEffect(() => {
+        async function getFavorites() {
 
             favs = await getFavoriteRoutes();
             //console.log(favs)
@@ -82,9 +85,9 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
     }, [favorites]);
 
-    function isFavorite(route){
+    function isFavorite(route) {
         //console.log(`is favorite ${favorites}` );
-        if(favorites.includes(route) > 0){
+        if (favorites.includes(route) > 0) {
             setHeartColor('red');
             return true;
         }
@@ -93,8 +96,8 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
     async function onHeartPress(route) {
         //const newColor = isFavorite(route) ? 'black' : 'red';
-    
-       // saveFavoriteRoutes([]);
+
+        // saveFavoriteRoutes([]);
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
             Toast.show({
@@ -115,9 +118,9 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
             favs = await getFavoriteRoutes();
             setFavorites(favs);
-            
+
         }
-    
+
     }
 
 
@@ -166,7 +169,20 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
-    const handleRouteInfoClick = (shortName, fullName, color) => {
+    const handleRouteInfoClick = async (shortName, fullName, color) => {
+        if (canTrackData) {
+            const location = await Location.getCurrentPositionAsync({});
+            await saveUsageDataRecord({
+                route: shortName,
+                coords:
+                {
+                    lat: location.coords.latitude,
+                    long: location.coords.longitude
+                },
+                time: new Date()
+            });
+        }
+
         navigation.navigate('RouteInfo', {
             routeShortName: shortName,
             routeName: fullName,
@@ -177,7 +193,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
     return (
         <View style={styles.container}>
-            <MapViewMemo 
+            <MapViewMemo
                 mapRegion={mapRegion}
                 setMapRegion={setMapRegion}
                 buses={buses}
@@ -197,7 +213,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                 <DropDownPicker
                     items={stops.map((stop, index) => ({label: index < 3 ? stop[1] : `${stop[1]} (#${stop[0]})`,
                         value: stop[0]
-                      }))}
+                    }))}
                     defaultValue={selectedStop}
                     placeholder={placeHolder}
                     value={selectedStop}
@@ -216,19 +232,19 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.flatListItem}>
-                            <TouchableOpacity  onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)} >
+                            <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)} >
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 10, marginRight: 10 }} >
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />
                                         <View style={{ marginLeft: 10 }}>
                                             <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
                                             <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
-                                        
+
                                         </View>
                                     </View>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(item.RouteShortName)}>
-                                            <FontAwesome6 name="heart" size={22}  style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }}/>
+                                            <FontAwesome6 name="heart" size={22} style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }} />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
                                             <AntDesign name="right" size={22} />

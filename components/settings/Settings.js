@@ -1,46 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, Switch, TouchableOpacity, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { getDarkModeSetting, setDarkModeSetting, getTrackingPermission, setTrackingPermission, clearUsageData, setRefreshFrequencySetting, getRefreshFrequencySetting } from '../../backend/userController';
+import { setDarkModeSetting, setTrackingPermission, clearUsageData, setRefreshFrequencySetting } from '../../backend/userController';
 import Link from './Link';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { updateDarkMode } from '../../store/darkModeReducer';
+import { updateRefreshFrequency } from '../../store/refreshFrequencyReducer';
+import { updateUsageTracking } from '../../store/usageTrackingReducer';
+
 export default function Settings({ navigation }) {
-    const [darkMode, setDarkMode] = useState(false);
-    const [usageTracking, setUsageTracking] = useState(false);
-    const [refreshFreq, setRefreshFreq] = useState(30);
+    const dispatch = useDispatch();
 
-    // fetch user settings from device storage
-    useEffect(() => {
-        async function getUserSettings() {
-            setDarkMode(await getDarkModeSetting());
-            setUsageTracking(await getTrackingPermission());
-            setRefreshFreq(await getRefreshFrequencySetting());
-        }
+    // Redux storage values
+    const darkModeRedux = useSelector(state => state.darkMode.isEnabled);
+    const refreshFreqRedux = useSelector(state => state.refreshFrequency.time);
+    const usageTrackingRedux = useSelector(state => state.usageTracking.isEnabled);
 
-        getUserSettings();
-    }, []);
+    // state variables
+    const [isDarkMode, setIsDarkMode] = useState(darkModeRedux);
+    const [usageTracking, setUsageTracking] = useState(usageTrackingRedux);
+    const [refreshFreq, setRefreshFreq] = useState(refreshFreqRedux);
 
     // handle dark mode switch toggled
-    function toggleDarkMode(props) {
-        setDarkMode(!darkMode);
-        setDarkModeSetting(props);
+    function toggleDarkMode(newDarkMode) {
+        setIsDarkMode(!isDarkMode);
+        setDarkModeSetting(newDarkMode);
+        dispatch(updateDarkMode(newDarkMode));
     }
 
     // handle usage tracking switch toggled
-    function toggleUsageTracking(props) {
+    function toggleUsageTracking(newUsageTracking) {
         setUsageTracking(!usageTracking);
-        setTrackingPermission(props);
+        setTrackingPermission(newUsageTracking);
+        dispatch(updateUsageTracking(newUsageTracking));
     }
 
     // handle frequency slider change
-    function handleSliderChange(freq) {
-        setRefreshFreq(freq);
+    function handleSliderChange(newFreq) {
+        setRefreshFreq(newFreq);
     }
 
-    function finishSliderChange(freq) {
-        setRefreshFrequencySetting(freq);
+    function finishSliderChange(newFreq) {
+        setRefreshFrequencySetting(newFreq);
+        dispatch(updateRefreshFrequency(newFreq));
     }
 
     return (
@@ -53,8 +58,7 @@ export default function Settings({ navigation }) {
                             trackColor={{ false: '#fff', true: '#000' }}
                             thumbColor={'#fff'}
                             onValueChange={toggleDarkMode}
-                            onSlidingComplete={finishSliderChange}
-                            value={darkMode}
+                            value={isDarkMode}
                             style={styles.switch}
                         />
                         <Text>Toggle Dark Mode</Text>
@@ -64,6 +68,7 @@ export default function Settings({ navigation }) {
                         <Slider
                             style={styles.slider}
                             onValueChange={handleSliderChange}
+                            onSlidingComplete={finishSliderChange}
                             value={refreshFreq}
                             minimumValue={10}
                             maximumValue={30}
