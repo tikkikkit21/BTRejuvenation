@@ -171,32 +171,26 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
               )
               }
             {/* If destination fields are filled, show Search button */}
-            {/* {startDestination && endDestination && ( */}
-                <TouchableOpacity
-                    style={styles.searchButton}
-                    onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
-                    underlayColor='white'
-                >
-                    <Text style={styles.searchText}>Search</Text>
-                </TouchableOpacity>
-                {/* )} */}
-                {routeData && (
-                    <View>
-                        <RouteOption 
-                            busLine={routeData[0].mainBusLine}
-                            tripDuration={routeData[0].totalDuration}
-                            tripDistance={routeData[0].totalDistance}
-                        />
-                    </View>
-                    // <View>
-                    //     <View>
-                    //         <Text>{routeData[0].totalDuration}</Text>
-                    //     </View>
-                    //     <View>
-                    //         <Text>{routeData[0].totalDistance}</Text>
-                    //     </View>
-                    // </View>
-                )}
+            {startDestination && endDestination && (
+                <View>
+                    <TouchableOpacity
+                        style={styles.searchButton}
+                        onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
+                        underlayColor='white'
+                    >
+                        <Text style={styles.searchText}>Search</Text>
+                    </TouchableOpacity>
+                    {routeData && (
+                        <View>
+                            <RouteOption 
+                                busLine={routeData[0].mainBusLine}
+                                tripDuration={routeData[0].totalDuration}
+                                tripDistance={routeData[0].totalDistance}
+                            />
+                        </View>
+                    )}
+                </View>
+            )}
           </BottomSheet>
         </View>
     );
@@ -206,82 +200,78 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
 const MapViewMemo = React.memo(Map);
 
 const styles = StyleSheet.create({
-  container: {
+    container: {
       flex: 1,
       backgroundColor: 'white'
-  },
-  swapButtonContainer: {
-      alignItems: 'center',
+    },
+    swapButtonContainer: {
       justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: 'white',
       padding: 15
-  },
-  swapButton: {
+    },
+    swapButton: {
       transform: [{ rotate: '90deg' }]
-  },
-  destinationContainer: {
+    },
+    destinationContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 10,
-      width: '90%',
-      marginLeft: 20,
+      marginHorizontal: 20,
+      marginVertical: 10,
       padding: 10,
-      paddingHorizontal: 10,
       backgroundColor: '#75787B',
       color: 'white'
-  },
-  textInputContainer: {
+    },
+    textInputContainer: {
       flex: 1,
       marginLeft: 5,
       height: 30
-  },
-  textInput: {
+    },
+    textInput: {
       flex: 1,
       padding: 5,
       fontSize: 16,
       color: 'black',
       backgroundColor: 'white',
       borderRadius: 10
-  },
-  moreButtonContainer: {
+    },
+    moreButtonContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: 'white',
       padding: 20,
       paddingLeft: 25
-  },
-  moreButtonText: {
+    },
+    moreButtonText: {
       color: 'blue',
       fontSize: 16
-  },
-  moreOptionsContainer: {
+    },
+    moreOptionsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 10,
-      width: '90%',
-      marginLeft: 20,
+      marginHorizontal: 20,
+      marginVertical: 10,
       padding: 10,
-      paddingHorizontal: 10,
       backgroundColor: '#75787B',
-      color: 'white',
-      marginBottom: 10 // Add margin bottom to create space
-  },
-  searchButton: {
-      marginRight: 20,
-      marginLeft: 20,
-      marginBottom: 10,
+      color: 'white'
+    },
+    searchButton: {
+      marginHorizontal: 20,
+      marginVertical: 10,
       padding: 10,
-      paddingHorizontal: 10,
       backgroundColor: '#A40046',
       borderRadius: 10,
       borderColor: '#fff'
-  },
-  searchText:{
+    },
+    searchText:{
       color: '#fff',
       textAlign: 'center',
-      paddingLeft: 10,
-      paddingRight: 10,
       fontSize: 16
-  }
-});
+    },
+  });
+  
 
 // Memoize Navigate component
 const MemoizedNavigate = React.memo(Navigate);
