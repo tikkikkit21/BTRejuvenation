@@ -5,15 +5,15 @@ import { MaterialCommunityIcons, Foundation, AntDesign } from '@expo/vector-icon
 
 
 const iconDict = {
-    "No Service": <Foundation name="prohibited" size={24} color="black" />,
-    "Reduced Service": <MaterialCommunityIcons name="bus-articulated-front" size={24} color="black" />,
-    "Significant Delays": <MaterialCommunityIcons name="bus-clock" size={24} color="black" />,
-    "Detour": <MaterialCommunityIcons name="transit-detour" size={24} color="black" />,
-    "Additional Service": <MaterialCommunityIcons name="bus-multiple" size={24} color="black" />,
-    "Modified Service": <MaterialCommunityIcons name="bus-marker" size={24} color="black" />,
-    "Stop Moved": <MaterialCommunityIcons name="bus-stop" size={24} color="black" />,
-    "Other": <MaterialCommunityIcons name="bus-alert" size={24} color="black" />,
-    "Unknown": <MaterialCommunityIcons name="alert" size={24} color="black" />
+    "No Service": <Foundation name="prohibited" size={30} color="black" />,
+    "Reduced Service": <MaterialCommunityIcons name="bus-articulated-front" size={30} color="black" />,
+    "Significant Delays": <MaterialCommunityIcons name="bus-clock" size={30} color="black" />,
+    "Detour": <MaterialCommunityIcons name="transit-detour" size={30} color="black" />,
+    "Additional Service": <MaterialCommunityIcons name="bus-multiple" size={30} color="black" />,
+    "Modified Service": <MaterialCommunityIcons name="bus-marker" size={30} color="black" />,
+    "Stop Moved": <MaterialCommunityIcons name="bus-stop" size={30} color="black" />,
+    "Other": <MaterialCommunityIcons name="bus-alert" size={30} color="black" />,
+    "Unknown": <MaterialCommunityIcons name="alert" size={30} color="black" />
 }
 
 export default function Alerts() {
