@@ -79,10 +79,9 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
         try {
             const result = await getConnectedRoutes(startDestination, endDestination);
             setRouteData(result);
-            console.log('Results: ', result);
+            console.log('Results: ', routeData);
         } catch (error) {
-            console.log('ERROR Fetching Data:', error);
-            console.log(result);
+            console.log('Error Fetching Data:', error);
         }
     };
     
@@ -178,6 +177,9 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                 >
                     <Text style={styles.searchText}>Search</Text>
                 </TouchableOpacity>
+                { routeData && (
+                    <Text>{routeData[0].duration ? routeData[0].duration : "huh"}</Text>
+                )}
             {/* )} */}
           </BottomSheet>
         </View>

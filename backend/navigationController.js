@@ -21,24 +21,24 @@ export async function getConnectedRoutes(origin, destination) {
     const { data } = await axios.get(`${GMAPS_ROOT}/${test}`);
 
     const legs = data.routes[0].legs[0]
-    console.log('Legs: ', data.routes[0].legs[0].steps)
-
     const tripDuration = getTotalDuration(legs);
     const busLine = getBusLine(legs);
     console.log('\nDuration: ', tripDuration);
     console.log('\nBus Line: ', busLine);
 
+
     const transitSteps = data.routes[0].legs[0].steps
         .filter(step => step.travel_mode === "TRANSIT")
-        .filter(step => step.transit_details.line.agencies[0][0].name === "Blacksburg Transit");
-
+        .filter(step => step.transit_details.line.agencies[0].name === "Blacksburg Transit");
+    
+    // return {tripDuration, busLine};
     return transitSteps.map(step => {
         return {
             polyline: decodeCoords(step.polyline),
             routeName: step.transit_details.line.short_name,
-            duration: step.duration,
+            duration: step.duration.text,
             distance: step.distance,
-            instructions: html_instructions
+            // instructions: html_instructions
         };
     });
 }
@@ -80,8 +80,6 @@ function getTotalDuration(legs) {
     }
     return totalDuration;
 }
-
-
 
 /**
  * Function to extract bus line to take from transit leg.
