@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
-import * as Linking from 'expo-linking';
+import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { getDarkModeSetting, setDarkModeSetting, getTrackingPermission, setTrackingPermission, clearUsageData, setRefreshFrequencySetting, getRefreshFrequencySetting } from '../../backend/userController';
 import Link from './Link';
 
-export default function Settings() {
+export default function Settings({ navigation }) {
     const [darkMode, setDarkMode] = useState(false);
     const [usageTracking, setUsageTracking] = useState(false);
     const [refreshFreq, setRefreshFreq] = useState(30);
@@ -99,7 +98,12 @@ export default function Settings() {
             </View>
             <Text style={styles.header}>Feedback</Text>
             <View style={styles.section}>
-
+                <View style={styles.setting}>
+                    <Text>Scan QR code on bus to access feedback form</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("QR Scanner")}>
+                        <MaterialCommunityIcons name="qrcode-scan" size={75} color="black" />
+                    </TouchableOpacity>
+                </View>
             </View>
             <View style={styles.section}>
                 <Link
@@ -152,19 +156,19 @@ const styles = StyleSheet.create({
         fontSize: 10
     },
     button: {
-        borderColor: "#000",
+        borderColor: "gray",
         borderWidth: 1,
         borderRadius: 15,
         padding: 15,
         width: "auto",
-        margin: 15
+        margin: 15,
+        alignItems: 'center',
     },
     buttonText: {
         marginLeft: 10
     },
     buttonLabel: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: "center"
+        alignItems: 'center'
     }
 });

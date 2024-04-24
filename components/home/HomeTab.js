@@ -32,8 +32,6 @@ function HomeTab({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, ro
                     />
                 )}
             </Stack.Screen>
-            <Stack.Screen name="Feedback" component={FeedbackForm} />
-            <Stack.Screen name="QR Scanner" component={QRScanner} />
         </Stack.Navigator>
     );
 }

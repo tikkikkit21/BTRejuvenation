@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import * as Linking from 'expo-linking';
 
 export default function Link({ text, url, icon }) {
     return (
