@@ -3,17 +3,16 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { getAlerts } from '../../backend/alertController';
 import { MaterialCommunityIcons, Foundation, AntDesign } from '@expo/vector-icons';
 
-
 const iconDict = {
-    "No Service": <Foundation name="prohibited" size={30} color="black" />,
-    "Reduced Service": <MaterialCommunityIcons name="bus-articulated-front" size={30} color="black" />,
-    "Significant Delays": <MaterialCommunityIcons name="bus-clock" size={30} color="black" />,
-    "Detour": <MaterialCommunityIcons name="transit-detour" size={30} color="black" />,
-    "Additional Service": <MaterialCommunityIcons name="bus-multiple" size={30} color="black" />,
-    "Modified Service": <MaterialCommunityIcons name="bus-marker" size={30} color="black" />,
-    "Stop Moved": <MaterialCommunityIcons name="bus-stop" size={30} color="black" />,
-    "Other": <MaterialCommunityIcons name="bus-alert" size={30} color="black" />,
-    "Unknown": <MaterialCommunityIcons name="alert" size={30} color="black" />
+    1: <Foundation name="prohibited" size={30} color="black" />,
+    2: <MaterialCommunityIcons name="bus-articulated-front" size={30} color="black" />,
+    3: <MaterialCommunityIcons name="bus-clock" size={30} color="black" />,
+    4: <MaterialCommunityIcons name="transit-detour" size={30} color="black" />,
+    5: <MaterialCommunityIcons name="bus-multiple" size={30} color="black" />,
+    6: <MaterialCommunityIcons name="bus-marker" size={30} color="black" />,
+    7: <MaterialCommunityIcons name="bus-stop" size={30} color="black" />,
+    8: <MaterialCommunityIcons name="bus-alert" size={30} color="black" />,
+    9: <MaterialCommunityIcons name="alert" size={30} color="black" />
 }
 
 export default function Alerts() {
@@ -31,7 +30,7 @@ export default function Alerts() {
     const alertViews = alerts.map(alert => {
         return <View style={styles.alertSection}>
             <View style={styles.alertText}>
-                {iconDict["Other"]}
+                {iconDict[alert.AlertCausesID] || iconDict[9]}
                 <Text style={styles.alertTitle}>{alert.AlertTitle}</Text>
             </View>
             <AntDesign name="right" />
