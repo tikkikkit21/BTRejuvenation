@@ -8,7 +8,7 @@ const darkModeSlice = createSlice({
         loading: false
     },
     reducers: {
-        setDarkMode(state, action) {
+        updateDarkMode(state, action) {
             console.log("state:", state);
             console.log("action:", action);
             state.isEnabled = action.payload
@@ -32,5 +32,5 @@ export const fetchDarkModeSetting = createAsyncThunk('settings/darkMode', async 
     return await getDarkModeSetting();
 });
 
-export const { setDarkMode } = darkModeSlice.actions;
+export const { updateDarkMode: setDarkMode } = darkModeSlice.actions;
 export default darkModeSlice.reducer;

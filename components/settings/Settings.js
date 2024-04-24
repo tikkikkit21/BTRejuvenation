@@ -7,7 +7,7 @@ import { getDarkModeSetting, setDarkModeSetting, getTrackingPermission, setTrack
 import Link from './Link';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setDarkMode } from '../../store/darkModeReducer';
+import { updateDarkMode } from '../../store/darkModeReducer';
 
 export default function Settings({ navigation }) {
     const dispatch = useDispatch();
@@ -31,7 +31,7 @@ export default function Settings({ navigation }) {
     function toggleDarkMode(props) {
         setIsDarkMode(!isDarkMode);
         setDarkModeSetting(props);
-        dispatch(setDarkMode(props));
+        dispatch(updateDarkMode(props));
     }
 
     // handle usage tracking switch toggled
