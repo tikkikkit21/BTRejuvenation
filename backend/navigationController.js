@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { all } from "axios";
 
 const APIKEY = process.env.GOOGLE_MAPS_API_KEY;
 const GMAPS_ROOT = "https://maps.googleapis.com/maps/api/directions";
@@ -20,27 +20,27 @@ export async function getConnectedRoutes(origin, destination) {
     const test = `json?origin=${'Torgersen Hall'}&destination=${'401 Laurence Ln'}&key=${APIKEY}&mode=transit`;
     const { data } = await axios.get(`${GMAPS_ROOT}/${test}`);
 
-    const legs = data.routes[0].legs[0]
-    const tripDuration = getTotalDuration(legs);
-    const busLine = getBusLine(legs);
-    console.log('\nDuration: ', tripDuration);
-    console.log('\nBus Line: ', busLine);
-
-
     const transitSteps = data.routes[0].legs[0].steps
         .filter(step => step.travel_mode === "TRANSIT")
         .filter(step => step.transit_details.line.agencies[0].name === "Blacksburg Transit");
+
+    const originalSteps = data.routes[0].legs[0].steps;
+
+    const totalDuration = getTotalDuration(originalSteps);
+    console.log("Total: ", totalDuration);
     
-    // return {tripDuration, busLine};
-    return transitSteps.map(step => {
+    return originalSteps.map(step => {
         return {
             polyline: decodeCoords(step.polyline),
-            routeName: step.transit_details.line.short_name,
-            duration: step.duration.text,
+            // Check if step has transit_details and line properties before accessing them
+            routeName: step.transit_details && step.transit_details.line ? step.transit_details.line.short_name : null,
+            duration: step.duration ? step.duration.text : null,
             distance: step.distance,
-            // instructions: html_instructions
+            instructions: step.html_instructions,
+            totalDuration: totalDuration
         };
     });
+
 }
 
 /**
@@ -72,13 +72,46 @@ function decodeCoords(t, e) {
  * @returns Total duraiton of trip.
  */
 function getTotalDuration(legs) {
-    let totalDuration = 0;
-    if (legs && legs.duration && legs.duration.value) {
-        totalDuration = legs.duration.text;
+    let totalDuration = {
+        minutes: 0,
+        hours: 0
+    };
+
+    if (legs && Array.isArray(legs)) {
+        legs.forEach(leg => {
+            if (leg.duration && leg.duration.text) {
+                const durationText = leg.duration.text;
+                // Extract numerical value of minutes
+                const durationMatch = durationText.match(/\b\d+\b/);
+                if (durationMatch && durationMatch.length > 0) {
+                    const durationInMinutes = parseInt(durationMatch[0]);
+                    totalDuration.minutes += durationInMinutes;
+                } else {
+                    console.error("Invalid duration format:", durationText);
+                }
+            } else {
+                console.error("Duration text not found in the leg object:", leg);
+            }
+        });
+
+        // Convert minutes to hours if necessary
+        if (totalDuration.minutes >= 60) {
+            totalDuration.hours = Math.floor(totalDuration.minutes / 60);
+            totalDuration.minutes = totalDuration.minutes % 60;
+        }
     } else {
-        console.error("Duration value not found in the legs object:", legs);
+        console.error("Invalid legs data:", legs);
     }
-    return totalDuration;
+
+    let formattedDuration = '';
+    if (totalDuration.hours > 0) {
+        formattedDuration += totalDuration.hours + ' hours ';
+    }
+    if (totalDuration.minutes > 0) {
+        formattedDuration += totalDuration.minutes + ' minutes';
+    }
+
+    return formattedDuration.trim();
 }
 
 /**

@@ -177,10 +177,17 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                 >
                     <Text style={styles.searchText}>Search</Text>
                 </TouchableOpacity>
-                { routeData && (
-                    <Text>{routeData[0].duration ? routeData[0].duration : "huh"}</Text>
+                {/*)}*/}
+                {routeData && (
+                    <View>
+                        <View>
+                            <Text>{routeData[0].totalDuration ? routeData[0].totalDuration : "huh"}</Text>
+                        </View>
+                        <View>
+                            <Text>{routeData[0].distance.text ? routeData[0].distance.text : "huh"}</Text>
+                        </View>
+                    </View>
                 )}
-            {/* )} */}
           </BottomSheet>
         </View>
     );
