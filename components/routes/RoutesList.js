@@ -10,6 +10,7 @@ import Map from '../home/Map';
 import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
 import { saveUsageDataRecord } from '../../backend/userController';
 import * as Location from 'expo-location';
+import { useSelector } from 'react-redux';
 
 function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBusStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
     const [open, setOpen] = useState(false);
@@ -19,7 +20,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     const [placeHolder, setPlaceholder] = useState("");
     const [favorites, setFavorites] = useState([]);
     const [heartColor, setHeartColor] = useState('black');
-
+    const canTrackData = useSelector(state => state.usageTracking.isEnabled);
     const navigation = useNavigation();
 
     //TODO: Create a method that uses the favorites useState to check to see if 
@@ -130,16 +131,18 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
     const handleRouteInfoClick = async (shortName, fullName, color) => {
-        const location = await Location.getCurrentPositionAsync({});
-        await saveUsageDataRecord({
-            route: shortName,
-            coords:
-            {
-                lat: location.coords.latitude,
-                long: location.coords.longitude
-            },
-            time: new Date()
-        });
+        if (canTrackData) {
+            const location = await Location.getCurrentPositionAsync({});
+            await saveUsageDataRecord({
+                route: shortName,
+                coords:
+                {
+                    lat: location.coords.latitude,
+                    long: location.coords.longitude
+                },
+                time: new Date()
+            });
+        }
 
         navigation.navigate('RouteInfo', {
             routeShortName: shortName,
