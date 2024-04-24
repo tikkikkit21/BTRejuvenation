@@ -28,6 +28,7 @@ export async function getScheduledRoutes(stopCode = "") {
 
     populateMap(scheduledStops);
 
+    //console.log(scheduledStops);
     return scheduledStops;
 }
 
@@ -76,5 +77,24 @@ function populateMap(routes) {
     routes.forEach(route => {
         routeColorMap[route.RouteShortName] = route.RouteColor;
     });
+
+}
+
+
+export async function getRoutesByCode(codeList){
+    if(codeList.length == 0 ){
+        console.log( "no favorites");
+    }
+    let routesByCode = [];
+
+    let allRoutes = await getScheduledRoutes();
+
+    allRoutes.forEach(route => {
+        if (codeList.includes(route.RouteShortName)) {
+            routesByCode.push(route);
+        }
+    });
+
+    return routesByCode;
 
 }

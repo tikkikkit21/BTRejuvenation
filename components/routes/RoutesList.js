@@ -5,7 +5,7 @@ import styles from '../../styles/Route.style';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
-import { getAllStops, getCurrentRoutes, getScheduledRoutes } from '../../backend/routeController';
+import { getAllStops, getCurrentRoutes, getScheduledRoutes, getRoutesByCode } from '../../backend/routeController';
 import Map from '../home/Map';
 import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
 
@@ -30,7 +30,9 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
-                const updatedStops = [["Stop Number", "All Routes"], ...stopLocal];
+                let updatedStops = [["FAVSTOP", "Favorite Stops"], ...stopLocal];
+                updatedStops = [["FAVROUTE", "Favorite Routes"], ...updatedStops];
+                updatedStops = [["", "All Routes"], ...updatedStops];
                 setStops(updatedStops);
                 //console.log(stops);
             } catch (error) {
@@ -75,6 +77,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
             setFavorites(favs);
         }
         getFavorites();
+        //console.log(favorites)
 
     }, [favorites]);
 
@@ -111,17 +114,35 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         selectStop(itemValue);
         stopCode = itemValue.value
 
-        async function fetchScheduledRoutes() {
-            try {
-                
-                const routesLocal = await getScheduledRoutes(stopCode);
-                setRoutes(routesLocal)
-            } catch (error) {
-                console.error('Error fetching stops:', error);
-            }
-        }
+        if(stopCode == "FAVSTOP"){
+            //navigate to stop component
 
-        fetchScheduledRoutes();
+            console.log("fav stop")
+        }
+        else if (stopCode == "FAVROUTE"){
+            async function fetchRoutesByCode(){
+                const routesLocal = await getRoutesByCode(favorites);
+                if(routesLocal.length == 0){
+                    alert(`No favorite routes. Press the heart to add a favorite.`);
+
+                }
+                setRoutes(routesLocal);
+            }
+            fetchRoutesByCode();
+        }
+        else{
+            async function fetchScheduledRoutes() {
+                try {
+                    
+                    const routesLocal = await getScheduledRoutes(stopCode);
+                    setRoutes(routesLocal)
+                } catch (error) {
+                    console.error('Error fetching stops:', error);
+                }
+            }
+    
+            fetchScheduledRoutes();
+        }
 
     };
 
@@ -156,7 +177,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
                 <DropDownPicker
-                    items={stops.map((stop, index) => ({label: index === 0 ? stop[1] : `${stop[1]} (#${stop[0]})`,
+                    items={stops.map((stop, index) => ({label: index < 3 ? stop[1] : `${stop[1]} (#${stop[0]})`,
                         value: stop[0]
                       }))}
                     defaultValue={selectedStop}
