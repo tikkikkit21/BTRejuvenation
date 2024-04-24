@@ -56,9 +56,13 @@ export default function Alerts({ navigation, route }) {
 
     if (specificAlert) {
         return (
-            <ScrollView>
-                <Text>Hi</Text>
-            </ScrollView>
+            <View style={alertStyles.container}>
+                <Text style={alertStyles.alertTitle}>{specificAlert.AlertTitle}</Text>
+                <Text style={alertStyles.alertDescription}>{specificAlert.AlertMessage}</Text>
+                {specificAlert.AffectedRoutesTripsStops &&
+                    <Text style={styles.alertAffected}>Affected Routes/Stops: {specificAlert.AffectedRoutesTripsStops}</Text>
+                }
+            </View>
         );
     }
 
@@ -95,5 +99,21 @@ const styles = StyleSheet.create({
     },
     alertDescription: {
         fontSize: 10
+    }
+});
+
+const alertStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingHorizontal: 10,
+    },
+    alertTitle: {
+        fontSize: 25,
+        paddingVertical: 5
+    },
+    alertDescription: {
+        paddingVertical: 20,
+        fontSize: 15
     }
 });
