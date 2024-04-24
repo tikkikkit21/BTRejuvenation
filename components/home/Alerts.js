@@ -61,8 +61,15 @@ export default function Alerts({ navigation, route }) {
         );
     });
 
-    if (specificAlert) {
-        return (
+    return !specificAlert
+        ? (
+            <ScrollView>
+                <View style={styles.container}>
+                    {alertViews}
+                </View>
+            </ScrollView>
+        )
+        : (
             <View style={alertStyles.container}>
                 <View style={alertStyles.header}>
                     <Text style={alertStyles.alertTitle}>{specificAlert.AlertTitle}</Text>
@@ -74,15 +81,6 @@ export default function Alerts({ navigation, route }) {
                 }
             </View>
         );
-    }
-
-    return (
-        <ScrollView>
-            <View style={styles.container}>
-                {alertViews}
-            </View>
-        </ScrollView>
-    );
 }
 
 const styles = StyleSheet.create({
