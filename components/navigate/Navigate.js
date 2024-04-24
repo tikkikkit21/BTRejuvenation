@@ -170,7 +170,7 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
               )
               }
             {/* If destination fields are filled, show Search button */}
-            {startDestination && endDestination && (
+            {/* {startDestination && endDestination && ( */}
                 <TouchableOpacity
                     style={styles.searchButton}
                     onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
@@ -178,7 +178,7 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                 >
                     <Text style={styles.searchText}>Search</Text>
                 </TouchableOpacity>
-            )}
+            {/* )} */}
           </BottomSheet>
         </View>
     );
