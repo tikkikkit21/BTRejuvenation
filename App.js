@@ -24,16 +24,15 @@ export default function App() {
     console.log("app/darkmode", darkMode);
 
     // fetch suggestion
-    async function fetchSuggestedRoute() {
-        const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
-        console.log("suggestedRoute:", suggestedRoute);
-
-        if (suggestedRoute !== null) {
-            // do something in frontend
-        }
-    }
-
     useEffect(() => {
+        async function fetchSuggestedRoute() {
+            const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
+            console.log("suggestedRoute:", suggestedRoute);
+
+            if (suggestedRoute !== null) {
+                // do something in frontend
+            }
+        }
         fetchSuggestedRoute();
     }, []);
 
