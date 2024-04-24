@@ -9,25 +9,27 @@ import Link from './Link';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateDarkMode } from '../../store/darkModeReducer';
 import { updateRefreshFrequency } from '../../store/refreshFrequencyReducer';
+import { updateUsageTracking } from '../../store/usageTrackingReducer';
 
 export default function Settings({ navigation }) {
     const dispatch = useDispatch();
     const darkModeRedux = useSelector(state => state.darkMode.isEnabled);
     const refreshFreqRedux = useSelector(state => state.refreshFrequency.time);
+    const usageTrackingRedux = useSelector(state => state.usageTracking.isEnabled);
     const [isDarkMode, setIsDarkMode] = useState(darkModeRedux);
-    const [usageTracking, setUsageTracking] = useState(false);
+    const [usageTracking, setUsageTracking] = useState(usageTrackingRedux);
     const [refreshFreq, setRefreshFreq] = useState(refreshFreqRedux);
 
     // fetch user settings from device storage
-    useEffect(() => {
-        async function getUserSettings() {
-            setIsDarkMode(await getDarkModeSetting());
-            setUsageTracking(await getTrackingPermission());
-            setRefreshFreq(await getRefreshFrequencySetting());
-        }
+    // useEffect(() => {
+    //     async function getUserSettings() {
+    //         setIsDarkMode(await getDarkModeSetting());
+    //         setUsageTracking(await getTrackingPermission());
+    //         setRefreshFreq(await getRefreshFrequencySetting());
+    //     }
 
-        getUserSettings();
-    }, []);
+    //     getUserSettings();
+    // }, []);
 
     // handle dark mode switch toggled
     function toggleDarkMode(props) {
@@ -40,6 +42,7 @@ export default function Settings({ navigation }) {
     function toggleUsageTracking(props) {
         setUsageTracking(!usageTracking);
         setTrackingPermission(props);
+        dispatch(updateUsageTracking(props));
     }
 
     // handle frequency slider change
