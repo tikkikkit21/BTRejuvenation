@@ -21,17 +21,18 @@ export async function getConnectedRoutes(origin, destination) {
     const { data } = await axios.get(`${GMAPS_ROOT}/${test}`);
 
     const legs = data.routes[0].legs[0]
+    console.log('Legs: ', data.routes[0].legs[0].steps)
 
-    const tripDetails = calculateTripDetails(legs);
-    console.log('\nDuration: ', tripDetails.totalDuration);
-    console.log('\nBus Line: ', tripDetails.busLine);
+    const tripDuration = getTotalDuration(legs);
+    const busLine = getBusLine(legs);
+    console.log('\nDuration: ', tripDuration);
+    console.log('\nBus Line: ', busLine);
 
     const transitSteps = data.routes[0].legs[0].steps
         .filter(step => step.travel_mode === "TRANSIT")
         .filter(step => step.transit_details.line.agencies[0][0].name === "Blacksburg Transit");
 
     return transitSteps.map(step => {
-        // console.log(step);
         return {
             polyline: decodeCoords(step.polyline),
             routeName: step.transit_details.line.short_name,
@@ -64,32 +65,42 @@ function decodeCoords(t, e) {
     return d = d.map(function (t) { return { latitude: t[0], longitude: t[1] } });
 }
 
-// Function to calculate total duration of the trip
+/**
+ * Function to calculate total duration of a trip.
+ * 
+ * @param {*} legs Contains trip information from origin to end destination.
+ * @returns Total duraiton of trip.
+ */
 function getTotalDuration(legs) {
     let totalDuration = 0;
-    for (const leg of legs) {
-        totalDuration += leg.duration.value;
+    if (legs && legs.duration && legs.duration.value) {
+        totalDuration = legs.duration.text;
+    } else {
+        console.error("Duration value not found in the legs object:", legs);
     }
     return totalDuration;
 }
 
-// Function to extract bus line to take from transit leg
+
+
+/**
+ * Function to extract bus line to take from transit leg.
+ * 
+ * NOTE: Will need to modify for connecting bus lines. (more than 1 bus line for a trip)
+ * 
+ * @param {*} leg Contains trip information from origin to end destination.
+ * @returns The bus line for the trip.
+ */
 function getBusLine(leg) {
     if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
         return leg.transit_details.line.short_name;
-    }
-    return "N/A";
-}
-
-// Calculate total duration and bus line for the trip
-function calculateTripDetails(legs) {
-    let totalDuration = getTotalDuration(legs);
-    let busLine = "N/A";
-    for (const leg of legs) {
-        if (leg.travel_mode === "TRANSIT") {
-            busLine = getBusLine(leg);
-            break; // Stop searching once the first transit leg is found
+    } else if (leg.steps) {
+        // If there are steps, iterate through them to find the transit step
+        for (const step of leg.steps) {
+            if (step.travel_mode === "TRANSIT" && step.transit_details && step.transit_details.line) {
+                return step.transit_details.line.short_name;
+            }
         }
     }
-    return { totalDuration, busLine };
+    return "N/A";
 }
