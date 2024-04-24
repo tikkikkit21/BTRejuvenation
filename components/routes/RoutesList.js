@@ -13,7 +13,7 @@ import { saveUsageDataRecord } from '../../backend/userController';
 import * as Location from 'expo-location';
 import { useSelector } from 'react-redux';
 
-function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBusStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
+export default function RoutesList() {
     const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
@@ -183,19 +183,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
     return (
         <View style={styles.container}>
-            <MapViewMemo
-                mapRegion={mapRegion}
-                setMapRegion={setMapRegion}
-                buses={buses}
-                setBuses={setBuses}
-                stops={busStops}
-                setStops={setBusStops}
-                route={route}
-                setRoute={setRoute}
-                isOnCooldown={isOnCooldown}
-                setIsOnCooldown={setIsOnCooldown}
-            />
-            <Toast />
+            <MapViewMemo />
             <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
@@ -253,8 +241,3 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
 // Memoized Map component to avoid unnecessary rerendering.
 const MapViewMemo = React.memo(Map);
-
-// Memoize RoutesList component
-const MemoizedRoutesList = React.memo(RoutesList);
-
-export default MemoizedRoutesList;

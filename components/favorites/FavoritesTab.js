@@ -4,7 +4,7 @@ import Favorites from './Favorites';
 
 const Stack = createStackNavigator();
 
-export default function FavoritesTab(props) {
+export default function AlertsTab() {
     return (
         <Stack.Navigator
             screenOptions={{
@@ -13,11 +13,7 @@ export default function FavoritesTab(props) {
             }}
             initialRouteName="Favorites"
         >
-            <Stack.Screen name="Favorites">
-                {(favoritesProps) => (
-                    <Favorites {...favoritesProps} {...props} />
-                )}
-            </Stack.Screen>
+            <Stack.Screen name="Favorites" component={Favorites} />
         </Stack.Navigator>
     );
 }
