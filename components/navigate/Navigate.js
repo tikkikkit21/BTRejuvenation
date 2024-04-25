@@ -4,7 +4,6 @@ import { useIsFocused } from '@react-navigation/native';
 import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
-import { useSelector } from 'react-redux';
 
 export default function Navigate() {
 
@@ -26,9 +25,6 @@ export default function Navigate() {
 
     // State to determine when to display more options
     const [showMoreOptions, setShowMoreOptions] = useState(false);
-
-    const darkMode = useSelector(state => state.darkMode.isEnabled);
-    const styles = darkMode ? dark : light;
 
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
@@ -74,27 +70,15 @@ export default function Navigate() {
 
     return (
         <View style={styles.container}>
-            <MapViewMemo 
-                mapRegion={mapRegion}
-                setMapRegion={setMapRegion}
-                buses={buses}
-                setBuses={setBuses}
-                stops={stops}
-                setStops={setStops}
-                route={route}
-                setRoute={setRoute}
-                isOnCooldown={isOnCooldown}
-                setIsOnCooldown={setIsOnCooldown}
-            />
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={bottomSheetIndex}
-                snapPoints={snapPoints}
-                backgroundStyle={styles.bottomSheet}
-                // backgroundStyle={{backgroundColor: '#FFFFFF'}}
-                onChange={handleAnimateBottomSheet}
-            >
-            <View style={styles.inputContainer}>
+          <MapViewMemo />
+          <BottomSheet
+              ref={bottomSheetRef}
+              index={bottomSheetIndex}
+              snapPoints={snapPoints}
+              backgroundStyle={{backgroundColor: '#FFFFFF'}}
+              onChange={handleAnimateBottomSheet}
+          >
+              <View style={styles.inputContainer}>
                 <FontAwesome6 name='location-crosshairs' size={15} color='white'/>
                 <View style={styles.textInputContainer}>
                     <BottomSheetTextInput
@@ -157,13 +141,10 @@ export default function Navigate() {
 // Memoized Map component to avoid unnecessary rerendering.
 const MapViewMemo = React.memo(Map);
 
-const light = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
       flex: 1,
       backgroundColor: 'white'
-  },
-  bottomSheet: {
-    backgroundColor: 'white'
   },
   containerHeadline: {
       fontSize: 20,
@@ -238,90 +219,3 @@ const light = StyleSheet.create({
     marginBottom: 10 // Add margin bottom to create space
   }
 });
-
-const dark = StyleSheet.create({
-    container: {
-        flex: 1,
-        // color: '#861F41'
-    },
-    bottomSheet: {
-      backgroundColor: '#861F41'
-    },
-    containerHeadline: {
-        fontSize: 20,
-        fontWeight: '600',
-        padding: 20,
-        color: '#861F41'
-    },
-    swapButtonContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#861F41',
-        padding: 15
-    },
-    swapButton: {
-        transform: [{ rotate: '90deg' }],
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderRadius: 10,
-        width: '90%',
-        marginLeft: 20,
-        padding: 10,
-        paddingHorizontal: 10,
-        backgroundColor: '#E5751F'
-    },
-    textInputContainer: {
-        flex: 1,
-        marginLeft: 5,
-        height: 30,
-        backgroundColor: '#E5751F'
-    },
-    textInput: {
-        flex: 1,
-        padding: 5,
-        fontSize: 16,
-        color: 'black',
-        backgroundColor: 'white',
-        borderRadius: 10
-    },
-    moreButtonContainer: {
-        backgroundColor: '#861F41',
-        padding: 20,
-        paddingLeft: 25
-    },
-    moreButtonText: {
-      color: '#E5751F',
-      fontSize: 16
-    },
-    whenInputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 10,
-      width: '90%',
-      marginLeft: 20,
-      padding: 10,
-      paddingHorizontal: 10,
-      backgroundColor: '#E5751F',
-      color: 'white',
-      marginBottom: 10 // Add margin bottom to create space
-    },
-    priorityInputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 10,
-      width: '90%',
-      marginLeft: 20,
-      padding: 10,
-      paddingHorizontal: 10,
-      backgroundColor: '#E5751F',
-      color: 'white',
-      marginBottom: 10 // Add margin bottom to create space
-    }
-  });
-
-// Memoize Navigate component
-const MemoizedNavigate = React.memo(Navigate);
-
-// export default MemoizedNavigate;

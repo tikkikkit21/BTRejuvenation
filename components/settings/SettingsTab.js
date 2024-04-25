@@ -3,17 +3,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Settings from './Settings';
 import FeedbackForm from './FeedbackForm';
 import QRScanner from './QRScanner';
-import { useSelector, useDispatch } from 'react-redux';
 
 const Stack = createStackNavigator();
 
 export default function SettingsTab(props) {
-    const darkMode = useSelector(state => state.darkMode.isEnabled);
-    // const styles = darkMode ? dark : light;
     return (
         <Stack.Navigator
             screenOptions={{
-                headerStyle: { backgroundColor: darkMode ? "#861F41" : "white"  },
+                headerStyle: { backgroundColor: '#FFFFFF' },
                 headerTintColor: '#000000'
             }}
             initialRouteName="Settings"
