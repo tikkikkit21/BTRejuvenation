@@ -6,6 +6,7 @@ import Map, { createMarkers, createRoute, createStops } from '../home/Map';
 import * as Location from 'expo-location';
 import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { useSelector } from 'react-redux';
 /**
  * make a call to get bus ->
  * or make a bus that gets passed in
@@ -34,6 +35,9 @@ export default function RouteInfo({ route }) {
     const [stops, setStops] = useState([]);
     const [busses, setBusses] = useState([]);
     const [mapRoute, setMapRoute] = useState([]);
+
+    const darkMode = useSelector(state => state.darkMode.isEnabled);
+    const styles = darkMode ? dark : light;
     /**
      * map state variables below
      */
@@ -118,7 +122,8 @@ export default function RouteInfo({ route }) {
             </MapView>
           <BottomSheet
                 snapPoints={snapPoints}
-                backgroundStyle={{ backgroundColor: '#FFFFFF' }}
+                backgroundStyle={styles.bottomSheet}
+                // backgroundStyle={{ backgroundColor: '#FFFFFF' }}
                 ref={bottomSheetRef}
             >
                 {/* Not gonna lie, below background color is from chat gpt, 
@@ -155,9 +160,12 @@ export default function RouteInfo({ route }) {
 }
 
 
-const styles = StyleSheet.create({
+const light = StyleSheet.create({
     container:{
         flex: 1, 
+        backgroundColor: 'white'
+    },
+    bottomSheet: {
         backgroundColor: 'white'
     },
     busInfoContainer: {
@@ -172,6 +180,35 @@ const styles = StyleSheet.create({
         paddingRight: 2,
         paddingBottom:10,
         marginVertical: 0.02
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject,
+    },
+  
+  
+});
+
+const dark = StyleSheet.create({
+    container:{
+        flex: 1, 
+        backgroundColor: '#861F41'
+    },
+    bottomSheet: {
+        backgroundColor: 'gray'
+    },
+    busInfoContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 70,
+        backgroundColor: '#861F41'
+    },
+    flatListItem: {
+        width: '100%',
+        paddingLeft:2, 
+        paddingTop:7,
+        paddingRight: 2,
+        paddingBottom:10,
+        marginVertical: 0.02,
     },
     map: {
         ...StyleSheet.absoluteFillObject,

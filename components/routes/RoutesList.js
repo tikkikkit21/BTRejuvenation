@@ -196,7 +196,7 @@ export default function RoutesList() {
             <MapViewMemo />
             <BottomSheet
                 snapPoints={snapPoints}
-                backgroundStyle={{ backgroundColor: '#FFFFFF' }}
+                backgroundStyle={{ backgroundColor: darkMode ? "gray" : "white" }}
             >
                 <DropDownPicker
                     items={stops.map((stop, index) => ({
