@@ -12,7 +12,7 @@ import { getBusColor } from '../../backend/routeController';
 export default function Navigate() {
 
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['40%', '60%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['30%', '60%', '70%', '95%'], []);
 
     // Checks if tab is focused on
     const isFocused = useIsFocused();
@@ -170,36 +170,11 @@ export default function Navigate() {
                 </View>
             </View>
             {/* Displays the More Options button */}
-            <View style={styles.moreButtonContainer}>
+            {/* <View style={styles.moreButtonContainer}>
                 <TouchableOpacity onPress={handleMoreOptions}>
                     <Text style={styles.moreButtonText}>More Options</Text>
                 </TouchableOpacity>
-            </View>
-              {showMoreOptions && (     // Displays more options if button is clicked
-                <View>
-                    {/* Displays the When option */}
-                    <View style={styles.moreOptionsContainer}>
-                        <Ionicons name="time-outline" size={15} color='white'/>
-                        <View style={styles.textInputContainer}>
-                            <BottomSheetTextInput
-                                style={styles.textInput}
-                                placeholder='When'
-                            />
-                        </View>
-                    </View>
-                    {/* Displays the Priority option */}
-                    <View style={styles.moreOptionsContainer}>
-                        <MaterialCommunityIcons name="priority-high" size={15} color='white'/>
-                        <View style={styles.textInputContainer}>
-                            <BottomSheetTextInput
-                                style={styles.textInput}
-                                placeholder='Priority'
-                            />
-                        </View>
-                    </View>
-                </View>
-              )
-              }
+            </View> */}
             {/* If destination fields are filled, show Search button */}
             {startDestination && endDestination && (
                 <View>
