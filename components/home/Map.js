@@ -7,6 +7,7 @@ import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
 import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
+import { useNavigation } from '@react-navigation/native';
 import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
 import { getAlerts } from '../../backend/alertController';
@@ -32,6 +33,9 @@ export default function Map({ navigation }) {
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const refreshFreq = useSelector(state => state.refreshFrequency.time);
     const [isDarkMode, setIsDarkMode] = useState(darkMode);
+    
+
+    
 
     // ask for user location
     Location.requestForegroundPermissionsAsync();
@@ -124,6 +128,10 @@ export default function Map({ navigation }) {
         setRoute(createRoute(stops, stopColor));
     }, [stops]);
 
+    
+
+  
+
     return (
         <View style={appStyles.container}>
             <MapView
@@ -133,8 +141,8 @@ export default function Map({ navigation }) {
                 showsUserLocation={true}
                 userInterfaceStyle={isDarkMode ? "dark" : "light"}
             >
-                {createMarkers(buses, handleMarkerSelect)}
-                {createStops(stops, stopColor)}
+                {createMarkers(buses, handleMarkerSelect, null, navigation)}
+                {createStops(stops, stopColor, navigation)}
                 {route}
             </MapView>
             <View style={styles.refreshButton}>
@@ -161,8 +169,27 @@ export default function Map({ navigation }) {
     )
 }
 
+
+export function getStopInfo(stopingName, stopingCode, navigation){
+    navigation.navigate('StopInfo', {
+        stopName: stopingName,
+        stopCode: stopingCode,
+        fromFavorites: false
+    });
+
+}
+
+export function getRouteInfo(shortName, fullName, color, navigation){
+    navigation.navigate('RouteInfo', {
+        routeShortName: shortName,
+        routeName: fullName,
+        routeColor: color
+    });
+}
+
+
 // creates bus icons for each bus in the bus data
-export function createMarkers(buses, handleSelect, color) {
+export function createMarkers(buses, handleSelect, color, navigation) {
     return buses.map(busObj => {
         return (
             <Marker
@@ -176,6 +203,7 @@ export function createMarkers(buses, handleSelect, color) {
                 pointerEvents="auto"
                 // For the route tab the handleseelct is not necesary, as we know bus info already
                 onSelect={handleSelect ? () => { handleSelect(busObj.RouteShortName) } : null}
+                onCalloutPress={() => getRouteInfo(busObj.RouteShortName, "no name", routeColorMap[busObj.RouteShortName], navigation)}
             >
                 <View>
                     <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : '#' + routeColorMap[busObj.RouteShortName]} />
@@ -185,8 +213,10 @@ export function createMarkers(buses, handleSelect, color) {
     });
 }
 
+
+
 // creates circles for each stop
-export function createStops(stops, color) {
+export function createStops(stops, color, navigation) {
     return stops.map(stopObj =>
         <Marker
             key={stopObj.StopCode}
@@ -197,6 +227,7 @@ export function createStops(stops, color) {
             title={stopObj.StopCode}
             description={stopObj.StopName}
             pointerEvents="auto"
+            onCalloutPress={() => getStopInfo(stopObj.StopName, stopObj.StopCode, navigation)}
         >
             <View>
                 <Octicons name="dot-fill" size={30} color={color ? '#' + color : 'red'} />
