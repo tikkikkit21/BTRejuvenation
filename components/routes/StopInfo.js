@@ -18,8 +18,10 @@ export default function StopInfo({ route }){
     const [singleStop, setSingleStop] = useState([]);
     //const [isArray, setIsArray] = useState(false);
 
-    const [favorites, setFavorites] = useState(false);
+    const [stopListItems, setStopListItems] = useState([]);
+    const [favorites, setFavorites] = useState([]);
 
+    
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
     useEffect (() => {
@@ -31,6 +33,9 @@ export default function StopInfo({ route }){
 
             favs = await getFavoriteStops();
             setFavorites(favs);
+
+            storeRoutes = await getScheduledRoutes(stopCode);  
+            setSingleRoutes(storeRoutes);
 
 
             let storeRoutes = [];
@@ -59,6 +64,8 @@ export default function StopInfo({ route }){
         }
 
         fetchData();
+
+        fetchStopListItems();
         
         /**
          * 1. getRoutes for stop
@@ -68,7 +75,15 @@ export default function StopInfo({ route }){
 
     }, []);
 
+    async function fetchStopListItems() {
+        const items = await renderStopList();
+        setStopListItems(items);
+    }
+
     function isFavorite(stop) {
+        if(favorites == null){
+            return false;
+        }
         if (favorites.includes(stop) > 0) {
             return true;
         }
@@ -110,80 +125,40 @@ export default function StopInfo({ route }){
         return formattedTime;
     }
 
-    async function stopListComponent(currStop, routeName, stopCode2, routeColor){
-        /**
-         * Harding Ave (HDG)
-         * time1, time2, time3, time4, time5
-         */
-        let times = await getNextDeparturesForStop(currStop.RouteShortName, stopCode2);
-        /**
-         * returns: (times.RouteShortName, times.StopName, times.AdjustedDepartureTime) * 5
-         * 
-         */
-        timesString = "";
-        times.forEach(time => {
-            timesString += `, ${formatTime(time.AdjustedDepartureTime)}`;
-        });
-        return (
-            <View style={{ alignItems: 'flex-start' }}>
-                <Text style={{ fontSize: 22, color: '#' + routeColor }}>{`${routeName} (${currStop.RouteShortName})`}</Text>
-                <Text style={{ fontSize: 19, color: '#' + routeColor }}>{`${timesString}`}</Text>
-            </View>
-        );
+    async function renderStopList() {
+        // Fetch the necessary data before rendering the FlatList
+        const stopListItems = await Promise.all(singleRoutes.map(async (item) => {
+            const stopList = await stopListComponent(item.RouteName, stopCode, item.RouteColor, item.RouteShortName);
+            return (
+                <View style={styles.flatListItem}>
+                    {stopList}
+                </View>
+            );
+        }));
+    
+        return stopListItems;
     }
-
+    
     return (
         <View>
-
-       
-            <MapViewMemo
-                    mapRegion={mapRegion}
-                    setMapRegion={setMapRegion}
-                    buses={buses}
-                    setBuses={setBuses}
-                    stops={busStops}
-                    setStops={setBusStops}
-                    route={route}
-                    setRoute={setRoute}
-                    isOnCooldown={isOnCooldown}
-                    setIsOnCooldown={setIsOnCooldown}
-                />
-                <Toast/>
-                <BottomSheet
-                    snapPoints={snapPoints}
-                    backgroundStyle={{ backgroundColor: '#FFFFFF' }}
-                >
-                     <View style={{ flexDirection: 'row', alignItems: 'center' }}> 
-                        <Text>`${singleStop.stopCode} - ${singleStop.StopName}`</Text>
-                        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(item.RouteShortName)}>
-                            <FontAwesome6 name="heart" size={22} style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }} />
-                        </TouchableOpacity>
-                     </View>
-                    <View>
-                        {/* Make below in a function, for a flatlist to call upon */}
-                        <FlatList
-                            data = {singleRoutes}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) => (
-                                <View style={styles.flatListItem}>
-                                    {stopListComponent(stopName, item.RouteName, stopCode, item.RouteColor)}
-                                </View>
-                            )}
-                        />
-                    </View>
-
-                                                {/* Harding Ave-HDG, then times underneath, repeat for each route */}
-
-                    
-                    
-
-                </BottomSheet>
-
-
+            <MapViewMemo/>
+            <Toast/>
+            <BottomSheet
+                snapPoints={snapPoints}
+                backgroundStyle={{ backgroundColor: '#FFFFFF' }}
+            >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}> 
+                    <Text>{`${singleStop.stopCode} - ${singleStop.StopName}`}</Text>
+                    <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(stopCode)}>
+                        <FontAwesome6 name="heart" size={22} style={{ color: isFavorite(stopCode) ? 'red' : 'black' }} />
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    {/* Render the stop list items */}
+                    {stopListItems}
+                </View>
+            </BottomSheet>
         </View>
-            
-
-
     );
 
 

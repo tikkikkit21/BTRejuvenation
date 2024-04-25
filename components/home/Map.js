@@ -30,8 +30,6 @@ export default function Map({ navigation }) {
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const refreshFreq = useSelector(state => state.refreshFrequency.time);
     const [isDarkMode, setIsDarkMode] = useState(darkMode);
-
-    const navigateMe = useNavigation();
     
 
     
@@ -125,7 +123,7 @@ export default function Map({ navigation }) {
                 userInterfaceStyle={isDarkMode ? "dark" : "light"}
             >
                 {createMarkers(buses, handleMarkerSelect)}
-                {createStops(stops, stopColor, navigateMe)}
+                {createStops(stops, stopColor, navigation)}
                 {route}
             </MapView>
             <View style={styles.refreshButton}>
@@ -148,8 +146,8 @@ export default function Map({ navigation }) {
 }
 
 
-function getStopInfo(navigation, stopingName){
-    navigateMe.navigate('StopInfo', {
+export function getStopInfo(stopingName, stopingCode, navigation){
+    navigation.navigate('StopInfo', {
         stopName: stopingName,
         stopCode: stopingCode,
         fromFavorites: false
