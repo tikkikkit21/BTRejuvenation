@@ -18,3 +18,18 @@ export async function getStops(routeCode) {
 
     return json;
 }
+
+export async function getNextDeparturesForStop(routeShortName, stopCode){
+    let noTrips = 5;
+
+    const { data } = await axios.get(`${ROOT}/GetNextDeparturesForStop?routeShortName=${routeShortName}&noOfTrips=${noTrips}&stopCode=${stopCode}`);
+
+    let json = xml2js(data, { compact: true });
+    json = json.DocumentElement.ScheduledStops;
+    json = json.map(stop => formatTextProperty(stop));
+
+    return json;
+
+
+
+}

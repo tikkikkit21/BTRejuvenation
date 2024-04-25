@@ -87,7 +87,7 @@ export default function RouteInfo({ route }) {
         }
     }, [busses]);
 
-    function formatTime(timeString) {
+     function formatTime(timeString) {
         const date = new Date(timeString);
         let hours = date.getHours();
         const minutes = date.getMinutes();

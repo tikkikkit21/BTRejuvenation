@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Map from './Map';
 import FeedbackForm from '../settings/FeedbackForm';
 import QRScanner from '../settings/QRScanner';
+import StopInfo from '../routes/StopInfo';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,7 @@ function HomeTab({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, ro
                     />
                 )}
             </Stack.Screen>
+            <Stack.Screen name="StopInfo" component={StopInfo}/>
         </Stack.Navigator>
     );
 }
