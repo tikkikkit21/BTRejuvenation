@@ -83,7 +83,6 @@ export default function RoutesList() {
         //     return true;
         // }
         // return false;
-        console.log("isFavorite/favorites:", favorites);
         return favorites.includes(route);
     }
 
