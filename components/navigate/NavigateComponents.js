@@ -4,11 +4,9 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 export function RouteOption({ busLine, tripDuration, tripDistance }) {
     return (
         <TouchableOpacity style={styles.container}>
-            <View>
-                <Text style={styles.text}>{busLine}</Text>
-                <Text style={styles.text}>{tripDuration}</Text>
-                <Text style={styles.text}>{tripDistance}</Text>
-            </View>
+            <Text style={styles.headerText}>{busLine}</Text>
+            <Text style={[styles.text, styles.textMargin]}>{tripDuration}</Text>
+            <Text style={styles.text}>{tripDistance}</Text>
         </TouchableOpacity>
     );
 }
@@ -27,15 +25,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 3,
-        alignItems: 'center', // Center content horizontally
-        justifyContent: 'center', // Center content vertically
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     headerText: {
         fontSize: 25,
-        marginBottom: 5,
+        marginBottom: 10,
     },
     text: {
         fontSize: 18,
         marginBottom: 2,
+    },
+    textMargin: {
+        marginTop: 5,
     },
 });

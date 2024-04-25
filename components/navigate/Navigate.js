@@ -5,6 +5,7 @@ import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
 import { getConnectedRoutes } from '../../backend/navigationController';
+import { getBus } from '../../backend/busController';
 import { RouteOption } from './NavigateComponents';
 
 function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
@@ -47,6 +48,15 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
             setShowMoreOptions(false);
         }
     }, [isFocused]);
+
+    // When startDestination and/or endDestination are emptied, reset routeData
+    useEffect(() => {
+        // Reset routeData when startDestination or endDestination is cleared
+        if (!startDestination || !endDestination) {
+            setRouteData(null);
+        }
+    }, [startDestination, endDestination]);
+    
 
     // Handles when the arrow-swap button is clicked
     const handleSwapDestinations = () => {
