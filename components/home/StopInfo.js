@@ -12,58 +12,20 @@ import { getFavoriteStops, deleteFavoriteStop, addFavoriteStop } from '../../bac
 
 export default function StopInfo({ route }){
     let { stopName, stopCode, fromFavorites } = route.params;
-
-    const [routes, setRoutes] = useState([]);
     const [singleRoutes, setSingleRoutes] = useState([]);
-    const [singleStop, setSingleStop] = useState([]);
-
-    const [update, setUpdate] = useState([]);
-    
-
     const [favorites, setFavorites] = useState([]);
 
     
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
     useEffect (() => {
-
-        // console.log("here");
-        // console.log(stopName);
-        // console.log(stopCode);
-        // console.log(fromFavorites);
-
         async function fetchData(){
-
-            // console.log("FETCHDATA")
-
-
-
-            
 
             const storeRoutes = await getScheduledRoutes(stopCode, false); 
             setSingleRoutes(storeRoutes);
 
             const favs = await getFavoriteStops();
             setFavorites(favs);
-
-
-           // console.log(singleRoutes); 
-            // if(fromFavorites){
-            //     let stops = favorites;
-
-            //     stops.forEach(async stop => {
-            //         let routeLocal = await getScheduledRoutes(stop);
-            //         storeRoutes.push(routeLocal);
-            //     });
-            //     console.log(storeRoutes);
-            //     setRoutes(storeRoutes);
-            // }
-
-            // else{
-            //     storeRoutes = await getScheduledRoutes(stopCode);  
-            //     setSingleRoutes(storeRoutes);
-            // }
-
 
             //routes has the informationL RouteName, RouteShortName, RouteColor
 
@@ -73,15 +35,8 @@ export default function StopInfo({ route }){
         }
         fetchData();
 
-        setUpdate([true]);
 
        
-
-        /**
-         * 1. getRoutes for stop
-         * 2. GetNextDeparturesForStop with trips = 5
-         * 3. store those into a component
-         */
 
     }, []);
 
@@ -163,12 +118,7 @@ export default function StopInfo({ route }){
 
     // Call renderStopList to get the stop list items
     //const stopListItems = await renderStopList();
-    /**
-     * IF THE CHAT GPT IMPLEMENTATION DOES NOT WORK, THEN GO BACKA ND USE THE AWAIT 
-     * GETNEXTDEPARTURES FOR STOP JUST OUTSIDE OF THE ARRAY AND STORE IT AS A STATE VARIABLE
-     * 
-     */
-    
+   
     return (
         <View style = {styles.container}>
             <MapViewMemo/>

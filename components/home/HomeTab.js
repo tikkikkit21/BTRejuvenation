@@ -4,6 +4,7 @@ import Map from './Map';
 import StopInfo from './StopInfo';
 import RouteInfo from '../routes/RouteInfo';
 import Alerts from './Alerts';
+import Alerts from './Alerts.js'
 
 const Stack = createStackNavigator();
 
