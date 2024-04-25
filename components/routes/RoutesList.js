@@ -71,14 +71,10 @@ export default function RoutesList() {
 
     }, []);
 
+
+    // update backend when favorites list changes
     useEffect(() => {
-        async function getFavorites() {
-
-            const favs = await getFavoriteRoutes();
-            setFavorites(favs);
-        }
-        getFavorites();
-
+        saveFavoriteRoutes(favorites);
     }, [favorites]);
 
     function isFavorite(route) {
@@ -123,9 +119,7 @@ export default function RoutesList() {
             newFavorites.push(route);
             setFavorites(newFavorites);
         }
-
     }
-
 
     const handleStopChange = (itemValue) => {
         setPlaceholder(itemValue.label)
