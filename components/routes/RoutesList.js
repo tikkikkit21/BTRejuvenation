@@ -23,6 +23,8 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     const canTrackData = useSelector(state => state.usageTracking.isEnabled);
     const navigation = useNavigation();
 
+    const darkMode = useSelector(state => state.darkMode.isEnabled);
+
     //TODO: Create a method that uses the favorites useState to check to see if 
     //there is a favorite for this user, instead of calling async every time
 
@@ -169,7 +171,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
             />
             <BottomSheet
                 snapPoints={snapPoints}
-                backgroundStyle={{ backgroundColor: '#FFFFFF' }}
+                backgroundStyle={{ backgroundColor: darkMode ? "gray" : "white" }}
             >
                 <DropDownPicker
                     items={stops.map((stop, index) => ({
