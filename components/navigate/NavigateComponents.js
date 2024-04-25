@@ -124,7 +124,6 @@ export function RouteDirections({ route }) {
                         )}
                     />
                 </View>
-
             </BottomSheet>
         </View>
     );

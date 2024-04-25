@@ -37,10 +37,10 @@ export default function Navigate() {
     const [routeData, setRouteData] = useState(null);
 
     // State to hold the route color
-    const [routeColor, setRouteColor] = useState('black');
+    const [routeColor, setRouteColor] = useState('white');
 
     // State to hold the route text color
-    const [routeTextColor, setRouteTextColor] = useState('black');
+    const [routeTextColor, setRouteTextColor] = useState('white');
 
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
@@ -104,8 +104,8 @@ export default function Navigate() {
             const busColor = await getBusColor(result[0].mainBusLine);
             // If route is only Walking
             if (busColor === null) {
-                setRouteColor('black');
-                setRouteTextColor('black');
+                setRouteColor('white');
+                setRouteTextColor('white');
             } else { // if route contains a bus
                 setRouteColor(busColor.RouteColor);
                 setRouteTextColor(busColor.RouteTextColor);
