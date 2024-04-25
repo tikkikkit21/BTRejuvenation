@@ -115,8 +115,6 @@ export default function Navigate() {
         //     });
         // }
 
-        console.log('RouteInfo clicked:');
-
         navigation.navigate('RouteDirections', {
             routeData: routeInfo
         });

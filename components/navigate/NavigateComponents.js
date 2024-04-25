@@ -23,12 +23,7 @@ export function RouteDirections({ route }) {
     const { routeData } = route.params;
 
     // Map state variables, sets initial map region
-    const [mapRegion, setMapRegion] = useState({
-        latitude: 37.227468937500895,
-        longitude: -80.42357646125542,
-        latitudeDelta: 0.051202637986392574,
-        longitudeDelta: 0.03720943536600885,
-    });
+    const [mapRegion, setMapRegion] = useState(null);
     Location.requestForegroundPermissionsAsync();
 
     // Ref for bottom sheet component
@@ -37,33 +32,68 @@ export function RouteDirections({ route }) {
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['30%', '50%', '70%', '95%'], []);
 
+    // Calculate map region to fit all points
     useEffect(() => {
-        // logic to set the initial map region based on the routeData, if needed
-    }, []);
+        if (routeData.length > 0) {
+            let minLat = Infinity;
+            let maxLat = -Infinity;
+            let minLng = Infinity;
+            let maxLng = -Infinity;
 
-    routeData.forEach((element, index) => {
-        console.log(`Element ${index + 1}:`);
-        console.log(element);
-        console.log('\n'); // Add a newline for separation
-    });    
+            // Calculate the bounds of the map region based on route coords
+            routeData.forEach((element) => {
+                element.points.forEach((point) => {
+                    minLat = Math.min(minLat, point.latitude);
+                    maxLat = Math.max(maxLat, point.latitude);
+                    minLng = Math.min(minLng, point.longitude);
+                    maxLng = Math.max(maxLng, point.longitude);
+                });
+            });
+
+            // Add padding to the bounding box
+            const latPadding = 0.01;
+            const longPadding = 0.03;
+
+            // Set Map Region based on the bounds of the route
+            setMapRegion({
+                latitude: (minLat + maxLat) / 2,
+                longitude: (minLng + maxLng) / 2,
+                latitudeDelta: (maxLat - minLat) + latPadding,
+                longitudeDelta: (maxLng - minLng) + longPadding,
+            });
+        }
+    }, [routeData]);
+
+    // routeData.forEach((element, index) => {
+    //     console.log(`Element ${index + 1}:`);
+    //     console.log(element);
+    //     console.log('\n'); // Add a newline for separation
+    // });    
     
     return (
         <View style={{ flex: 1 }}>
-            <MapView
-                style={{ flex: 1 }}
-                initialRegion={mapRegion}
-            >
-                {/* Render markers or routes on the map based on routeData */}
-            </MapView>
+            {mapRegion && ( // Render map only when mapRegion is available
+                <MapView
+                    style={{ flex: 1 }}
+                    region={mapRegion}
+                >
+                    {routeData.map((element, index) => (
+                        <Marker
+                            key={index}
+                            coordinate={element.points[0]} // You can choose any point in the element
+                            title={element.instructions}
+                        />
+                    ))}
+                </MapView>
+            )}
             <BottomSheet
                 ref={bottomSheetRef}
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
-                <View>
+                <View alignItems={'center'} justifyContent={'center'}>
                     <Text>ROUTE DIRECTIONS</Text>
                 </View>
-                {/* Render your bottom sheet content here, displaying route information */}
             </BottomSheet>
         </View>
     );
