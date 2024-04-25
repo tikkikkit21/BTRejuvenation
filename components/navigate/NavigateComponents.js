@@ -1,6 +1,9 @@
 import { React, useMemo, useRef, useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import MapView, { MapCallout, Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
 import Map, { createMarkers, createRoute, createStops } from '../home/Map';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 // Displays a button with basic information about a route
 export function RouteOption({ busLine, tripDuration, tripDistance, onPress }) {
@@ -15,14 +18,53 @@ export function RouteOption({ busLine, tripDuration, tripDistance, onPress }) {
 
 // Displays the directions for a route
 export function RouteDirections({ route }) {
+
+    // Contains information of route
     const { routeData } = route.params;
+
+    // Map state variables, sets initial map region
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 37.227468937500895,
+        longitude: -80.42357646125542,
+        latitudeDelta: 0.051202637986392574,
+        longitudeDelta: 0.03720943536600885,
+    });
+    Location.requestForegroundPermissionsAsync();
+
+    // Ref for bottom sheet component
+    const bottomSheetRef = useRef(null);
+
+    // Points of the screen where the bottom sheet extends to
+    const snapPoints = useMemo(() => ['30%', '50%', '70%', '95%'], []);
+
+    useEffect(() => {
+        // logic to set the initial map region based on the routeData, if needed
+    }, []);
+
     routeData.forEach((element, index) => {
         console.log(`Element ${index + 1}:`);
         console.log(element);
         console.log('\n'); // Add a newline for separation
-    });    return (
-        <View>
-            <Text>Hello!</Text>
+    });    
+    
+    return (
+        <View style={{ flex: 1 }}>
+            <MapView
+                style={{ flex: 1 }}
+                initialRegion={mapRegion}
+            >
+                {/* Render markers or routes on the map based on routeData */}
+            </MapView>
+            <BottomSheet
+                ref={bottomSheetRef}
+                snapPoints={snapPoints}
+                backgroundStyle={{ backgroundColor: '#FFFFFF' }}
+            >
+                <View>
+                    <Text>ROUTE DIRECTIONS</Text>
+                </View>
+                {/* Render your bottom sheet content here, displaying route information */}
+            </BottomSheet>
         </View>
     );
 }
