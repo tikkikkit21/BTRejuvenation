@@ -90,11 +90,11 @@ export default function Navigate() {
 
     // Handles when 'search' button is clicked
     const handleRouteSearch = async () => {
-        // something
+        // Retrieve route data of the connected route for the trip
         try {
             const result = await getConnectedRoutes(startDestination, endDestination);
             setRouteData(result);
-            console.log('Results: ', routeData);
+            // console.log('Results: ', routeData);
         } catch (error) {
             console.log('Error Fetching Data:', error);
         }

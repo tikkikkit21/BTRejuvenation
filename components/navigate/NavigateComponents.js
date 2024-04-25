@@ -134,6 +134,36 @@ export function createRouteCoords(route) {
                 }
             });
         }
+        // Add markers to the first and last coordinates of the route
+        if (route.length > 0) {
+            const firstPoint = route[0].points[0];
+            const lastSegment = route[route.length - 1];
+            const lastPoint = lastSegment.points[lastSegment.points.length - 1];
+
+            // Add icon to the first coordinate (starting point)
+            markers.push(
+                <Marker
+                    key={`startMarker-${Math.random()}`}
+                    coordinate={{ latitude: firstPoint.latitude, longitude: firstPoint.longitude }}
+                >
+                    <View>
+                        <FontAwesome6 name="person" size={24} color="green" />
+                    </View>
+                </Marker>
+            );
+
+            // Add icon to the last coordinate (end destination)
+            markers.push(
+                <Marker
+                    key={`endMarker-${Math.random()}`}
+                    coordinate={{ latitude: lastPoint.latitude, longitude: lastPoint.longitude }}
+                >
+                    <View>
+                        <FontAwesome6 name="person" size={24} color="red" />
+                    </View>
+                </Marker>
+            );
+        }
     });
 
     // Return the array of Marker components and Polylines
