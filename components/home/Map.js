@@ -162,7 +162,7 @@ export default function Map({ navigation }) {
             </View>
             {alerts.length > 0 && <View style={styles.alertButton}>
                 <TouchableOpacity onPress={handleAlertClick}>
-                    <FontAwesome5 name="bell" size={20} color="white" />
+                    <FontAwesome5 name="bell" size={20} color={darkMode ? "white" : "#861F41"} />
                 </TouchableOpacity>
             </View>}
         </View>
@@ -302,6 +302,14 @@ const light = StyleSheet.create({
         padding: 16,
         borderRadius: 15
     },
+    alertButton: {
+        position: 'absolute',
+        top: 150,
+        right: 10,
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 15
+    },
     locationButton: {
         position: 'absolute',
         top: 80,
@@ -348,7 +356,7 @@ const dark = StyleSheet.create({
         position: 'absolute',
         top: 150,
         right: 10,
-        backgroundColor: '#A40046',
+        backgroundColor: '#861F41',
         padding: 15,
         borderRadius: 15
     },
