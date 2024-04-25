@@ -76,6 +76,14 @@ export default function Alerts({ navigation, route }) {
         );
     }
 
+    if (alerts.length === 0) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.loading}>Loading alerts...</Text>
+            </View>
+        );
+    }
+
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -90,6 +98,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingHorizontal: 10
+    },
+    loading: {
+        fontSize: 25,
+        marginTop: 20,
+        alignSelf: "center"
     },
     alertSection: {
         paddingVertical: 10,
