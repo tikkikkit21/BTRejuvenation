@@ -204,7 +204,7 @@ export default function Navigate() {
                     {routeData && (     // If routeData exists, display it
                         <View style={styles.routeOptionContainer}>
                             <RouteOption 
-                                busLine={routeData[0].mainBusLine === 'N/A' ? 'Walking' : routeData[0].mainBusLine}
+                                busLine={routeData[0].mainBusLine === 'N/A' ? 'Walk' : routeData[0].mainBusLine}
                                 tripDuration={routeData[0].totalDuration}
                                 tripDistance={routeData[0].totalDistance}
                                 routeColor={routeColor}
