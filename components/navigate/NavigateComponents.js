@@ -1,5 +1,5 @@
 import { React, useMemo, useRef, useEffect, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, FlatList } from "react-native";
 import MapView, { MapCallout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -22,7 +22,7 @@ export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, o
 export function RouteDirections({ route }) {
 
     // Contains information of route
-    const { routeData, routeColor } = route.params;
+    const { routeData, routeColor, routeTextColor, startDestination, endDestination } = route.params;
 
     // Map state variables, sets initial map region
     const [mapRegion, setMapRegion] = useState(null);
@@ -33,7 +33,7 @@ export function RouteDirections({ route }) {
 
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['30%', '50%', '70%', '95%'], []);
-
+    
     // Calculate map region to fit all points
     useEffect(() => {
         if (routeData && routeData.length > 0) {
@@ -81,8 +81,50 @@ export function RouteDirections({ route }) {
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
                 <View alignItems={'center'} justifyContent={'center'}>
-                    <Text>ROUTE DIRECTIONS</Text>
+                    <Text style={{ backgroundColor: routeColor === 'black' ? 'black' : `#${routeColor}`, fontSize: 20, fontWeight: 'bold'}}>Route Directions</Text>
+                    <FlatList
+                        data={[
+                            { key: 'Start Destination', value: startDestination, icon: 'human-male' },
+                            { key: 'End Destination', value: endDestination, icon: 'human-male' },
+                            { key: 'Total Duration', value: routeData[0].totalDuration, icon: 'clock' },
+                            { key: 'Instructions', value: routeData.map(data => data.instructions).join('\n'), icon: 'directions' }
+                        ]}
+                        renderItem={({ item }) => (
+                            <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+                                {item.key !== "Instructions" && (
+                                    <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                                        {item.key === 'Start Destination' && (
+                                            <MaterialCommunityIcons name={item.icon} size={35} color="green" />
+                                        )}
+                                        {item.key === 'End Destination' && (
+                                            <MaterialCommunityIcons name={item.icon} size={35} color="red" />
+                                        )}
+                                        {item.key === 'Total Duration' && (
+                                            <MaterialCommunityIcons name={item.icon} size={35} color="black" />
+                                        )}
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>{item.key}</Text>
+                                            <Text style={{ fontSize: 14 }}>{item.value}</Text>
+                                        </View>
+                                    </View>
+                                )}
+                                <View style={{ marginLeft: 10 }}>
+                                    {item.key === 'Instructions' && routeData.map(data => (
+                                        <View key={data.instructions} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            {data.routeName !== null ? (
+                                                <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'black' ? 'black' : `#${routeColor}`} />
+                                            ) : (
+                                                <MaterialCommunityIcons name="walk" size={30} color="black" />
+                                            )}
+                                            <Text style={{ fontSize: 14, fontWeight:'bold' }}>{data.instructions}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </View>
+                        )}
+                    />
                 </View>
+
             </BottomSheet>
         </View>
     );
@@ -148,7 +190,7 @@ export function createRouteCoords(route, color) {
                     coordinate={{ latitude: firstPoint.latitude, longitude: firstPoint.longitude }}
                 >
                     <View>
-                        <FontAwesome6 name="person" size={24} color="green" />
+                        <MaterialCommunityIcons name="human-male" size={24} color="green" />
                     </View>
                 </Marker>
             );
@@ -160,7 +202,7 @@ export function createRouteCoords(route, color) {
                     coordinate={{ latitude: lastPoint.latitude, longitude: lastPoint.longitude }}
                 >
                     <View>
-                        <FontAwesome6 name="person" size={24} color="red" />
+                        <MaterialCommunityIcons name="human-male" size={30} color="red" />
                     </View>
                 </Marker>
             );

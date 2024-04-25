@@ -39,6 +39,9 @@ export default function Navigate() {
     // State to hold the route color
     const [routeColor, setRouteColor] = useState('black');
 
+    // State to hold the route text color
+    const [routeTextColor, setRouteTextColor] = useState('black');
+
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
     useEffect(() => {
@@ -102,8 +105,11 @@ export default function Navigate() {
             // If route is only Walking
             if (busColor === null) {
                 setRouteColor('black');
+                setRouteTextColor('black');
             } else { // if route contains a bus
                 setRouteColor(busColor.RouteColor);
+                setRouteTextColor(busColor.RouteTextColor);
+                console.log("Check", busColor.RouteTextColor);
             }
         } catch (error) {
             console.log('Error Fetching Data:', error);
@@ -116,6 +122,9 @@ export default function Navigate() {
         navigation.navigate('RouteDirections', {
             routeData: routeInfo,
             routeColor: routeColor,
+            routeTextColor: routeTextColor,
+            startDestination: startDestination,
+            endDestination: endDestination
         });
     };
 
