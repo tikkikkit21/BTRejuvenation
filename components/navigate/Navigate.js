@@ -247,15 +247,16 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     moreButtonContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        padding: 20,
-        paddingLeft: 25
+        backgroundColor: '#A40046', // Background color
+        paddingVertical: 10,
+        paddingHorizontal: 20, // Adjust padding as needed
+        borderRadius: 10,
+        marginHorizontal: 20,
+        marginVertical: 10,
     },
     moreButtonText: {
-        color: 'blue',
-        fontSize: 16
+        color: '#fff', // Font color
+        fontSize: 16,
     },
     moreOptionsContainer: {
         flexDirection: 'row',
@@ -284,8 +285,7 @@ const styles = StyleSheet.create({
         alignItems: 'center', // Center content horizontally
         justifyContent: 'center', // Center content vertically
     },
-  });
-  
+});
 
 // Memoize Navigate component
 const MemoizedNavigate = React.memo(Navigate);
