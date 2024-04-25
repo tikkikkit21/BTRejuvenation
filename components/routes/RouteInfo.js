@@ -63,7 +63,7 @@ export default function RouteInfo({ route }) {
         async function fetchInfo(){
             const bussesInfo = await getBus(routeShortName);
             setBusses(bussesInfo);
-            
+
             const stops = await getStops(routeShortName);
             setStops(stops);
 
@@ -125,8 +125,9 @@ export default function RouteInfo({ route }) {
                 so that the text is easier to read */}
                 <View style={[styles.busInfoContainer, { backgroundColor: '#' + routeColor }]}>
                     <Text style={{ fontSize: 22, color: '#000000', textAlign: 'center' }}>{`${routeShortName} Bus #${busses.AgencyVehicleName}`}</Text>
-                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Last Stop: ${busses.LastStopName} (#${busses.StopCode})`}</Text>
-                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Bus Capacity: ${busses.PercentOfCapacity}%`}</Text>
+                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>
+                        {`Bus Capacity: ${busses.PercentOfCapacity !== undefined ? busses.PercentOfCapacity + '%' : busses.TotalCount + ' People'}`}
+                    </Text>                    
 
                 </View>
 
