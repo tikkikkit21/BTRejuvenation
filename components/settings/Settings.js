@@ -11,14 +11,11 @@ import { updateDarkMode } from '../../store/darkModeReducer';
 import { updateRefreshFrequency } from '../../store/refreshFrequencyReducer';
 import { updateUsageTracking } from '../../store/usageTrackingReducer';
 
-
-
 export default function Settings({ navigation }) {
     const dispatch = useDispatch();
 
     // Redux storage values
     const darkModeRedux = useSelector(state => state.darkMode.isEnabled);
-    const styles = darkModeRedux ? dark : light;
     const refreshFreqRedux = useSelector(state => state.refreshFrequency.time);
     const usageTrackingRedux = useSelector(state => state.usageTracking.isEnabled);
 
@@ -136,7 +133,7 @@ export default function Settings({ navigation }) {
     );
 }
 
-const light = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -176,60 +173,6 @@ const light = StyleSheet.create({
     },
     buttonText: {
         marginLeft: 10
-    },
-    buttonLabel: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    }
-});
-
-const dark = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#E5751F',
-        padding: 25
-    },
-    header: {
-        fontSize: 20,
-        color: '#861F41'
-    },
-    section: {
-        marginTop: 5,
-        marginBottom: 5,
-        color: '#861F41'
-    },
-    setting: {
-        margin: 5,
-        margin: 5,
-        color: '#861F41'
-    },
-    inlineSetting: {
-        margin: 5,
-        margin: 5,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    switch: {
-        margin: 10,
-        color: '#861F41'
-    },
-    small: {
-        fontSize: 10,
-        color: '#861F41'
-    },
-    button: {
-        borderColor: "#861F41",
-        backgroundColor: '#861F41',
-        borderWidth: 1,
-        borderRadius: 15,
-        padding: 15,
-        width: "auto",
-        margin: 15,
-        alignItems: 'center',
-    },
-    buttonText: {
-        marginLeft: 10,
-        color: 'white'
     },
     buttonLabel: {
         flexDirection: 'row',

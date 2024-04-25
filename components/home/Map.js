@@ -31,7 +31,6 @@ export default function Map({ navigation }) {
 
     const refreshTimer = useRef(null);
     const darkMode = useSelector(state => state.darkMode.isEnabled);
-    const styles = darkMode ? dark : light;
     const refreshFreq = useSelector(state => state.refreshFrequency.time);
     const [isDarkMode, setIsDarkMode] = useState(darkMode);
     
@@ -148,7 +147,7 @@ export default function Map({ navigation }) {
             </MapView>
             <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleRefreshClick}>
-                    <MaterialCommunityIcons name="restart" size={24} color={darkMode ? "white" : "#861F41"} />
+                    <MaterialCommunityIcons name="restart" size={24} color="white" />
                 </TouchableOpacity>
             </View>
             {/* <View style={styles.feedbackButton}>
@@ -158,7 +157,7 @@ export default function Map({ navigation }) {
             </View> */}
             <View style={styles.locationButton}>
                 <TouchableOpacity onPress={handleLocationClick}>
-                    <Entypo name="direction" size={20} color={darkMode ? "white" : "#861F41"} />
+                    <Entypo name="direction" size={20} color="white" />
                 </TouchableOpacity>
             </View>
             {alerts.length > 0 && <View style={styles.alertButton}>
@@ -281,7 +280,7 @@ function format(coords) {
     return [coords.slice(0, 20), coords.slice(19, coords.length)];
 }
 
-const light = StyleSheet.create({
+const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
     },
@@ -289,8 +288,7 @@ const light = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
-        backgroundColor: 'white',
-        // backgroundColor: '#A40046',
+        backgroundColor: '#A40046',
         padding: 13,
         borderRadius: 15
     },
@@ -298,8 +296,7 @@ const light = StyleSheet.create({
         position: 'absolute',
         top: 80,
         right: 10,
-        backgroundColor: 'white',
-        // backgroundColor: '#A40046',
+        backgroundColor: '#A40046',
         padding: 16,
         borderRadius: 15
     },
@@ -307,41 +304,7 @@ const light = StyleSheet.create({
         position: 'absolute',
         top: 80,
         right: 10,
-        backgroundColor: 'white',
-        // backgroundColor: '#A40046',
-        padding: 15,
-        borderRadius: 15
-    },
-});
-
-const dark = StyleSheet.create({
-    map: {
-        ...StyleSheet.absoluteFillObject,
-    },
-    refreshButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-        backgroundColor: '#861F41',
-        // backgroundColor: '#A40046',
-        padding: 13,
-        borderRadius: 15
-    },
-    feedbackButton: {
-        position: 'absolute',
-        top: 80,
-        right: 10,
-        backgroundColor: '#861F41',
-        // backgroundColor: '#A40046',
-        padding: 16,
-        borderRadius: 15
-    },
-    locationButton: {
-        position: 'absolute',
-        top: 80,
-        right: 10,
-        backgroundColor: '#861F41',
-        // backgroundColor: '#A40046',
+        backgroundColor: '#A40046',
         padding: 15,
         borderRadius: 15
     },

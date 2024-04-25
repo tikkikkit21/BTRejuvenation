@@ -5,7 +5,7 @@ const darkModeSlice = createSlice({
     name: "darkmode",
     initialState: {
         isEnabled: false,
-        loading: false,
+        loading: false
     },
     reducers: {
         updateDarkMode(state, action) {
