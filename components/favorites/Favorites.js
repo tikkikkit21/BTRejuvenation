@@ -3,24 +3,13 @@ import React, { useMemo } from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
 
-function Favorites({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
+export default function Favorites() {
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['10%','25%', '50%', '70%', '95%'], []);
 
     return (
         <View style={styles.container}>
-          <MapViewMemo 
-                mapRegion={mapRegion}
-                setMapRegion={setMapRegion}
-                buses={buses}
-                setBuses={setBuses}
-                stops={stops}
-                setStops={setStops}
-                route={route}
-                setRoute={setRoute}
-                isOnCooldown={isOnCooldown}
-                setIsOnCooldown={setIsOnCooldown}
-            />
+          <MapViewMemo />
           <BottomSheet 
               snapPoints={snapPoints}
               backgroundStyle={{backgroundColor: '#7F1237'}}
@@ -63,8 +52,3 @@ const styles = StyleSheet.create({
         marginLeft: 100,
     }
   });
-
-// Memoize Favorites component
-const MemoizedFavorites = React.memo(Favorites);
-
-export default MemoizedFavorites;

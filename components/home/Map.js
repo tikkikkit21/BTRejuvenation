@@ -5,15 +5,27 @@ import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
 import { useNavigation } from '@react-navigation/native';
 import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
 import { useSelector } from 'react-redux';
 
-function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
-    const [stopColor, setStopColor] = useState();
+export default function Map({ navigation }) {
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 37.227468937500895,
+        longitude: -80.42357646125542,
+        latitudeDelta: 0.051202637986392574,
+        longitudeDelta: 0.03720943536600885,
+    })
+    const [buses, setBuses] = useState([]);
+    const [stops, setStops] = useState([]);
+    const [route, setRoute] = useState();
+    const [stopColor, setStopColor] = useState('black');
+    //const [selectedBus, setSelectedBus] = useState(''); might use in future for navigation
+    const [isOnCooldown, setIsOnCooldown] = useState(false);
+
     const refreshTimer = useRef(null);
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const refreshFreq = useSelector(state => state.refreshFrequency.time);
@@ -266,8 +278,3 @@ const styles = StyleSheet.create({
         borderRadius: 15
     },
 });
-
-// Memoize Map component
-const MemoizedMap = React.memo(Map);
-
-export default MemoizedMap;
