@@ -32,6 +32,7 @@ export default function RoutesList() {
     //TODO: Create a method that uses the favorites useState to check to see if 
     //there is a favorite for this user, instead of calling async every time
 
+    // load in info from API
     useEffect(() => {
         async function fetchStops() {
             try {
@@ -77,6 +78,7 @@ export default function RoutesList() {
         saveFavoriteRoutes(favorites);
     }, [favorites]);
 
+    // helper function to check if a route is favorited or not
     function isFavorite(route) {
         // if (favorites.includes(route) > 0) {
         //     setHeartColor('red');
@@ -120,6 +122,7 @@ export default function RoutesList() {
         }
     }
 
+    // handles selecting a stop from the filter
     const handleStopChange = (itemValue) => {
         setPlaceholder(itemValue.label)
         selectStop(itemValue);
@@ -165,6 +168,7 @@ export default function RoutesList() {
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
+    // clicking on a route navigates to specific info about that route
     const handleRouteInfoClick = async (shortName, fullName, color) => {
         if (canTrackData) {
             const location = await Location.getCurrentPositionAsync({});
