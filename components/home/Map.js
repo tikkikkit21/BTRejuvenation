@@ -14,7 +14,6 @@ import { getAlerts } from '../../backend/alertController';
 import { useSelector } from 'react-redux';
 
 export default function Map({ navigation }) {
-    getAlerts()
     const [mapRegion, setMapRegion] = useState({
         latitude: 37.227468937500895,
         longitude: -80.42357646125542,
@@ -33,9 +32,9 @@ export default function Map({ navigation }) {
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const refreshFreq = useSelector(state => state.refreshFrequency.time);
     const [isDarkMode, setIsDarkMode] = useState(darkMode);
-    
 
-    
+
+
 
     // ask for user location
     Location.requestForegroundPermissionsAsync();
@@ -128,9 +127,9 @@ export default function Map({ navigation }) {
         setRoute(createRoute(stops, stopColor));
     }, [stops]);
 
-    
 
-  
+
+
 
     return (
         <View style={appStyles.container}>
@@ -170,7 +169,7 @@ export default function Map({ navigation }) {
 }
 
 
-export function getStopInfo(stopingName, stopingCode, navigation){
+export function getStopInfo(stopingName, stopingCode, navigation) {
     navigation.navigate('StopInfo', {
         stopName: stopingName,
         stopCode: stopingCode,
@@ -179,7 +178,7 @@ export function getStopInfo(stopingName, stopingCode, navigation){
 
 }
 
-export function getRouteInfo(shortName, fullName, color, navigation){
+export function getRouteInfo(shortName, fullName, color, navigation) {
     navigation.navigate('RouteInfo', {
         routeShortName: shortName,
         routeName: fullName,
@@ -190,10 +189,10 @@ export function getRouteInfo(shortName, fullName, color, navigation){
 
 // creates bus icons for each bus in the bus data
 export function createMarkers(buses, handleSelect, color, navigation) {
-    return buses.map(busObj => {
+    return buses.map((busObj, index) => {
         return (
             <Marker
-                key={busObj.AgencyVehicleName}
+                key={index}
                 coordinate={{
                     latitude: busObj.Latitude,
                     longitude: busObj.Longitude
@@ -261,7 +260,7 @@ export function createRoute(stops, color) {
                 destination={mc[mc.length - 1]}
                 waypoints={mc.slice(1, mc.length - 1)}
                 apikey={process.env.GOOGLE_MAPS_API_KEY}
-                strokeWidth={2}
+                strokeWidth={3}
                 strokeColor={routeColor}
             />
         );
