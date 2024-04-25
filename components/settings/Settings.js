@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, StyleSheet, Switch, TouchableOpacity, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 import { setDarkModeSetting, setTrackingPermission, clearUsageData, setRefreshFrequencySetting } from '../../backend/userController';
 import Link from './Link';
@@ -48,7 +49,16 @@ export default function Settings({ navigation }) {
         dispatch(updateRefreshFrequency(newFreq));
     }
 
-    return (
+    function deleteData() {
+        clearUsageData();
+        Toast.show({
+            type: "success",
+            text1: "Data succesfully deleted",
+            position: "top"
+        });
+    }
+
+    return (<>
         <ScrollView>
             <View style={styles.container} >
                 <Text style={styles.header}>General</Text>
@@ -93,7 +103,7 @@ export default function Settings({ navigation }) {
                     <View style={styles.setting}>
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={clearUsageData}
+                            onPress={deleteData}
                         >
                             <View style={styles.buttonLabel}>
                                 <FontAwesome6 name="trash" size={24} color="red" />
@@ -130,7 +140,8 @@ export default function Settings({ navigation }) {
                 </View>
             </View>
         </ScrollView>
-    );
+        <Toast />
+    </>);
 }
 
 const styles = StyleSheet.create({
