@@ -124,20 +124,20 @@ export default function RoutesList() {
         selectStop(itemValue);
         stopCode = itemValue.value
 
-        if(stopCode == "FAVSTOP"){
+        if (stopCode == "FAVSTOP") {
             //navigate to stop component
 
             console.log("fav stop")
         }
-        else if (stopCode == "FAVROUTE"){
-            async function fetchRoutesByCode(){
+        else if (stopCode == "FAVROUTE") {
+            async function fetchRoutesByCode() {
                 const routesLocal = await getRoutesByCode(favorites);
-                if(routesLocal.length == 0){
+                if (routesLocal.length == 0) {
                     Toast.show({
                         type: "success",
                         text1: `No favorite routes`,
                         position: "top"
-        
+
                     });
 
                 }
@@ -145,17 +145,17 @@ export default function RoutesList() {
             }
             fetchRoutesByCode();
         }
-        else{
+        else {
             async function fetchScheduledRoutes() {
                 try {
-                    
+
                     const routesLocal = await getScheduledRoutes(stopCode);
                     setRoutes(routesLocal)
                 } catch (error) {
                     console.error('Error fetching stops:', error);
                 }
             }
-    
+
             fetchScheduledRoutes();
         }
 
@@ -194,7 +194,8 @@ export default function RoutesList() {
                 backgroundStyle={{ backgroundColor: darkMode ? "gray" : "white" }}
             >
                 <DropDownPicker
-                    items={stops.map((stop, index) => ({label: index < 3 ? stop[1] : `${stop[1]} (#${stop[0]})`,
+                    items={stops.map((stop, index) => ({
+                        label: index < 3 ? stop[1] : `${stop[1]} (#${stop[0]})`,
                         value: stop[0]
                     }))}
                     defaultValue={selectedStop}
@@ -208,7 +209,7 @@ export default function RoutesList() {
                     open={open}
                     setOpen={setOpen}
                 />
-                
+
 
                 <FlatList
                     data={routes}
@@ -234,7 +235,7 @@ export default function RoutesList() {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                
+
                             </TouchableOpacity>
                         </View>
                     )}
