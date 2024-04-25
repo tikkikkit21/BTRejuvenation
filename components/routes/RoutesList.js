@@ -63,7 +63,7 @@ export default function RoutesList() {
 
         async function getFavorites() {
 
-            favs = await getFavoriteRoutes();
+            const favs = await getFavoriteRoutes();
             setFavorites(favs);
         }
         getFavorites();
@@ -74,7 +74,7 @@ export default function RoutesList() {
     useEffect(() => {
         async function getFavorites() {
 
-            favs = await getFavoriteRoutes();
+            const favs = await getFavoriteRoutes();
             setFavorites(favs);
         }
         getFavorites();
@@ -87,6 +87,7 @@ export default function RoutesList() {
         //     return true;
         // }
         // return false;
+        console.log("isFavorite/favorites:", favorites);
         return favorites.includes(route);
     }
 
@@ -95,13 +96,17 @@ export default function RoutesList() {
         // remove favorite route
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
-            const newFavorites = favorites.splice(favorites.indexOf(route), 1);
-            setFavorites(newFavorites);
-            Toast.show({
-                type: "success",
-                text1: `${route} removed from favorites`,
-                position: "top"
-            });
+            const newFavorites = [...favorites];
+            const index = favorites.indexOf(route);
+            if (index !== -1) {
+                newFavorites.splice(favorites.indexOf(route), 1);
+                setFavorites(newFavorites);
+                Toast.show({
+                    type: "success",
+                    text1: `${route} removed from favorites`,
+                    position: "top"
+                });
+            }
         }
 
         // add favorite route
@@ -114,11 +119,9 @@ export default function RoutesList() {
 
             });
 
-            const newFavorites = favorites.push(route);
+            const newFavorites = [...favorites];
+            newFavorites.push(route);
             setFavorites(newFavorites);
-
-            // favs = await getFavoriteRoutes();
-            // setFavorites(favs);
         }
 
     }
