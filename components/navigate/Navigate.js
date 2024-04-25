@@ -11,7 +11,7 @@ import { RouteOption } from './NavigateComponents';
 function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
 
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['35%', '50%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['40%', '60%', '70%', '95%'], []);
 
     // Checks if tab is focused on
     const isFocused = useIsFocused();
