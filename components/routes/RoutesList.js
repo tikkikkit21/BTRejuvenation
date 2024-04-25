@@ -90,17 +90,22 @@ export default function RoutesList() {
         return favorites.includes(route);
     }
 
+    // pressing heart favorites/unfavorites a route
     async function onHeartPress(route) {
-
+        // remove favorite route
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
+            const newFavorites = favorites.splice(favorites.indexOf(route), 1);
+            setFavorites(newFavorites);
             Toast.show({
                 type: "success",
                 text1: `${route} removed from favorites`,
                 position: "top"
-
             });
-        } else {
+        }
+
+        // add favorite route
+        else {
             await addFavoriteRoute(route);
             Toast.show({
                 type: "success",
@@ -109,9 +114,11 @@ export default function RoutesList() {
 
             });
 
-            favs = await getFavoriteRoutes();
-            setFavorites(favs);
+            const newFavorites = favorites.push(route);
+            setFavorites(newFavorites);
 
+            // favs = await getFavoriteRoutes();
+            // setFavorites(favs);
         }
 
     }
