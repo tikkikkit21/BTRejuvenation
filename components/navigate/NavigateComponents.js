@@ -7,9 +7,10 @@ import { Polyline } from 'react-native-maps';
 import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Displays a button with basic information about a route
-export function RouteOption({ busLine, tripDuration, tripDistance, onPress }) {
+export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, onPress }) {
+    const backgroundColor = routeColor === 'black' ? 'black' : `#${routeColor}`;
     return (
-        <TouchableOpacity style={styles.container} onPress={onPress}>
+        <TouchableOpacity style={[styles.container, { backgroundColor: backgroundColor }]} onPress={onPress}>
             <Text style={styles.headerText}>{busLine}</Text>
             <Text style={[styles.text, styles.textMargin]}>{tripDuration}</Text>
             <Text style={styles.text}>{tripDistance}</Text>
@@ -21,7 +22,7 @@ export function RouteOption({ busLine, tripDuration, tripDistance, onPress }) {
 export function RouteDirections({ route }) {
 
     // Contains information of route
-    const { routeData } = route.params;
+    const { routeData, routeColor } = route.params;
 
     // Map state variables, sets initial map region
     const [mapRegion, setMapRegion] = useState(null);
@@ -35,7 +36,7 @@ export function RouteDirections({ route }) {
 
     // Calculate map region to fit all points
     useEffect(() => {
-        if (routeData.length > 0) {
+        if (routeData && routeData.length > 0) {
             let minLat = Infinity;
             let maxLat = -Infinity;
             let minLng = Infinity;
@@ -71,7 +72,7 @@ export function RouteDirections({ route }) {
                     showsUserLocation={true}
                 >
                     {/* Create markers for route */}
-                    {createRouteCoords(routeData)}
+                    {createRouteCoords(routeData, routeColor)}
                 </MapView>
             )}
             <BottomSheet
@@ -88,7 +89,7 @@ export function RouteDirections({ route }) {
 }
 
 // Create icons for stop markers en route
-export function createRouteCoords(route) {
+export function createRouteCoords(route, color) {
     // Contains information of route
     const markers = [];
     const polylines = [];
@@ -106,7 +107,7 @@ export function createRouteCoords(route) {
                     key={`polyline-${index}`}
                     coordinates={points}
                     strokeWidth={5}
-                    strokeColor="blue"
+                    strokeColor={color === 'black' ? 'black' : `#${color}`}
                 />
             );
         } else {

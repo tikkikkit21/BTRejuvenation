@@ -36,6 +36,9 @@ export default function Navigate() {
     // State to hold routes navigation data
     const [routeData, setRouteData] = useState(null);
 
+    // State to hold the route color
+    const [routeColor, setRouteColor] = useState('black');
+
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
     useEffect(() => {
@@ -95,6 +98,14 @@ export default function Navigate() {
         try {
             const result = await getConnectedRoutes(startDestination, endDestination);
             setRouteData(result);
+            const busColor = await getBusColor(result[0].mainBusLine);
+            // console.log('Route 1: ', result);
+            // If route is only Walking
+            if (busColor === null) {
+                setRouteColor('black');
+            } else { // if route contains a bus
+                setRouteColor(busColor.RouteColor);
+            }
         } catch (error) {
             console.log('Error Fetching Data:', error);
         }
@@ -102,24 +113,13 @@ export default function Navigate() {
 
     // Handles when a RouteOption is pressed
     const handleRouteInfoClick = async (routeInfo) => {
-        // if (canTrackData) {
-        //     const location = await Location.getCurrentPositionAsync({});
-        //     await saveUsageDataRecord({
-        //         route: shortName,
-        //         coords:
-        //         {
-        //             lat: location.coords.latitude,
-        //             long: location.coords.longitude
-        //         },
-        //         time: new Date()
-        //     });
-        // }
-
-
+        // Send props to RouteDirections
         navigation.navigate('RouteDirections', {
-            routeData: routeInfo
+            routeData: routeInfo,
+            routeColor: routeColor,
         });
     };
+
     
 
     return (
@@ -208,6 +208,7 @@ export default function Navigate() {
                                 busLine={routeData[0].mainBusLine}
                                 tripDuration={routeData[0].totalDuration}
                                 tripDistance={routeData[0].totalDistance}
+                                routeColor={routeColor}
                                 onPress={() => handleRouteInfoClick(routeData)}
                             />
                         </View>
