@@ -21,7 +21,7 @@ export default function RoutesList() {
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
     const [selectedStop, selectStop] = useState("");
-    const [placeHolder, setPlaceholder] = useState("");
+    const [placeHolder, setPlaceholder] = useState("Filter By Route");
     const [favorites, setFavorites] = useState([]);
     const [heartColor, setHeartColor] = useState('black');
 
@@ -33,9 +33,6 @@ export default function RoutesList() {
     //there is a favorite for this user, instead of calling async every time
 
     useEffect(() => {
-
-        setPlaceholder("Filter By Route")
-
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
