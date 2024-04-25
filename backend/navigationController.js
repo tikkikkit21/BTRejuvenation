@@ -159,7 +159,7 @@ function getTotalDistance(legs) {
 function getBusLine(legs) {
     for (const leg of legs) {
         if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
-            return leg.transit_details.line.short_name;
+            return leg.transit_details.line.name;
         }
     }
     return "N/A";

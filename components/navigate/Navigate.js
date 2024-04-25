@@ -180,8 +180,8 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                     >
                         <Text style={styles.searchText}>Search</Text>
                     </TouchableOpacity>
-                    {routeData && (
-                        <View>
+                    {routeData && (     // If routeData exists, display it
+                        <View style={styles.routeOptionContainer}>
                             <RouteOption 
                                 busLine={routeData[0].mainBusLine}
                                 tripDuration={routeData[0].totalDuration}
@@ -201,74 +201,78 @@ const MapViewMemo = React.memo(Map);
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: 'white'
+        flex: 1,
+        backgroundColor: 'white'
     },
     swapButtonContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'white',
-      padding: 15
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        padding: 15
     },
     swapButton: {
-      transform: [{ rotate: '90deg' }]
+        transform: [{ rotate: '90deg' }]
     },
     destinationContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 10,
-      marginHorizontal: 20,
-      marginVertical: 10,
-      padding: 10,
-      backgroundColor: '#75787B',
-      color: 'white'
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginHorizontal: 20,
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#75787B',
+        color: 'white'
     },
     textInputContainer: {
-      flex: 1,
-      marginLeft: 5,
-      height: 30
+        flex: 1,
+        marginLeft: 5,
+        height: 30
     },
     textInput: {
-      flex: 1,
-      padding: 5,
-      fontSize: 16,
-      color: 'black',
-      backgroundColor: 'white',
-      borderRadius: 10
+        flex: 1,
+        padding: 5,
+        fontSize: 16,
+        color: 'black',
+        backgroundColor: 'white',
+        borderRadius: 10
     },
     moreButtonContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'white',
-      padding: 20,
-      paddingLeft: 25
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        padding: 20,
+        paddingLeft: 25
     },
     moreButtonText: {
-      color: 'blue',
-      fontSize: 16
+        color: 'blue',
+        fontSize: 16
     },
     moreOptionsContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 10,
-      marginHorizontal: 20,
-      marginVertical: 10,
-      padding: 10,
-      backgroundColor: '#75787B',
-      color: 'white'
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginHorizontal: 20,
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#75787B',
+        color: 'white'
     },
     searchButton: {
-      marginHorizontal: 20,
-      marginVertical: 10,
-      padding: 10,
-      backgroundColor: '#A40046',
-      borderRadius: 10,
-      borderColor: '#fff'
+        marginHorizontal: 20,
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#A40046',
+        borderRadius: 10,
+        borderColor: '#fff'
     },
-    searchText:{
-      color: '#fff',
-      textAlign: 'center',
-      fontSize: 16
+    searchText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16
+    },
+    routeOptionContainer: {
+        alignItems: 'center', // Center content horizontally
+        justifyContent: 'center', // Center content vertically
     },
   });
   
