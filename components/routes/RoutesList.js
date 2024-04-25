@@ -14,6 +14,9 @@ import * as Location from 'expo-location';
 import { useSelector } from 'react-redux';
 
 export default function RoutesList() {
+    const navigation = useNavigation();
+
+    // state variables
     const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
@@ -21,10 +24,10 @@ export default function RoutesList() {
     const [placeHolder, setPlaceholder] = useState("");
     const [favorites, setFavorites] = useState([]);
     const [heartColor, setHeartColor] = useState('black');
-    const canTrackData = useSelector(state => state.usageTracking.isEnabled);
-    const navigation = useNavigation();
 
+    // redux variables
     const darkMode = useSelector(state => state.darkMode.isEnabled);
+    const canTrackData = useSelector(state => state.usageTracking.isEnabled);
 
     //TODO: Create a method that uses the favorites useState to check to see if 
     //there is a favorite for this user, instead of calling async every time
