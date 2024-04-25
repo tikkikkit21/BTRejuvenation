@@ -27,14 +27,14 @@ export default function StopInfo({ route }){
 
     useEffect (() => {
 
-        console.log("here");
-        console.log(stopName);
-        console.log(stopCode);
-        console.log(fromFavorites);
+        // console.log("here");
+        // console.log(stopName);
+        // console.log(stopCode);
+        // console.log(fromFavorites);
 
         async function fetchData(){
 
-            console.log("FETCHDATA")
+            // console.log("FETCHDATA")
 
 
 
@@ -47,7 +47,7 @@ export default function StopInfo({ route }){
             setFavorites(favs);
 
 
-            console.log(singleRoutes); 
+           // console.log(singleRoutes); 
             // if(fromFavorites){
             //     let stops = favorites;
 

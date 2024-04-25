@@ -122,7 +122,7 @@ export default function Map({ navigation }) {
                 showsUserLocation={true}
                 userInterfaceStyle={isDarkMode ? "dark" : "light"}
             >
-                {createMarkers(buses, handleMarkerSelect)}
+                {createMarkers(buses, handleMarkerSelect, null, navigation)}
                 {createStops(stops, stopColor, navigation)}
                 {route}
             </MapView>
@@ -155,9 +155,17 @@ export function getStopInfo(stopingName, stopingCode, navigation){
 
 }
 
+export function getRouteInfo(shortName, fullName, color, navigation){
+    navigation.navigate('RouteInfo', {
+        routeShortName: shortName,
+        routeName: fullName,
+        routeColor: color
+    });
+}
+
 
 // creates bus icons for each bus in the bus data
-export function createMarkers(buses, handleSelect, color) {
+export function createMarkers(buses, handleSelect, color, navigation) {
     return buses.map(busObj => {
         return (
             <Marker
@@ -171,6 +179,7 @@ export function createMarkers(buses, handleSelect, color) {
                 pointerEvents="auto"
                 // For the route tab the handleseelct is not necesary, as we know bus info already
                 onSelect={handleSelect ? () => { handleSelect(busObj.RouteShortName) } : null}
+                onCalloutPress={() => getRouteInfo(busObj.RouteShortName, "no name", routeColorMap[busObj.RouteShortName], navigation)}
             >
                 <View>
                     <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : '#' + routeColorMap[busObj.RouteShortName]} />

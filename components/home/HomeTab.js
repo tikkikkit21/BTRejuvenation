@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Map from './Map';
 import StopInfo from './StopInfo';
+import RouteInfo from '../routes/RouteInfo';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ function HomeTab() {
         >
             <Stack.Screen name="Blacksburg Transit" component={Map} />
             <Stack.Screen name="StopInfo" component={StopInfo}/>
+            <Stack.Screen name="RouteInfo" component={RouteInfo}/>
         </Stack.Navigator>
     );
 }
