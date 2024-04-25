@@ -13,7 +13,6 @@ import { getAlerts } from '../../backend/alertController';
 import { useSelector } from 'react-redux';
 
 export default function Map({ navigation }) {
-    getAlerts()
     const [mapRegion, setMapRegion] = useState({
         latitude: 37.227468937500895,
         longitude: -80.42357646125542,

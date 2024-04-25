@@ -3,8 +3,11 @@ import { xml2js } from "xml-js";
 import { formatTextProperty } from "./apiUtil";
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
+const ALERTS = [];
+var hasCached = false;
 
 export async function getAlerts() {
+    if (hasCached) return ALERTS;
     // const { data } = await axios.get(`${ROOT}/GetActiveAlerts?alertTypes=&alertCauses=&alertEffects=`);
     const { data } = await axios.get(`${ROOT}/GetAllAlerts`);
     let json = xml2js(data, { compact: true });
@@ -15,5 +18,8 @@ export async function getAlerts() {
     }
 
     json = json.map(alert => formatTextProperty(alert));
+
+    ALERTS.push(...json);
+    hasCached = true;
     return json;
 }
