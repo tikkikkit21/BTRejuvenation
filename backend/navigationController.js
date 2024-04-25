@@ -20,8 +20,8 @@ const GMAPS_ROOT = "https://maps.googleapis.com/maps/api/directions";
  */
 export async function getConnectedRoutes(origin, destination) {
     const query = `json?origin=${origin}&destination=${destination}&key=${APIKEY}&mode=transit`;
-    // const test = `json?origin=${'Torgersen Hall'}&destination=${'401 Laurence Ln'}&key=${APIKEY}&mode=transit`;
-    const { data } = await axios.get(`${GMAPS_ROOT}/${query}`);
+    const test = `json?origin=${'Torgersen Hall'}&destination=${'401 Laurence Ln'}&key=${APIKEY}&mode=transit`;
+    const { data } = await axios.get(`${GMAPS_ROOT}/${test}`);
 
     const tripSteps = data.routes[0].legs[0].steps;
 

@@ -1,13 +1,29 @@
-import React from "react";
+import { React, useMemo, useRef, useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import Map, { createMarkers, createRoute, createStops } from '../home/Map';
 
-export function RouteOption({ busLine, tripDuration, tripDistance }) {
+// Displays a button with basic information about a route
+export function RouteOption({ busLine, tripDuration, tripDistance, onPress }) {
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={onPress}>
             <Text style={styles.headerText}>{busLine}</Text>
             <Text style={[styles.text, styles.textMargin]}>{tripDuration}</Text>
             <Text style={styles.text}>{tripDistance}</Text>
         </TouchableOpacity>
+    );
+}
+
+// Displays the directions for a route
+export function RouteDirections({ route }) {
+    const { routeData } = route.params;
+    routeData.forEach((element, index) => {
+        console.log(`Element ${index + 1}:`);
+        console.log(element);
+        console.log('\n'); // Add a newline for separation
+    });    return (
+        <View>
+            <Text>Hello!</Text>
+        </View>
     );
 }
 

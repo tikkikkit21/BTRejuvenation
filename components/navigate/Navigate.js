@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
@@ -15,6 +15,9 @@ export default function Navigate() {
 
     // Checks if tab is focused on
     const isFocused = useIsFocused();
+
+    // To navigate to other views
+    const navigation = useNavigation();
 
     // Ref for the BottomSheet component
     const bottomSheetRef = useRef(null);
@@ -95,6 +98,28 @@ export default function Navigate() {
         } catch (error) {
             console.log('Error Fetching Data:', error);
         }
+    };
+
+    // Handles when a RouteOption is pressed
+    const handleRouteInfoClick = async (routeInfo) => {
+        // if (canTrackData) {
+        //     const location = await Location.getCurrentPositionAsync({});
+        //     await saveUsageDataRecord({
+        //         route: shortName,
+        //         coords:
+        //         {
+        //             lat: location.coords.latitude,
+        //             long: location.coords.longitude
+        //         },
+        //         time: new Date()
+        //     });
+        // }
+
+        console.log('RouteInfo clicked:');
+
+        navigation.navigate('RouteDirections', {
+            routeData: routeInfo
+        });
     };
     
 
@@ -184,6 +209,7 @@ export default function Navigate() {
                                 busLine={routeData[0].mainBusLine}
                                 tripDuration={routeData[0].totalDuration}
                                 tripDistance={routeData[0].totalDistance}
+                                onPress={() => handleRouteInfoClick(routeData)}
                             />
                         </View>
                     )}
