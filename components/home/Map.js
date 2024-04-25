@@ -230,7 +230,7 @@ export function createRoute(stops, color) {
                 destination={mc[mc.length - 1]}
                 waypoints={mc.slice(1, mc.length - 1)}
                 apikey={process.env.GOOGLE_MAPS_API_KEY}
-                strokeWidth={2}
+                strokeWidth={3}
                 strokeColor={routeColor}
             />
         );
