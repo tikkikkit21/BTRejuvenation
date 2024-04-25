@@ -6,9 +6,9 @@
 export function formatTextProperty(data) {
     for (const key of Object.keys(data)) {
         data[key] = data[key]._text;
-        if (!isNaN(Number(data[key]))) {
-            data[key] = Number(data[key]);
-        }
+        // if (!isNaN(Number(data[key]))) {
+        //     data[key] = Number(data[key]);
+        // }
     }
 
     return data;
