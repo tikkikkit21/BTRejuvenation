@@ -46,8 +46,6 @@ export default function RoutesList() {
             }
         }
 
-        fetchStops();
-
         async function fetchAllRoutes() {
             try {
                 /**
@@ -60,16 +58,18 @@ export default function RoutesList() {
             }
         }
 
-        fetchAllRoutes()
-
-        async function getFavorites() {
-
+        async function fetchFavorites() {
             const favs = await getFavoriteRoutes();
             setFavorites(favs);
         }
-        getFavorites();
 
+        async function fetchAll() {
+            await fetchStops();
+            await fetchAllRoutes();
+            await fetchFavorites();
+        }
 
+        fetchAll();
     }, []);
 
 
