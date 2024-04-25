@@ -2,8 +2,9 @@ import { React, useMemo, useRef, useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import MapView, { MapCallout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import Map, { createMarkers, createRoute, createStops } from '../home/Map';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { Polyline } from 'react-native-maps';
+import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Displays a button with basic information about a route
 export function RouteOption({ busLine, tripDuration, tripDistance, onPress }) {
@@ -50,25 +51,15 @@ export function RouteDirections({ route }) {
                 });
             });
 
-            // Add padding to the bounding box
-            const latPadding = 0.01;
-            const longPadding = 0.03;
-
             // Set Map Region based on the bounds of the route
             setMapRegion({
                 latitude: (minLat + maxLat) / 2,
                 longitude: (minLng + maxLng) / 2,
-                latitudeDelta: (maxLat - minLat) + latPadding,
-                longitudeDelta: (maxLng - minLng) + longPadding,
+                latitudeDelta: 0.051202637986392574,
+                longitudeDelta: 0.03720943536600885,
             });
         }
-    }, [routeData]);
-
-    // routeData.forEach((element, index) => {
-    //     console.log(`Element ${index + 1}:`);
-    //     console.log(element);
-    //     console.log('\n'); // Add a newline for separation
-    // });    
+    }, [routeData]); 
     
     return (
         <View style={{ flex: 1 }}>
@@ -76,14 +67,11 @@ export function RouteDirections({ route }) {
                 <MapView
                     style={{ flex: 1 }}
                     region={mapRegion}
+                    onRegionChangeComplete={(region) => setMapRegion(region)}
+                    showsUserLocation={true}
                 >
-                    {routeData.map((element, index) => (
-                        <Marker
-                            key={index}
-                            coordinate={element.points[0]} // You can choose any point in the element
-                            title={element.instructions}
-                        />
-                    ))}
+                    {/* Create markers for route */}
+                    {createRouteCoords(routeData)}
                 </MapView>
             )}
             <BottomSheet
@@ -97,6 +85,59 @@ export function RouteDirections({ route }) {
             </BottomSheet>
         </View>
     );
+}
+
+// Create icons for stop markers en route
+export function createRouteCoords(route) {
+    // Contains information of route
+    const markers = [];
+    const polylines = [];
+
+    route.forEach((element, index) => {
+        // If the element has a valid routeName, create a polyline
+        if (element.routeName !== null) {
+            const points = element.points.map(point => ({
+                latitude: point.latitude,
+                longitude: point.longitude
+            }));
+
+            polylines.push(
+                <Polyline
+                    key={`polyline-${index}`}
+                    coordinates={points}
+                    strokeWidth={5}
+                    strokeColor="blue"
+                />
+            );
+        } else {
+            // Iterate over each point in the element's point array
+            element.points.forEach((point, pointIndex) => {
+                // Skip a certain number of points before adding a marker
+                if (pointIndex % 2 === 0) {
+                    // Determine the coordinate for the marker
+                    const coordinate = {
+                        latitude: point.latitude,
+                        longitude: point.longitude
+                    };
+
+                    // Push a Marker component into the markers array
+                    markers.push(
+                        <Marker
+                            key={`${index}-${pointIndex}`} // Unique key for each Marker
+                            coordinate={coordinate}
+                        >
+                            <View>
+                                <Octicons name="dot-fill" size={15} color="black" />
+                            </View>
+                        </Marker>
+                    );
+                }
+            });
+        }
+    });
+
+    // Return the array of Marker components and Polylines
+    return [...markers, ...polylines];
 }
 
 const styles = StyleSheet.create({
