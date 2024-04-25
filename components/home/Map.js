@@ -5,14 +5,29 @@ import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
 import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
+import { getAlerts } from '../../backend/alertController';
 import { useSelector } from 'react-redux';
 
-function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
-    const [stopColor, setStopColor] = useState();
+export default function Map({ navigation }) {
+    getAlerts()
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 37.227468937500895,
+        longitude: -80.42357646125542,
+        latitudeDelta: 0.051202637986392574,
+        longitudeDelta: 0.03720943536600885,
+    })
+    const [buses, setBuses] = useState([]);
+    const [stops, setStops] = useState([]);
+    const [route, setRoute] = useState();
+    const [stopColor, setStopColor] = useState('black');
+    //const [selectedBus, setSelectedBus] = useState(''); might use in future for navigation
+    const [isOnCooldown, setIsOnCooldown] = useState(false);
+    const [alerts, setAlerts] = useState([]);
+
     const refreshTimer = useRef(null);
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const styles = darkMode ? dark : light;
@@ -47,6 +62,17 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
         };
     }, []);
 
+    // check for alerts
+    useEffect(() => {
+        async function fetchAlerts() {
+            const alertsData = await getAlerts();
+            if (alertsData.length > 0) {
+                setAlerts(alertsData);
+            }
+        }
+        fetchAlerts();
+    }, []);
+
     // refresh button has a 5s cooldown, and resets the automatic refresh
     function handleRefreshClick() {
         if (!isOnCooldown) {
@@ -71,6 +97,11 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
             latitudeDelta: 0.00964806666502227,
             longitudeDelta: 0.008857245616368914
         })
+    }
+
+    // handles alert button
+    function handleAlertClick() {
+        navigation.navigate("Alerts");
     }
 
     // fetches bus data from backend
@@ -122,6 +153,11 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
                     <Entypo name="direction" size={20} color={darkMode ? "white" : "#861F41"} />
                 </TouchableOpacity>
             </View>
+            {alerts.length > 0 && <View style={styles.alertButton}>
+                <TouchableOpacity onPress={handleAlertClick}>
+                    <FontAwesome5 name="bell" size={20} color="white" />
+                </TouchableOpacity>
+            </View>}
         </View>
     )
 }
@@ -278,9 +314,12 @@ const dark = StyleSheet.create({
         padding: 15,
         borderRadius: 15
     },
+    alertButton: {
+        position: 'absolute',
+        top: 150,
+        right: 10,
+        backgroundColor: '#A40046',
+        padding: 15,
+        borderRadius: 15
+    },
 });
-
-// Memoize Map component
-const MemoizedMap = React.memo(Map);
-
-export default MemoizedMap;

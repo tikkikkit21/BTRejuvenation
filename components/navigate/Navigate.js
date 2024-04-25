@@ -6,7 +6,7 @@ import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
 import { useSelector } from 'react-redux';
 
-function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
+export default function Navigate() {
 
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['35%', '50%', '70%', '95%'], []);
@@ -41,8 +41,6 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
             // Reset destinations
             setStartDestination('');
             setEndDestination('');
-            // Resets show more options
-            setShowMoreOptions(false);
         }
     }, [isFocused]);
 
@@ -106,13 +104,13 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                         onChangeText={setStartDestination} // Updates the startDestination
                     />
                 </View>
-            </View>
-            <View style={styles.swapButtonContainer}>
+              </View>
+              <View style={styles.swapButtonContainer}>
                 <TouchableOpacity onPress={handleSwapDestinations}>
                     <Fontisto name="arrow-swap" size={22} style={styles.swapButton}/>
                 </TouchableOpacity>
-            </View>
-            <View style={styles.inputContainer}>
+              </View>
+              <View style={styles.inputContainer}>
                 <Entypo name='location' size={15} color='white'/>
                 <View style={styles.textInputContainer}>
                     <BottomSheetTextInput
@@ -122,12 +120,12 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
                         onChangeText={setEndDestination} // Updates the endDestination
                     />
                 </View>
-            </View>
-            <View style={styles.moreButtonContainer}>
+              </View>
+              <View style={styles.moreButtonContainer}>
                 <TouchableOpacity onPress={handleMoreOptions}>
                     <Text style={styles.moreButtonText}>More Options</Text>
                 </TouchableOpacity>
-            </View>
+              </View>
               {showMoreOptions && (
                 <View>
                     <View style={styles.whenInputContainer}>
@@ -326,4 +324,4 @@ const dark = StyleSheet.create({
 // Memoize Navigate component
 const MemoizedNavigate = React.memo(Navigate);
 
-export default MemoizedNavigate;
+// export default MemoizedNavigate;

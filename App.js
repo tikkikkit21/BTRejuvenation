@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState } from 'react';
 
 import { Ionicons, FontAwesome5, FontAwesome6, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -46,18 +45,6 @@ export default function App() {
         dispatch(fetchUsageTrackingSetting());
     }, []);
 
-    // States for the Map component
-    const [mapRegion, setMapRegion] = useState({
-        latitude: 37.227468937500895,
-        longitude: -80.42357646125542,
-        latitudeDelta: 0.051202637986392574,
-        longitudeDelta: 0.03720943536600885,
-    })
-    const [buses, setBuses] = useState([]);
-    const [stops, setStops] = useState([]);
-    const [route, setRoute] = useState();
-    const [isOnCooldown, setIsOnCooldown] = useState(false);
-
     return (
         <NavigationContainer>
             <Tab.Navigator
@@ -94,74 +81,9 @@ export default function App() {
                     headerShown: false
                 })}
             >
-                <Tab.Screen name="HomeTab">
-                    {(props) => (
-                        <HomeTab
-                            {...props}
-                            mapRegion={mapRegion}
-                            setMapRegion={setMapRegion}
-                            buses={buses}
-                            setBuses={setBuses}
-                            stops={stops}
-                            setStops={setStops}
-                            route={route}
-                            setRoute={setRoute}
-                            isOnCooldown={isOnCooldown}
-                            setIsOnCooldown={setIsOnCooldown}
-                        />
-                    )}
-                </Tab.Screen>
-                <Tab.Screen name="NavigateTab">
-                    {(props) => (
-                        <NavigateTab
-                            {...props}
-                            mapRegion={mapRegion}
-                            setMapRegion={setMapRegion}
-                            buses={buses}
-                            setBuses={setBuses}
-                            stops={stops}
-                            setStops={setStops}
-                            route={route}
-                            setRoute={setRoute}
-                            isOnCooldown={isOnCooldown}
-                            setIsOnCooldown={setIsOnCooldown}
-                        />
-                    )}
-                </Tab.Screen>
-                <Tab.Screen name="RoutesTab">
-                    {(props) => (
-                        <RoutesTab
-                            {...props}
-                            mapRegion={mapRegion}
-                            setMapRegion={setMapRegion}
-                            buses={buses}
-                            setBuses={setBuses}
-                            stops={stops}
-                            setStops={setStops}
-                            route={route}
-                            setRoute={setRoute}
-                            isOnCooldown={isOnCooldown}
-                            setIsOnCooldown={setIsOnCooldown}
-                        />
-                    )}
-                </Tab.Screen>
-                {/* <Tab.Screen name="FavoritesTab">
-                    {(props) => (
-                        <FavoritesTab
-                            {...props}
-                            mapRegion={mapRegion}
-                            setMapRegion={setMapRegion}
-                            buses={buses}
-                            setBuses={setBuses}
-                            stops={stops}
-                            setStops={setStops}
-                            route={route}
-                            setRoute={setRoute}
-                            isOnCooldown={isOnCooldown}
-                            setIsOnCooldown={setIsOnCooldown}
-                        />
-                    )}
-                </Tab.Screen> */}
+                <Tab.Screen name="HomeTab" component={HomeTab} />
+                <Tab.Screen name="NavigateTab" component={NavigateTab} />
+                <Tab.Screen name="RoutesTab" component={RoutesTab} />
                 <Tab.Screen name="SettingsTab" component={SettingsTab} />
             </Tab.Navigator>
         </NavigationContainer>

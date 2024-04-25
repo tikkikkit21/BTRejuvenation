@@ -16,11 +16,7 @@ export default function NavigateTab(props) {
             }}
             initialRouteName="Navigate"
         >
-            <Stack.Screen name="Navigate">
-                {(navigationProps) => (
-                    <Navigate {...navigationProps} {...props} />
-                )}
-            </Stack.Screen>
+            <Stack.Screen name="Navigate" component={Navigate} />
         </Stack.Navigator>
     );
 }

@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Map from './Map';
 import FeedbackForm from '../settings/FeedbackForm';
@@ -18,23 +18,8 @@ function HomeTab({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, ro
             }}
             initialRouteName="Map"
         >
-            <Stack.Screen name="Blacksburg Transit">
-                {(props) => (
-                    <Map
-                        {...props}
-                        mapRegion={mapRegion}
-                        setMapRegion={setMapRegion}
-                        buses={buses}
-                        setBuses={setBuses}
-                        stops={stops}
-                        setStops={setStops}
-                        route={route}
-                        setRoute={setRoute}
-                        isOnCooldown={isOnCooldown}
-                        setIsOnCooldown={setIsOnCooldown}
-                    />
-                )}
-            </Stack.Screen>
+            <Stack.Screen name="Blacksburg Transit" component={Map} />
+            <Stack.Screen name="Alerts" component={Alerts} />
         </Stack.Navigator>
     );
 }
