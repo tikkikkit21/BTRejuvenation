@@ -8,7 +8,7 @@ import { getConnectedRoutes } from '../../backend/navigationController';
 import { getBus } from '../../backend/busController';
 import { RouteOption } from './NavigateComponents';
 
-function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
+export default function Navigate() {
 
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['40%', '60%', '70%', '95%'], []);
@@ -100,27 +100,15 @@ function Navigate({ mapRegion, setMapRegion, buses, setBuses, stops, setStops, r
 
     return (
         <View style={styles.container}>
-            <MapViewMemo 
-                mapRegion={mapRegion}
-                setMapRegion={setMapRegion}
-                buses={buses}
-                setBuses={setBuses}
-                stops={stops}
-                setStops={setStops}
-                route={route}
-                setRoute={setRoute}
-                isOnCooldown={isOnCooldown}
-                setIsOnCooldown={setIsOnCooldown}
-            />
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={bottomSheetIndex}
-                snapPoints={snapPoints}
-                backgroundStyle={{backgroundColor: '#FFFFFF'}}
-                onChange={handleAnimateBottomSheet} // Handles the BottomSheet index when changed
-            >
-            {/* Displays Start Destination input */}
-            <View style={styles.destinationContainer}>
+          <MapViewMemo />
+          <BottomSheet
+              ref={bottomSheetRef}
+              index={bottomSheetIndex}
+              snapPoints={snapPoints}
+              backgroundStyle={{backgroundColor: '#FFFFFF'}}
+              onChange={handleAnimateBottomSheet}
+          >
+              <View style={styles.destinationContainer}>
                 <FontAwesome6 name='location-crosshairs' size={15} color='white'/>
                 <View style={styles.textInputContainer}>
                     <BottomSheetTextInput
@@ -286,8 +274,3 @@ const styles = StyleSheet.create({
         justifyContent: 'center', // Center content vertically
     },
 });
-
-// Memoize Navigate component
-const MemoizedNavigate = React.memo(Navigate);
-
-export default MemoizedNavigate;

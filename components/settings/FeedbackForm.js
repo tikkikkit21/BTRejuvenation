@@ -70,14 +70,14 @@ export default function FeedbackForm({ route, navigation }) {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Text style={styles.title}>Scan QR Code on the Bus</Text>
+                {/* <Text style={styles.title}>Scan QR Code on the Bus</Text>
                 <Text style={styles.description}>Scan QR Code on the Bus</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("QR Scanner")}>
                         <MaterialCommunityIcons name="qrcode-scan" size={75} color="black" />
                     </TouchableOpacity>
-                </View>
-                <Text style={styles.title}>Feedback</Text>
+                </View> */}
+                {/* <Text style={styles.title}>Feedback</Text> */}
                 <FormTextInput
                     question={"Route Name"}
                     placeholder={"What bus route did you take?"}

@@ -3,13 +3,17 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../../styles/Route.style';
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
-import { getAllStops, getCurrentRoutes, getScheduledRoutes } from '../../backend/routeController';
+import { getAllStops, getCurrentRoutes, getScheduledRoutes, getRoutesByCode } from '../../backend/routeController';
 import Map from '../home/Map';
 import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
+import { saveUsageDataRecord } from '../../backend/userController';
+import * as Location from 'expo-location';
+import { useSelector } from 'react-redux';
 
-function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBusStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
+export default function RoutesList() {
     const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
@@ -17,7 +21,7 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     const [placeHolder, setPlaceholder] = useState("");
     const [favorites, setFavorites] = useState([]);
     const [heartColor, setHeartColor] = useState('black');
-
+    const canTrackData = useSelector(state => state.usageTracking.isEnabled);
     const navigation = useNavigation();
 
     //TODO: Create a method that uses the favorites useState to check to see if 
@@ -26,11 +30,13 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     useEffect(() => {
 
         setPlaceholder("Filter By Route")
-        
+
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
-                const updatedStops = [["", "All Routes"], ...stopLocal];
+                let updatedStops = [["FAVSTOP", "Favorite Stops"], ...stopLocal];
+                updatedStops = [["FAVROUTE", "Favorite Routes"], ...updatedStops];
+                updatedStops = [["", "All Routes"], ...updatedStops];
                 setStops(updatedStops);
             } catch (error) {
                 console.error('Error fetching stops:', error);
@@ -53,33 +59,28 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
         fetchAllRoutes()
 
-        async function getFavorites(){
+        async function getFavorites() {
 
             favs = await getFavoriteRoutes();
-            //console.log(favs)
-
             setFavorites(favs);
         }
         getFavorites();
 
-        
+
     }, []);
 
-    useEffect(() =>{
-        async function getFavorites(){
+    useEffect(() => {
+        async function getFavorites() {
 
             favs = await getFavoriteRoutes();
-            //console.log(favs)
-
             setFavorites(favs);
         }
         getFavorites();
 
     }, [favorites]);
 
-    function isFavorite(route){
-        //console.log(`is favorite ${favorites}` );
-        if(favorites.includes(route) > 0){
+    function isFavorite(route) {
+        if (favorites.includes(route) > 0) {
             setHeartColor('red');
             return true;
         }
@@ -87,21 +88,29 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
     }
 
     async function onHeartPress(route) {
-        //const newColor = isFavorite(route) ? 'black' : 'red';
-    
-       // saveFavoriteRoutes([]);
+
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
-            alert(`${route} removed from favorites`);
+            Toast.show({
+                type: "success",
+                text1: `${route} removed from favorites`,
+                position: "top"
+
+            });
         } else {
             await addFavoriteRoute(route);
-            alert(`${route} added to favorites`);
+            Toast.show({
+                type: "success",
+                text1: `${route} added to favorites`,
+                position: "top"
+
+            });
 
             favs = await getFavoriteRoutes();
             setFavorites(favs);
-            
+
         }
-    
+
     }
 
 
@@ -110,24 +119,60 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
         selectStop(itemValue);
         stopCode = itemValue.value
 
-        async function fetchScheduledRoutes() {
-            try {
-                
-                const routesLocal = await getScheduledRoutes(stopCode);
-                setRoutes(routesLocal)
-            } catch (error) {
-                console.error('Error fetching stops:', error);
-            }
-        }
+        if(stopCode == "FAVSTOP"){
+            //navigate to stop component
 
-        fetchScheduledRoutes();
+            console.log("fav stop")
+        }
+        else if (stopCode == "FAVROUTE"){
+            async function fetchRoutesByCode(){
+                const routesLocal = await getRoutesByCode(favorites);
+                if(routesLocal.length == 0){
+                    Toast.show({
+                        type: "success",
+                        text1: `No favorite routes`,
+                        position: "top"
+        
+                    });
+
+                }
+                setRoutes(routesLocal);
+            }
+            fetchRoutesByCode();
+        }
+        else{
+            async function fetchScheduledRoutes() {
+                try {
+                    
+                    const routesLocal = await getScheduledRoutes(stopCode);
+                    setRoutes(routesLocal)
+                } catch (error) {
+                    console.error('Error fetching stops:', error);
+                }
+            }
+    
+            fetchScheduledRoutes();
+        }
 
     };
 
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
-    const handleRouteInfoClick = (shortName, fullName, color) => {
+    const handleRouteInfoClick = async (shortName, fullName, color) => {
+        if (canTrackData) {
+            const location = await Location.getCurrentPositionAsync({});
+            await saveUsageDataRecord({
+                route: shortName,
+                coords:
+                {
+                    lat: location.coords.latitude,
+                    long: location.coords.longitude
+                },
+                time: new Date()
+            });
+        }
+
         navigation.navigate('RouteInfo', {
             routeShortName: shortName,
             routeName: fullName,
@@ -138,24 +183,15 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
     return (
         <View style={styles.container}>
-            <MapViewMemo 
-                mapRegion={mapRegion}
-                setMapRegion={setMapRegion}
-                buses={buses}
-                setBuses={setBuses}
-                stops={busStops}
-                setStops={setBusStops}
-                route={route}
-                setRoute={setRoute}
-                isOnCooldown={isOnCooldown}
-                setIsOnCooldown={setIsOnCooldown}
-            />
+            <MapViewMemo />
             <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
                 <DropDownPicker
-                    items={stops.map(stop => ({ label: stop[1], value: stop[0] }))}
+                    items={stops.map((stop, index) => ({label: index < 3 ? stop[1] : `${stop[1]} (#${stop[0]})`,
+                        value: stop[0]
+                    }))}
                     defaultValue={selectedStop}
                     placeholder={placeHolder}
                     value={selectedStop}
@@ -167,29 +203,34 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
                     open={open}
                     setOpen={setOpen}
                 />
+                
+
                 <FlatList
                     data={routes}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.flatListItem}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 10, marginRight: 10 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />
-                                    <View style={{ marginLeft: 10 }}>
-                                        <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
-                                        <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
-                                       
+                            <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)} >
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 10, marginRight: 10 }} >
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
+                                            <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>
+
+                                        </View>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(item.RouteShortName)}>
+                                            <FontAwesome6 name="heart" size={22} style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
+                                            <AntDesign name="right" size={22} />
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(item.RouteShortName)}>
-                                        <FontAwesome6 name="heart" size={22}  style={{ color: isFavorite(item.RouteShortName) ? 'red' : 'black' }}/>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)}>
-                                        <AntDesign name="right" size={22} />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                                
+                            </TouchableOpacity>
                         </View>
                     )}
                 />
@@ -200,8 +241,3 @@ function RoutesList({ mapRegion, setMapRegion, buses, setBuses, busStops, setBus
 
 // Memoized Map component to avoid unnecessary rerendering.
 const MapViewMemo = React.memo(Map);
-
-// Memoize RoutesList component
-const MemoizedRoutesList = React.memo(RoutesList);
-
-export default MemoizedRoutesList;

@@ -3,7 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const FAVORITE_ROUTES_KEY = "favorite-routes";
 const FAVORITE_STOPS_KEY = "favorite-stops";
 const TRACK_APP_USAGE_KEY = "track-app-usage";
-const USAGE_DATA_KEY = "usage-data"
+const USAGE_DATA_KEY = "usage-data";
+const DARK_MODE_KEY = "dark-mode";
+const REFRESH_FREQUENCY_KEY = "refresh-frequency";
 
 /* Favorite routes */
 
@@ -72,7 +74,7 @@ export async function addFavoriteRoute(routeCode) {
 export async function deleteFavoriteRoute(routeCode) {
     try {
         const value = await AsyncStorage.getItem(FAVORITE_ROUTES_KEY);
-        
+
         if (value !== null) {
             let favoriteRoutes = JSON.parse(value);
             favoriteRoutes = favoriteRoutes.filter(route => route !== routeCode);
@@ -163,6 +165,7 @@ export async function deleteFavoriteStop(stopCode) {
     }
 }
 
+/** AI stuff */
 /**
  * Set whether or not to track user app usage
  * @param {boolean} canTrack user setting whether to track app usage
@@ -171,7 +174,7 @@ export async function setTrackingPermission(canTrack) {
     if (typeof canTrack !== "boolean") {
         throw new TypeError("canTrack must be a boolean");
     }
-    await AsyncStorage.setItem(TRACK_APP_USAGE_KEY, canTrack);
+    await AsyncStorage.setItem(TRACK_APP_USAGE_KEY, canTrack ? "t" : "f");
 }
 
 /**
@@ -180,7 +183,9 @@ export async function setTrackingPermission(canTrack) {
  */
 export async function getTrackingPermission() {
     const canTrack = await AsyncStorage.getItem(TRACK_APP_USAGE_KEY);
-    return canTrack || false;
+    return canTrack
+        ? canTrack === "t"
+        : false;
 }
 
 /**
@@ -303,4 +308,43 @@ function getSimilarity(data1, data2) {
     // return average of the 2 similarities (assumes both features are equally
     // important)
     return (timeNorm + distNorm) / 2.0;
+}
+
+/** User settings */
+/**
+ * Change user's dark mode preference
+ * @param {boolean} mode true for dark mode, false for light mode
+ */
+export async function setDarkModeSetting(mode) {
+    await AsyncStorage.setItem(DARK_MODE_KEY, mode ? "t" : "f");
+}
+
+/**
+ * Get user's dark mode preference
+ * @returns {boolean} tru for dark mode, false for light mode
+ */
+export async function getDarkModeSetting() {
+    const value = await AsyncStorage.getItem(DARK_MODE_KEY);
+    return value
+        ? value === "t"
+        : false;
+}
+
+/**
+ * Change user's refresh frequency setting
+ * @param {number} frequency refresh frequency in seconds
+ */
+export async function setRefreshFrequencySetting(frequency) {
+    await AsyncStorage.setItem(REFRESH_FREQUENCY_KEY, frequency.toString());
+}
+
+/**
+ * Get user's refresh frequency setting
+ * @returns {number} refresh frequency in seconds
+ */
+export async function getRefreshFrequencySetting() {
+    const value = await AsyncStorage.getItem(REFRESH_FREQUENCY_KEY);
+    return value
+        ? Number(value)
+        : 30;
 }
