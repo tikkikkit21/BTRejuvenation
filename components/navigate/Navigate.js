@@ -7,6 +7,7 @@ import Map from '../home/Map';
 import { getConnectedRoutes } from '../../backend/navigationController';
 import { getBus } from '../../backend/busController';
 import { RouteOption } from './NavigateComponents';
+import { getBusColor } from '../../backend/routeController';
 
 export default function Navigate() {
 
@@ -94,7 +95,6 @@ export default function Navigate() {
         try {
             const result = await getConnectedRoutes(startDestination, endDestination);
             setRouteData(result);
-            // console.log('Results: ', routeData);
         } catch (error) {
             console.log('Error Fetching Data:', error);
         }
@@ -114,6 +114,7 @@ export default function Navigate() {
         //         time: new Date()
         //     });
         // }
+
 
         navigation.navigate('RouteDirections', {
             routeData: routeInfo
