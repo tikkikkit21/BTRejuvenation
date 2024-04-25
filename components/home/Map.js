@@ -163,10 +163,10 @@ export default function Map({ navigation }) {
 
 // creates bus icons for each bus in the bus data
 export function createMarkers(buses, handleSelect, color) {
-    return buses.map(busObj => {
+    return buses.map((busObj, index) => {
         return (
             <Marker
-                key={busObj.AgencyVehicleName}
+                key={index}
                 coordinate={{
                     latitude: busObj.Latitude,
                     longitude: busObj.Longitude
