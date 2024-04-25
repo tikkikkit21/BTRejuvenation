@@ -5,19 +5,37 @@ import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
+import { useNavigation } from '@react-navigation/native';
 import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
+import { getAlerts } from '../../backend/alertController';
 import { useSelector } from 'react-redux';
 
-function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setStops, route, setRoute, isOnCooldown, setIsOnCooldown }) {
-    const [stopColor, setStopColor] = useState();
+export default function Map({ navigation }) {
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 37.227468937500895,
+        longitude: -80.42357646125542,
+        latitudeDelta: 0.051202637986392574,
+        longitudeDelta: 0.03720943536600885,
+    })
+    const [buses, setBuses] = useState([]);
+    const [stops, setStops] = useState([]);
+    const [route, setRoute] = useState();
+    const [stopColor, setStopColor] = useState('black');
+    //const [selectedBus, setSelectedBus] = useState(''); might use in future for navigation
+    const [isOnCooldown, setIsOnCooldown] = useState(false);
+    const [alerts, setAlerts] = useState([]);
+
     const refreshTimer = useRef(null);
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const styles = darkMode ? dark : light;
     const refreshFreq = useSelector(state => state.refreshFrequency.time);
     const [isDarkMode, setIsDarkMode] = useState(darkMode);
+
+
+
 
     // ask for user location
     Location.requestForegroundPermissionsAsync();
@@ -47,6 +65,17 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
         };
     }, []);
 
+    // check for alerts
+    useEffect(() => {
+        async function fetchAlerts() {
+            const alertsData = await getAlerts();
+            if (alertsData.length > 0) {
+                setAlerts(alertsData);
+            }
+        }
+        fetchAlerts();
+    }, []);
+
     // refresh button has a 5s cooldown, and resets the automatic refresh
     function handleRefreshClick() {
         if (!isOnCooldown) {
@@ -73,6 +102,11 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
         })
     }
 
+    // handles alert button
+    function handleAlertClick() {
+        navigation.navigate("Alerts");
+    }
+
     // fetches bus data from backend
     async function loadBuses() {
         const buses = await getAllBuses();
@@ -94,6 +128,10 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
         setRoute(createRoute(stops, stopColor));
     }, [stops]);
 
+
+
+
+
     return (
         <View style={appStyles.container}>
             <MapView
@@ -103,8 +141,8 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
                 showsUserLocation={true}
                 userInterfaceStyle={isDarkMode ? "dark" : "light"}
             >
-                {createMarkers(buses, handleMarkerSelect)}
-                {createStops(stops, stopColor)}
+                {createMarkers(buses, handleMarkerSelect, null, navigation)}
+                {createStops(stops, stopColor, navigation)}
                 {route}
             </MapView>
             <View style={styles.refreshButton}>
@@ -122,16 +160,40 @@ function Map({ navigation, mapRegion, setMapRegion, buses, setBuses, stops, setS
                     <Entypo name="direction" size={20} color={darkMode ? "white" : "#861F41"} />
                 </TouchableOpacity>
             </View>
+            {alerts.length > 0 && <View style={styles.alertButton}>
+                <TouchableOpacity onPress={handleAlertClick}>
+                    <FontAwesome5 name="bell" size={20} color="white" />
+                </TouchableOpacity>
+            </View>}
         </View>
     )
 }
 
+
+export function getStopInfo(stopingName, stopingCode, navigation) {
+    navigation.navigate('StopInfo', {
+        stopName: stopingName,
+        stopCode: stopingCode,
+        fromFavorites: false
+    });
+
+}
+
+export function getRouteInfo(shortName, fullName, color, navigation) {
+    navigation.navigate('RouteInfo', {
+        routeShortName: shortName,
+        routeName: fullName,
+        routeColor: color
+    });
+}
+
+
 // creates bus icons for each bus in the bus data
-export function createMarkers(buses, handleSelect, color) {
-    return buses.map(busObj => {
+export function createMarkers(buses, handleSelect, color, navigation) {
+    return buses.map((busObj, index) => {
         return (
             <Marker
-                key={busObj.AgencyVehicleName}
+                key={index}
                 coordinate={{
                     latitude: busObj.Latitude,
                     longitude: busObj.Longitude
@@ -141,6 +203,7 @@ export function createMarkers(buses, handleSelect, color) {
                 pointerEvents="auto"
                 // For the route tab the handleseelct is not necesary, as we know bus info already
                 onSelect={handleSelect ? () => { handleSelect(busObj.RouteShortName) } : null}
+                onCalloutPress={() => getRouteInfo(busObj.RouteShortName, "no name", routeColorMap[busObj.RouteShortName], navigation)}
             >
                 <View>
                     <FontAwesome6 name="bus-simple" size={30} color={color ? '#' + color : '#' + routeColorMap[busObj.RouteShortName]} />
@@ -150,8 +213,10 @@ export function createMarkers(buses, handleSelect, color) {
     });
 }
 
+
+
 // creates circles for each stop
-export function createStops(stops, color) {
+export function createStops(stops, color, navigation) {
     return stops.map(stopObj =>
         <Marker
             key={stopObj.StopCode}
@@ -162,6 +227,7 @@ export function createStops(stops, color) {
             title={stopObj.StopCode}
             description={stopObj.StopName}
             pointerEvents="auto"
+            onCalloutPress={() => getStopInfo(stopObj.StopName, stopObj.StopCode, navigation)}
         >
             <View>
                 <Octicons name="dot-fill" size={30} color={color ? '#' + color : 'red'} />
@@ -195,7 +261,7 @@ export function createRoute(stops, color) {
                 destination={mc[mc.length - 1]}
                 waypoints={mc.slice(1, mc.length - 1)}
                 apikey={process.env.GOOGLE_MAPS_API_KEY}
-                strokeWidth={2}
+                strokeWidth={3}
                 strokeColor={routeColor}
             />
         );
@@ -278,9 +344,12 @@ const dark = StyleSheet.create({
         padding: 15,
         borderRadius: 15
     },
+    alertButton: {
+        position: 'absolute',
+        top: 150,
+        right: 10,
+        backgroundColor: '#A40046',
+        padding: 15,
+        borderRadius: 15
+    },
 });
-
-// Memoize Map component
-const MemoizedMap = React.memo(Map);
-
-export default MemoizedMap;

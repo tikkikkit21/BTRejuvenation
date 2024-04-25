@@ -67,7 +67,7 @@ export default function RouteInfo({ route }) {
         async function fetchInfo(){
             const bussesInfo = await getBus(routeShortName);
             setBusses(bussesInfo);
-            
+
             const stops = await getStops(routeShortName);
             setStops(stops);
 
@@ -81,6 +81,7 @@ export default function RouteInfo({ route }) {
     }, []);
 
     useEffect(() => {
+
         if (busses.length > 0) {
             setMapRegion({
                 latitude: busses.Latitude, 
@@ -91,7 +92,7 @@ export default function RouteInfo({ route }) {
         }
     }, [busses]);
 
-    function formatTime(timeString) {
+     function formatTime(timeString) {
         const date = new Date(timeString);
         let hours = date.getHours();
         const minutes = date.getMinutes();
@@ -131,7 +132,9 @@ export default function RouteInfo({ route }) {
                 <View style={[styles.busInfoContainer, { backgroundColor: `rgba(${parseInt(routeColor.slice(0,2), 16)},${parseInt(routeColor.slice(2,4), 16)},${parseInt(routeColor.slice(4,6), 16)}, 0.8)` }]}>
                     <Text style={{ fontSize: 22, color: '#000000', textAlign: 'center' }}>{`${routeShortName} Bus #${busses.AgencyVehicleName}`}</Text>
                     <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Last Stop: ${busses.LastStopName} (#${busses.StopCode})`}</Text>
-                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Bus Capacity: ${busses.PercentOfCapacity}%`}</Text>
+                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>
+                        {`Bus Capacity: ${busses.PercentOfCapacity !== undefined ? busses.PercentOfCapacity + '%' : busses.TotalCount + ' People'}`}
+                    </Text>                    
 
                 </View>
 
