@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { getScheduledRoutes } from '../../backend/routeController';
 import Toast from 'react-native-toast-message';
-import Map from '../home/Map';
+import Map from './Map';
 import { FontAwesome6 } from '@expo/vector-icons';
 
 import { getNextDeparturesForStop } from '../../backend/stopController';
@@ -16,43 +16,53 @@ export default function StopInfo({ route }){
     const [routes, setRoutes] = useState([]);
     const [singleRoutes, setSingleRoutes] = useState([]);
     const [singleStop, setSingleStop] = useState([]);
-    //const [isArray, setIsArray] = useState(false);
 
-    const [stopListItems, setStopListItems] = useState([]);
+    const [update, setUpdate] = useState([]);
+    
+
     const [favorites, setFavorites] = useState([]);
 
     
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
     useEffect (() => {
-        //setIsArray(Array.isArray(stops));
 
-        
+        console.log("here");
+        console.log(stopName);
+        console.log(stopCode);
+        console.log(fromFavorites);
 
         async function fetchData(){
 
-            favs = await getFavoriteStops();
-            setFavorites(favs);
+            console.log("FETCHDATA")
 
-            storeRoutes = await getScheduledRoutes(stopCode);  
+
+
+            
+
+            const storeRoutes = await getScheduledRoutes(stopCode, false); 
             setSingleRoutes(storeRoutes);
 
+            const favs = await getFavoriteStops();
+            setFavorites(favs);
 
-            let storeRoutes = [];
-            if(fromFavorites){
-                let stops = favorites;
 
-                stops.forEach(async stop => {
-                    let routeLocal = await getScheduledRoutes(stop);
-                    storeRoutes.push(routeLocal);
-                });
-                console.log(storeRoutes);
-                setRoutes(storeRoutes);
-            }
-            else{
-                storeRoutes = await getScheduledRoutes(stopCode);  
-                setSingleRoutes(storeRoutes);
-            }
+            console.log(singleRoutes); 
+            // if(fromFavorites){
+            //     let stops = favorites;
+
+            //     stops.forEach(async stop => {
+            //         let routeLocal = await getScheduledRoutes(stop);
+            //         storeRoutes.push(routeLocal);
+            //     });
+            //     console.log(storeRoutes);
+            //     setRoutes(storeRoutes);
+            // }
+
+            // else{
+            //     storeRoutes = await getScheduledRoutes(stopCode);  
+            //     setSingleRoutes(storeRoutes);
+            // }
 
 
             //routes has the informationL RouteName, RouteShortName, RouteColor
@@ -60,13 +70,13 @@ export default function StopInfo({ route }){
             //from routes, then use the GetNextDeparturesForStop(stop) trips = 5
             //then we will have RouteShortName, StopName, format(AdjustedDepartureTime)
 
-
         }
-
         fetchData();
 
-        fetchStopListItems();
-        
+        setUpdate([true]);
+
+       
+
         /**
          * 1. getRoutes for stop
          * 2. GetNextDeparturesForStop with trips = 5
@@ -75,10 +85,22 @@ export default function StopInfo({ route }){
 
     }, []);
 
-    async function fetchStopListItems() {
-        const items = await renderStopList();
-        setStopListItems(items);
-    }
+    useEffect (() =>{
+
+        async function populateTimeString(){
+            const promises = singleRoutes.map(async (item) => {
+                const newTimeString = await getTimeString(stopCode, item.RouteShortName);
+                item.TimeString = newTimeString;
+            });
+        
+            await Promise.all(promises);
+            setSingleRoutes([...singleRoutes]);
+           }
+        populateTimeString();
+
+    }, [favorites])
+
+
 
     function isFavorite(stop) {
         if(favorites == null){
@@ -89,6 +111,7 @@ export default function StopInfo({ route }){
         }
         return false;
     }
+
 
     async function onHeartPress(stop) {
 
@@ -108,7 +131,11 @@ export default function StopInfo({ route }){
                 position: "top"
 
             });
+
+           
         }
+
+        setFavorites(await getFavoriteStops());
 
     }
 
@@ -125,42 +152,54 @@ export default function StopInfo({ route }){
         return formattedTime;
     }
 
-    async function renderStopList() {
-        // Fetch the necessary data before rendering the FlatList
-        const stopListItems = await Promise.all(singleRoutes.map(async (item) => {
-            const stopList = await stopListComponent(item.RouteName, stopCode, item.RouteColor, item.RouteShortName);
-            return (
-                <View style={styles.flatListItem}>
-                    {stopList}
-                </View>
-            );
-        }));
-    
-        return stopListItems;
+    async function getTimeString(stopCode2, routeShortName) {
+        const times = await getNextDeparturesForStop(routeShortName, stopCode2);       
+        if(!Array.isArray(times)){
+            times = [times];
+        }
+        const timeString = times.map(time => formatTime(time.AdjustedDepartureTime)).join(', ');
+        return timeString;
     }
+
+    // Call renderStopList to get the stop list items
+    //const stopListItems = await renderStopList();
+    /**
+     * IF THE CHAT GPT IMPLEMENTATION DOES NOT WORK, THEN GO BACKA ND USE THE AWAIT 
+     * GETNEXTDEPARTURES FOR STOP JUST OUTSIDE OF THE ARRAY AND STORE IT AS A STATE VARIABLE
+     * 
+     */
     
     return (
-        <View>
+        <View style = {styles.container}>
             <MapViewMemo/>
             <Toast/>
             <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}> 
-                    <Text>{`${singleStop.stopCode} - ${singleStop.StopName}`}</Text>
-                    <TouchableOpacity style={{ marginRight: 15 }} onPress={() => onHeartPress(stopCode)}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 10, borderBottomColor: 'grey', borderBottomWidth: 1 }}> 
+                    <Text style={{ fontSize: 20, marginLeft: 15 }}>{`${stopCode} - ${stopName}`}</Text>
+                    <TouchableOpacity style={{ marginRight: 25 }} onPress={() => onHeartPress(stopCode)}>
                         <FontAwesome6 name="heart" size={22} style={{ color: isFavorite(stopCode) ? 'red' : 'black' }} />
                     </TouchableOpacity>
                 </View>
-                <View>
-                    {/* Render the stop list items */}
-                    {stopListItems}
-                </View>
+                <FlatList
+                    data = {singleRoutes}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => (
+                        <View style={styles.flatListItem}>
+                            <View style={{ flexDirection: 'column', alignItems: 'left', marginLeft: 10, marginRight: 10 }}>
+                                <Text style={{ fontSize: 17, color: '#' + item.RouteColor, textAlign: 'left' }}>{`${item.RouteName} (${item.RouteShortName})`}</Text>
+                                <Text style={{ fontSize: 12, color: '#' + item.RouteColor}}>{item.TimeString}</Text>
+                            </View>
+                               
+                        </View>
+                    )}  
+                />
+                    
             </BottomSheet>
         </View>
     );
-
 
     
 }

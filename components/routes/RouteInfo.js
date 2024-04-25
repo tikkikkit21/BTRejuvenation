@@ -123,7 +123,7 @@ export default function RouteInfo({ route }) {
                 {/* Not gonna lie, below background color is from chat gpt, 
                 i used it to make the background color slightly more light
                 so that the text is easier to read */}
-                <View style={[styles.busInfoContainer, { backgroundColor: `rgba(${parseInt(routeColor.slice(0,2), 16)},${parseInt(routeColor.slice(2,4), 16)},${parseInt(routeColor.slice(4,6), 16)}, 0.8)` }]}>
+                <View style={[styles.busInfoContainer, { backgroundColor: '#' + routeColor }]}>
                     <Text style={{ fontSize: 22, color: '#000000', textAlign: 'center' }}>{`${routeShortName} Bus #${busses.AgencyVehicleName}`}</Text>
                     <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Last Stop: ${busses.LastStopName} (#${busses.StopCode})`}</Text>
                     <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Bus Capacity: ${busses.PercentOfCapacity}%`}</Text>

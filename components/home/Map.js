@@ -194,7 +194,7 @@ export function createStops(stops, color, navigation) {
             title={stopObj.StopCode}
             description={stopObj.StopName}
             pointerEvents="auto"
-            onCalloutPress={getStopInfo(stopObj.stopName, stopObj.StopCode, navigation)}
+            onCalloutPress={() => getStopInfo(stopObj.StopName, stopObj.StopCode, navigation)}
         >
             <View>
                 <Octicons name="dot-fill" size={30} color={color ? '#' + color : 'red'} />

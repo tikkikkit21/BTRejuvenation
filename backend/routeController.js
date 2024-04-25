@@ -2,6 +2,7 @@ import axios from "axios";
 import { xml2js } from "xml-js";
 import { formatTextProperty } from "./apiUtil";
 
+
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
 
 export const routeColorMap = {};
@@ -13,7 +14,7 @@ export const routeColorMap = {};
  * @returns list of bus routes that serve the stop
  * 
  */
-export async function getScheduledRoutes(stopCode = "") {
+export async function getScheduledRoutes(stopCode = "", popMap = true) {
     // leaving servicedate as blank because it auto-searches for today's date
     const { data } = await axios.get(`${ROOT}/GetScheduledRoutes?stopCode=${stopCode}&serviceDate=`);
     const json = xml2js(data, { compact: true });
@@ -26,7 +27,10 @@ export async function getScheduledRoutes(stopCode = "") {
 
     scheduledStops = scheduledStops.map(stop => formatTextProperty(stop));
 
-    populateMap(scheduledStops);
+    if(popMap){
+        populateMap(scheduledStops);
+    }
+    
 
     //console.log(scheduledStops);
     return scheduledStops;

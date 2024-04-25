@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Map from './Map';
-import StopInfo from '../routes/StopInfo';
+import StopInfo from './StopInfo';
 
 const Stack = createStackNavigator();
 
