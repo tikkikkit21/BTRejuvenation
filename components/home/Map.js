@@ -5,14 +5,16 @@ import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { getAllBuses } from '../../backend/busController';
-import { FontAwesome, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import appStyles from '../../styles/App.style';
 import { useNavigation } from '@react-navigation/native';
 import { getStops } from '../../backend/stopController';
 import { getCurrentRoutes, getScheduledRoutes, routeColorMap } from '../../backend/routeController';
+import { getAlerts } from '../../backend/alertController';
 import { useSelector } from 'react-redux';
 
 export default function Map({ navigation }) {
+    getAlerts()
     const [mapRegion, setMapRegion] = useState({
         latitude: 37.227468937500895,
         longitude: -80.42357646125542,
@@ -25,9 +27,11 @@ export default function Map({ navigation }) {
     const [stopColor, setStopColor] = useState('black');
     //const [selectedBus, setSelectedBus] = useState(''); might use in future for navigation
     const [isOnCooldown, setIsOnCooldown] = useState(false);
+    const [alerts, setAlerts] = useState([]);
 
     const refreshTimer = useRef(null);
     const darkMode = useSelector(state => state.darkMode.isEnabled);
+    const styles = darkMode ? dark : light;
     const refreshFreq = useSelector(state => state.refreshFrequency.time);
     const [isDarkMode, setIsDarkMode] = useState(darkMode);
     
@@ -62,6 +66,17 @@ export default function Map({ navigation }) {
         };
     }, []);
 
+    // check for alerts
+    useEffect(() => {
+        async function fetchAlerts() {
+            const alertsData = await getAlerts();
+            if (alertsData.length > 0) {
+                setAlerts(alertsData);
+            }
+        }
+        fetchAlerts();
+    }, []);
+
     // refresh button has a 5s cooldown, and resets the automatic refresh
     function handleRefreshClick() {
         if (!isOnCooldown) {
@@ -86,6 +101,11 @@ export default function Map({ navigation }) {
             latitudeDelta: 0.00964806666502227,
             longitudeDelta: 0.008857245616368914
         })
+    }
+
+    // handles alert button
+    function handleAlertClick() {
+        navigation.navigate("Alerts");
     }
 
     // fetches bus data from backend
@@ -128,7 +148,7 @@ export default function Map({ navigation }) {
             </MapView>
             <View style={styles.refreshButton}>
                 <TouchableOpacity onPress={handleRefreshClick}>
-                    <MaterialCommunityIcons name="restart" size={24} color="white" />
+                    <MaterialCommunityIcons name="restart" size={24} color={darkMode ? "white" : "#861F41"} />
                 </TouchableOpacity>
             </View>
             {/* <View style={styles.feedbackButton}>
@@ -138,9 +158,14 @@ export default function Map({ navigation }) {
             </View> */}
             <View style={styles.locationButton}>
                 <TouchableOpacity onPress={handleLocationClick}>
-                    <Entypo name="direction" size={20} color="white" />
+                    <Entypo name="direction" size={20} color={darkMode ? "white" : "#861F41"} />
                 </TouchableOpacity>
             </View>
+            {alerts.length > 0 && <View style={styles.alertButton}>
+                <TouchableOpacity onPress={handleAlertClick}>
+                    <FontAwesome5 name="bell" size={20} color="white" />
+                </TouchableOpacity>
+            </View>}
         </View>
     )
 }
@@ -256,7 +281,7 @@ function format(coords) {
     return [coords.slice(0, 20), coords.slice(19, coords.length)];
 }
 
-const styles = StyleSheet.create({
+const light = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
     },
@@ -264,7 +289,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
-        backgroundColor: '#A40046',
+        backgroundColor: 'white',
+        // backgroundColor: '#A40046',
         padding: 13,
         borderRadius: 15
     },
@@ -272,13 +298,56 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 80,
         right: 10,
-        backgroundColor: '#A40046',
+        backgroundColor: 'white',
+        // backgroundColor: '#A40046',
         padding: 16,
         borderRadius: 15
     },
     locationButton: {
         position: 'absolute',
         top: 80,
+        right: 10,
+        backgroundColor: 'white',
+        // backgroundColor: '#A40046',
+        padding: 15,
+        borderRadius: 15
+    },
+});
+
+const dark = StyleSheet.create({
+    map: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    refreshButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: '#861F41',
+        // backgroundColor: '#A40046',
+        padding: 13,
+        borderRadius: 15
+    },
+    feedbackButton: {
+        position: 'absolute',
+        top: 80,
+        right: 10,
+        backgroundColor: '#861F41',
+        // backgroundColor: '#A40046',
+        padding: 16,
+        borderRadius: 15
+    },
+    locationButton: {
+        position: 'absolute',
+        top: 80,
+        right: 10,
+        backgroundColor: '#861F41',
+        // backgroundColor: '#A40046',
+        padding: 15,
+        borderRadius: 15
+    },
+    alertButton: {
+        position: 'absolute',
+        top: 150,
         right: 10,
         backgroundColor: '#A40046',
         padding: 15,
