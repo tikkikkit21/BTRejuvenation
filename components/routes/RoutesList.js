@@ -23,7 +23,7 @@ export default function RoutesList() {
     const [selectedStop, selectStop] = useState("");
     const [placeHolder, setPlaceholder] = useState("Filter By Route");
     const [favorites, setFavorites] = useState([]);
-    const [heartColor, setHeartColor] = useState('black');
+    // const [heartColor, setHeartColor] = useState('black');
 
     // redux variables
     const darkMode = useSelector(state => state.darkMode.isEnabled);
@@ -82,11 +82,12 @@ export default function RoutesList() {
     }, [favorites]);
 
     function isFavorite(route) {
-        if (favorites.includes(route) > 0) {
-            setHeartColor('red');
-            return true;
-        }
-        return false;
+        // if (favorites.includes(route) > 0) {
+        //     setHeartColor('red');
+        //     return true;
+        // }
+        // return false;
+        return favorites.includes(route);
     }
 
     async function onHeartPress(route) {
