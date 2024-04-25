@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { Ionicons, FontAwesome5, FontAwesome6, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -22,6 +22,8 @@ const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37
 
 export default function App() {
     const dispatch = useDispatch();
+
+    const darkMode = useSelector(state => state.darkMode.isEnabled);
 
     // fetch suggestion
     useEffect(() => {
@@ -73,7 +75,7 @@ export default function App() {
 
                         return icon;
                     },
-                    tabBarActiveTintColor: '#861F41',
+                    tabBarActiveTintColor: darkMode ? "#E5751F" : "#861F41" ,
                     tabBarInactiveTintColor: 'gray',
                     tabBarLabel: getTabBarLabel(route.name), // Custom tab label
                     headerShown: false

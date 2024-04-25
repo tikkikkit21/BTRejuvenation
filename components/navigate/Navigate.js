@@ -8,6 +8,7 @@ import { getConnectedRoutes } from '../../backend/navigationController';
 import { getBus } from '../../backend/busController';
 import { RouteOption } from './NavigateComponents';
 import { getBusColor } from '../../backend/routeController';
+import { useSelector } from 'react-redux';
 
 export default function Navigate() {
 
@@ -41,6 +42,8 @@ export default function Navigate() {
 
     // State to hold the route text color
     const [routeTextColor, setRouteTextColor] = useState('white');
+    const darkMode = useSelector(state => state.darkMode.isEnabled);
+    const styles = darkMode ? dark : light;
 
 
     // Reset bottom sheet index to a fixed snap point whenever the component mounts
@@ -132,15 +135,16 @@ export default function Navigate() {
 
     return (
         <View style={styles.container}>
-          <MapViewMemo />
-          <BottomSheet
-              ref={bottomSheetRef}
-              index={bottomSheetIndex}
-              snapPoints={snapPoints}
-              backgroundStyle={{backgroundColor: '#FFFFFF'}}
-              onChange={handleAnimateBottomSheet}
-          >
-              <View style={styles.destinationContainer}>
+            <MapViewMemo />
+            <BottomSheet
+                ref={bottomSheetRef}
+                index={bottomSheetIndex}
+                snapPoints={snapPoints}
+                backgroundStyle={styles.bottomSheet}
+                // backgroundStyle={{backgroundColor: '#FFFFFF'}}
+                onChange={handleAnimateBottomSheet}
+            >
+            <View style={styles.inputContainer}>
                 <FontAwesome6 name='location-crosshairs' size={15} color='white'/>
                 <View style={styles.textInputContainer}>
                     <BottomSheetTextInput
@@ -206,34 +210,203 @@ export default function Navigate() {
 // Memoized Map component to avoid unnecessary rerendering.
 const MapViewMemo = React.memo(Map);
 
-const styles = StyleSheet.create({
+// const styles = StyleSheet.create({
+    // container: {
+    //     flex: 1,
+    //     backgroundColor: 'white'
+    // },
+    // swapButtonContainer: {
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     backgroundColor: 'white',
+    //     padding: 15
+    // },
+    // swapButton: {
+    //     transform: [{ rotate: '90deg' }]
+    // },
+    // destinationContainer: {
+    //     flexDirection: 'row',
+    //     alignItems: 'center',
+    //     borderRadius: 10,
+    //     marginHorizontal: 20,
+    //     marginVertical: 10,
+    //     padding: 10,
+    //     backgroundColor: '#75787B',
+    //     color: 'white'
+    // },
+    // textInputContainer: {
+    //     flex: 1,
+    //     marginLeft: 5,
+    //     height: 30
+    // },
+    // textInput: {
+    //     flex: 1,
+    //     padding: 5,
+    //     fontSize: 16,
+    //     color: 'black',
+    //     backgroundColor: 'white',
+    //     borderRadius: 10
+    // },
+    // moreButtonContainer: {
+    //     backgroundColor: '#A40046', // Background color
+    //     paddingVertical: 10,
+    //     paddingHorizontal: 20, // Adjust padding as needed
+    //     borderRadius: 10,
+    //     marginHorizontal: 20,
+    //     marginVertical: 10,
+    // },
+    // moreButtonText: {
+    //     color: '#fff', // Font color
+    //     fontSize: 16,
+    // },
+    // moreOptionsContainer: {
+    //     flexDirection: 'row',
+    //     alignItems: 'center',
+    //     borderRadius: 10,
+    //     marginHorizontal: 20,
+    //     marginVertical: 10,
+    //     padding: 10,
+    //     backgroundColor: '#75787B',
+    //     color: 'white'
+    // },
+    // searchButton: {
+    //     marginHorizontal: 20,
+    //     marginVertical: 10,
+    //     padding: 10,
+    //     backgroundColor: '#A40046',
+    //     borderRadius: 10,
+    //     borderColor: '#fff'
+    // },
+    // searchText: {
+    //     color: '#fff',
+    //     textAlign: 'center',
+    //     fontSize: 16
+    // },
+    // routeOptionContainer: {
+    //     alignItems: 'center', // Center content horizontally
+    //     justifyContent: 'center', // Center content vertically
+    // },
+
+const light = StyleSheet.create({
+  container: {
+      flex: 1,
+      backgroundColor: 'white'
+  },
+  bottomSheet: {
+    backgroundColor: 'white'
+  },
+  containerHeadline: {
+      fontSize: 20,
+      fontWeight: '600',
+      padding: 20,
+      color: 'white'
+  },
+  swapButtonContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'white',
+      padding: 15
+  },
+  swapButton: {
+      transform: [{ rotate: '90deg' }]
+  },
+  inputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 10,
+      width: '90%',
+      marginLeft: 20,
+      padding: 10,
+      paddingHorizontal: 10,
+      backgroundColor: '#75787B',
+      color: 'white'
+  },
+  textInputContainer: {
+      flex: 1,
+      marginLeft: 5,
+      height: 30
+  },
+  textInput: {
+      flex: 1,
+      padding: 5,
+      fontSize: 16,
+      color: 'black',
+      backgroundColor: 'white',
+      borderRadius: 10
+  },
+  moreButtonContainer: {
+      backgroundColor: 'white',
+      padding: 20,
+      paddingLeft: 25
+  },
+  moreButtonText: {
+    color: 'blue',
+    fontSize: 16
+  },
+  whenInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    width: '90%',
+    marginLeft: 20,
+    padding: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#75787B',
+    color: 'white',
+    marginBottom: 10 // Add margin bottom to create space
+  },
+  priorityInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    width: '90%',
+    marginLeft: 20,
+    padding: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#75787B',
+    color: 'white',
+    marginBottom: 10 // Add margin bottom to create space
+  }
+});
+
+const dark = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        // color: '#861F41'
+    },
+    bottomSheet: {
+      backgroundColor: '#861F41'
+    },
+    containerHeadline: {
+        fontSize: 20,
+        fontWeight: '600',
+        padding: 20,
+        color: '#861F41'
     },
     swapButtonContainer: {
-        justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
+        justifyContent: 'center',
+        backgroundColor: '#861F41',
         padding: 15
     },
     swapButton: {
-        transform: [{ rotate: '90deg' }]
+        transform: [{ rotate: '90deg' }],
     },
-    destinationContainer: {
+    inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 10,
-        marginHorizontal: 20,
-        marginVertical: 10,
+        width: '90%',
+        marginLeft: 20,
         padding: 10,
-        backgroundColor: '#75787B',
-        color: 'white'
+        paddingHorizontal: 10,
+        backgroundColor: '#E5751F'
     },
     textInputContainer: {
         flex: 1,
         marginLeft: 5,
-        height: 30
+        height: 30,
+        backgroundColor: '#E5751F'
     },
     textInput: {
         flex: 1,
@@ -244,42 +417,41 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     moreButtonContainer: {
-        backgroundColor: '#A40046', // Background color
-        paddingVertical: 10,
-        paddingHorizontal: 20, // Adjust padding as needed
-        borderRadius: 10,
-        marginHorizontal: 20,
-        marginVertical: 10,
+        backgroundColor: '#861F41',
+        padding: 20,
+        paddingLeft: 25
     },
     moreButtonText: {
-        color: '#fff', // Font color
-        fontSize: 16,
+      color: '#E5751F',
+      fontSize: 16
     },
-    moreOptionsContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderRadius: 10,
-        marginHorizontal: 20,
-        marginVertical: 10,
-        padding: 10,
-        backgroundColor: '#75787B',
-        color: 'white'
+    whenInputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 10,
+      width: '90%',
+      marginLeft: 20,
+      padding: 10,
+      paddingHorizontal: 10,
+      backgroundColor: '#E5751F',
+      color: 'white',
+      marginBottom: 10 // Add margin bottom to create space
     },
-    searchButton: {
-        marginHorizontal: 20,
-        marginVertical: 10,
-        padding: 10,
-        backgroundColor: '#A40046',
-        borderRadius: 10,
-        borderColor: '#fff'
-    },
-    searchText: {
-        color: '#fff',
-        textAlign: 'center',
-        fontSize: 16
-    },
-    routeOptionContainer: {
-        alignItems: 'center', // Center content horizontally
-        justifyContent: 'center', // Center content vertically
-    },
-});
+    priorityInputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 10,
+      width: '90%',
+      marginLeft: 20,
+      padding: 10,
+      paddingHorizontal: 10,
+      backgroundColor: '#E5751F',
+      color: 'white',
+      marginBottom: 10 // Add margin bottom to create space
+    }
+  });
+
+// Memoize Navigate component
+// const MemoizedNavigate = React.memo(Navigate);
+
+// export default MemoizedNavigate;

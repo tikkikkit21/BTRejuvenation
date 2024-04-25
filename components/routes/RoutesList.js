@@ -14,23 +14,26 @@ import * as Location from 'expo-location';
 import { useSelector } from 'react-redux';
 
 export default function RoutesList() {
+    const navigation = useNavigation();
+
+    // state variables
     const [open, setOpen] = useState(false);
     const [stops, setStops] = useState([]);
     const [routes, setRoutes] = useState([]);
     const [selectedStop, selectStop] = useState("");
-    const [placeHolder, setPlaceholder] = useState("");
+    const [placeHolder, setPlaceholder] = useState("Filter By Route");
     const [favorites, setFavorites] = useState([]);
-    const [heartColor, setHeartColor] = useState('black');
+    // const [heartColor, setHeartColor] = useState('black');
+
+    // redux variables
+    const darkMode = useSelector(state => state.darkMode.isEnabled);
     const canTrackData = useSelector(state => state.usageTracking.isEnabled);
-    const navigation = useNavigation();
 
     //TODO: Create a method that uses the favorites useState to check to see if 
     //there is a favorite for this user, instead of calling async every time
 
+    // load in info from API
     useEffect(() => {
-
-        setPlaceholder("Filter By Route")
-
         async function fetchStops() {
             try {
                 const stopLocal = await getAllStops();
@@ -42,8 +45,6 @@ export default function RoutesList() {
                 console.error('Error fetching stops:', error);
             }
         }
-
-        fetchStops();
 
         async function fetchAllRoutes() {
             try {
@@ -57,47 +58,56 @@ export default function RoutesList() {
             }
         }
 
-        fetchAllRoutes()
-
-        async function getFavorites() {
-
-            favs = await getFavoriteRoutes();
+        async function fetchFavorites() {
+            const favs = await getFavoriteRoutes();
             setFavorites(favs);
         }
-        getFavorites();
 
+        async function fetchAll() {
+            await fetchStops();
+            await fetchAllRoutes();
+            await fetchFavorites();
+        }
 
+        fetchAll();
     }, []);
 
+
+    // update backend when favorites list changes
     useEffect(() => {
-        async function getFavorites() {
-
-            favs = await getFavoriteRoutes();
-            setFavorites(favs);
-        }
-        getFavorites();
-
+        saveFavoriteRoutes(favorites);
     }, [favorites]);
 
+    // helper function to check if a route is favorited or not
     function isFavorite(route) {
-        if (favorites.includes(route) > 0) {
-            setHeartColor('red');
-            return true;
-        }
-        return false;
+        // if (favorites.includes(route) > 0) {
+        //     setHeartColor('red');
+        //     return true;
+        // }
+        // return false;
+        return favorites.includes(route);
     }
 
+    // pressing heart favorites/unfavorites a route
     async function onHeartPress(route) {
-
+        // remove favorite route
         if (isFavorite(route)) {
             await deleteFavoriteRoute(route);
-            Toast.show({
-                type: "success",
-                text1: `${route} removed from favorites`,
-                position: "top"
+            const newFavorites = [...favorites];
+            const index = favorites.indexOf(route);
+            if (index !== -1) {
+                newFavorites.splice(favorites.indexOf(route), 1);
+                setFavorites(newFavorites);
+                Toast.show({
+                    type: "success",
+                    text1: `${route} removed from favorites`,
+                    position: "top"
+                });
+            }
+        }
 
-            });
-        } else {
+        // add favorite route
+        else {
             await addFavoriteRoute(route);
             Toast.show({
                 type: "success",
@@ -106,33 +116,32 @@ export default function RoutesList() {
 
             });
 
-            favs = await getFavoriteRoutes();
-            setFavorites(favs);
-
+            const newFavorites = [...favorites];
+            newFavorites.push(route);
+            setFavorites(newFavorites);
         }
-
     }
 
-
+    // handles selecting a stop from the filter
     const handleStopChange = (itemValue) => {
         setPlaceholder(itemValue.label)
         selectStop(itemValue);
         stopCode = itemValue.value
 
-        if(stopCode == "FAVSTOP"){
+        if (stopCode == "FAVSTOP") {
             //navigate to stop component
 
             console.log("fav stop")
         }
-        else if (stopCode == "FAVROUTE"){
-            async function fetchRoutesByCode(){
+        else if (stopCode == "FAVROUTE") {
+            async function fetchRoutesByCode() {
                 const routesLocal = await getRoutesByCode(favorites);
-                if(routesLocal.length == 0){
+                if (routesLocal.length == 0) {
                     Toast.show({
                         type: "success",
                         text1: `No favorite routes`,
                         position: "top"
-        
+
                     });
 
                 }
@@ -140,17 +149,17 @@ export default function RoutesList() {
             }
             fetchRoutesByCode();
         }
-        else{
+        else {
             async function fetchScheduledRoutes() {
                 try {
-                    
+
                     const routesLocal = await getScheduledRoutes(stopCode);
                     setRoutes(routesLocal)
                 } catch (error) {
                     console.error('Error fetching stops:', error);
                 }
             }
-    
+
             fetchScheduledRoutes();
         }
 
@@ -159,6 +168,7 @@ export default function RoutesList() {
     // Points of the screen where the bottom sheet extends to
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
+    // clicking on a route navigates to specific info about that route
     const handleRouteInfoClick = async (shortName, fullName, color) => {
         if (canTrackData) {
             const location = await Location.getCurrentPositionAsync({});
@@ -186,10 +196,11 @@ export default function RoutesList() {
             <MapViewMemo />
             <BottomSheet
                 snapPoints={snapPoints}
-                backgroundStyle={{ backgroundColor: '#FFFFFF' }}
+                backgroundStyle={{ backgroundColor: darkMode ? "gray" : "white" }}
             >
                 <DropDownPicker
-                    items={stops.map((stop, index) => ({label: index < 3 ? stop[1] : `${stop[1]} (#${stop[0]})`,
+                    items={stops.map((stop, index) => ({
+                        label: index < 3 ? stop[1] : `${stop[1]} (#${stop[0]})`,
                         value: stop[0]
                     }))}
                     defaultValue={selectedStop}
@@ -203,7 +214,7 @@ export default function RoutesList() {
                     open={open}
                     setOpen={setOpen}
                 />
-                
+
 
                 <FlatList
                     data={routes}
@@ -229,7 +240,7 @@ export default function RoutesList() {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                
+
                             </TouchableOpacity>
                         </View>
                     )}
