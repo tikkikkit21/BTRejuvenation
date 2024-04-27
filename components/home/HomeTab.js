@@ -9,6 +9,8 @@ import Map from './Map';
 import StopInfo from './StopInfo';
 import RouteInfo from '../routes/RouteInfo';
 import Alerts from './Alerts';
+import { getBus } from '../../backend/busController';
+import { routeColorMap } from '../../backend/routeController';
 
 const Stack = createStackNavigator();
 
@@ -30,8 +32,11 @@ function HomeTab() {
             };
             const suggestedRoute = await getSuggestedRoute(data);
 
-            // if there's a valid suggested route, alert on initial startup
+            // if there's a valid suggested route, alert on initial startups
             if (suggestedRoute) {
+                const busInfo = await getBus(suggestedRoute);
+                console.log("businfo:", busInfo);
+                console.log("colorMap:", routeColorMap)
                 Alert.alert(
                     "Suggested Route",
                     suggestedRoute,
@@ -39,7 +44,6 @@ function HomeTab() {
                         {
                             text: "Sure",
                             onPress: () => {
-                                console.log("navigating to routes list...");
                                 navigation.navigate(
                                     "RoutesTab",
                                     {
@@ -47,8 +51,9 @@ function HomeTab() {
                                         params: {
                                             routeShortName: suggestedRoute,
                                             routeName: "fullName",
-                                            routeColor: "red"
-                                        }
+                                            routeColor: routeColorMap[suggestedRoute]
+                                        },
+                                        initial: false
                                     }
                                 );
                             }
