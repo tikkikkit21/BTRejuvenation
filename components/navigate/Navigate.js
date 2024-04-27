@@ -69,7 +69,7 @@ export default function Navigate() {
             setRouteData(null);
         }
     }, [startDestination, endDestination]);
-    
+
 
     // Handles when the arrow-swap button is clicked
     const handleSwapDestinations = () => {
@@ -82,12 +82,12 @@ export default function Navigate() {
     // Handles when 'More Options' is clicked
     const handleMoreOptions = () => {
         setShowMoreOptions(!showMoreOptions);
-        
+
         // Extend or reduce screen if more options displayed
         if (!showMoreOptions && bottomSheetIndex == 0) {
             bottomSheetRef.current?.snapToIndex(1); // Extend
             setBottomSheetIndex(1);
-        }  else if (showMoreOptions && bottomSheetIndex == 1) {
+        } else if (showMoreOptions && bottomSheetIndex == 1) {
             bottomSheetRef.current?.snapToIndex(0); // Reduce
             setBottomSheetIndex(0);
         }
@@ -131,7 +131,7 @@ export default function Navigate() {
         });
     };
 
-    
+
 
     return (
         <View style={styles.container}>
@@ -144,65 +144,65 @@ export default function Navigate() {
                 // backgroundStyle={{backgroundColor: '#FFFFFF'}}
                 onChange={handleAnimateBottomSheet}
             >
-            <View style={styles.inputContainer}>
-                <FontAwesome6 name='location-crosshairs' size={15} color='white'/>
-                <View style={styles.textInputContainer}>
-                    <BottomSheetTextInput
-                        style={styles.textInput}
-                        placeholder='Start Destination'
-                        value={startDestination}
-                        onChangeText={setStartDestination} // Updates the startDestination
-                    />
+                <View style={styles.inputContainer}>
+                    <FontAwesome6 name='location-crosshairs' size={15} color='white' />
+                    <View style={styles.textInputContainer}>
+                        <BottomSheetTextInput
+                            style={styles.textInput}
+                            placeholder='Start Destination'
+                            value={startDestination}
+                            onChangeText={setStartDestination} // Updates the startDestination
+                        />
+                    </View>
                 </View>
-            </View>
-            {/* Displays the Swap button */}
-            <View style={styles.swapButtonContainer}>
-                <TouchableOpacity onPress={handleSwapDestinations}>
-                    <Fontisto name="arrow-swap" size={22} style={styles.swapButton}/>
-                </TouchableOpacity>
-            </View>
-            {/* Displays End Destination input */}
-            <View style={styles.inputContainer}>
-                <Entypo name='location' size={15} color='white'/>
-                <View style={styles.textInputContainer}>
-                    <BottomSheetTextInput
-                        style={styles.textInput}
-                        placeholder='End Destination  '
-                        value={endDestination}
-                        onChangeText={setEndDestination} // Updates the endDestination
-                    />
+                {/* Displays the Swap button */}
+                <View style={styles.swapButtonContainer}>
+                    <TouchableOpacity onPress={handleSwapDestinations}>
+                        <Fontisto name="arrow-swap" size={22} style={styles.swapButton} />
+                    </TouchableOpacity>
                 </View>
-            </View>
-            {/* Displays the More Options button */}
-            {/* <View style={styles.moreButtonContainer}>
+                {/* Displays End Destination input */}
+                <View style={styles.inputContainer}>
+                    <Entypo name='location' size={15} color='white' />
+                    <View style={styles.textInputContainer}>
+                        <BottomSheetTextInput
+                            style={styles.textInput}
+                            placeholder='End Destination  '
+                            value={endDestination}
+                            onChangeText={setEndDestination} // Updates the endDestination
+                        />
+                    </View>
+                </View>
+                {/* Displays the More Options button */}
+                {/* <View style={styles.moreButtonContainer}>
                 <TouchableOpacity onPress={handleMoreOptions}>
                     <Text style={styles.moreButtonText}>More Options</Text>
                 </TouchableOpacity>
             </View> */}
-            {/* If destination fields are filled, show Search button */}
-            {startDestination && endDestination && (
-                <View>
-                    <TouchableOpacity
-                        style={styles.searchButton}
-                        onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
-                        underlayColor='white'
-                    >
-                        <Text style={styles.searchText}>Search</Text>
-                    </TouchableOpacity>
-                    {routeData && (     // If routeData exists, display it
-                        <View style={styles.routeOptionContainer}>
-                            <RouteOption 
-                                busLine={routeData[0].mainBusLine === 'N/A' ? 'Walk' : routeData[0].mainBusLine}
-                                tripDuration={routeData[0].totalDuration}
-                                tripDistance={routeData[0].totalDistance}
-                                routeColor={routeColor}
-                                onPress={() => handleRouteInfoClick(routeData)}
-                            />
-                        </View>
-                    )}
-                </View>
-            )}
-          </BottomSheet>
+                {/* If destination fields are filled, show Search button */}
+                {startDestination && endDestination && (
+                    <View>
+                        <TouchableOpacity
+                            style={styles.searchButton}
+                            onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
+                            underlayColor='white'
+                        >
+                            <Text style={styles.searchText}>Search</Text>
+                        </TouchableOpacity>
+                        {routeData && (     // If routeData exists, display it
+                            <View style={styles.routeOptionContainer}>
+                                <RouteOption
+                                    busLine={routeData[0].mainBusLine === 'N/A' ? 'Walk' : routeData[0].mainBusLine}
+                                    tripDuration={routeData[0].totalDuration}
+                                    tripDistance={routeData[0].totalDistance}
+                                    routeColor={routeColor}
+                                    onPress={() => handleRouteInfoClick(routeData)}
+                                />
+                            </View>
+                        )}
+                    </View>
+                )}
+            </BottomSheet>
         </View>
     );
 }
@@ -211,85 +211,85 @@ export default function Navigate() {
 const MapViewMemo = React.memo(Map);
 
 const light = StyleSheet.create({
-  container: {
-      flex: 1,
-      backgroundColor: 'white'
-  },
-  bottomSheet: {
-    backgroundColor: 'white'
-  },
-  containerHeadline: {
-      fontSize: 20,
-      fontWeight: '600',
-      padding: 20,
-      color: 'white'
-  },
-  swapButtonContainer: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'white',
-      padding: 15
-  },
-  swapButton: {
-      transform: [{ rotate: '90deg' }]
-  },
-  inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 10,
-      width: '90%',
-      marginLeft: 20,
-      padding: 10,
-      paddingHorizontal: 10,
-      backgroundColor: '#75787B',
-      color: 'white'
-  },
-  textInputContainer: {
-      flex: 1,
-      marginLeft: 5,
-      height: 30
-  },
-  textInput: {
-      flex: 1,
-      padding: 5,
-      fontSize: 16,
-      color: 'black',
-      backgroundColor: 'white',
-      borderRadius: 10
-  },
-  moreButtonContainer: {
-      backgroundColor: 'white',
-      padding: 20,
-      paddingLeft: 25
-  },
-  moreButtonText: {
-    color: 'blue',
-    fontSize: 16
-  },
-  whenInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    width: '90%',
-    marginLeft: 20,
-    padding: 10,
-    paddingHorizontal: 10,
-    backgroundColor: '#75787B',
-    color: 'white',
-    marginBottom: 10 // Add margin bottom to create space
-  },
-  priorityInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    width: '90%',
-    marginLeft: 20,
-    padding: 10,
-    paddingHorizontal: 10,
-    backgroundColor: '#75787B',
-    color: 'white',
-    marginBottom: 10 // Add margin bottom to create space
-  }
+    container: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
+    bottomSheet: {
+        backgroundColor: 'white'
+    },
+    containerHeadline: {
+        fontSize: 20,
+        fontWeight: '600',
+        padding: 20,
+        color: 'white'
+    },
+    swapButtonContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        padding: 15
+    },
+    swapButton: {
+        transform: [{ rotate: '90deg' }]
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 10,
+        width: '90%',
+        marginLeft: 20,
+        padding: 10,
+        paddingHorizontal: 10,
+        backgroundColor: '#75787B',
+        color: 'white'
+    },
+    textInputContainer: {
+        flex: 1,
+        marginLeft: 5,
+        height: 30
+    },
+    textInput: {
+        flex: 1,
+        padding: 5,
+        fontSize: 16,
+        color: 'black',
+        backgroundColor: 'white',
+        borderRadius: 10
+    },
+    moreButtonContainer: {
+        backgroundColor: 'white',
+        padding: 20,
+        paddingLeft: 25
+    },
+    moreButtonText: {
+        color: 'blue',
+        fontSize: 16
+    },
+    whenInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 10,
+        width: '90%',
+        marginLeft: 20,
+        padding: 10,
+        paddingHorizontal: 10,
+        backgroundColor: '#75787B',
+        color: 'white',
+        marginBottom: 10 // Add margin bottom to create space
+    },
+    priorityInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 10,
+        width: '90%',
+        marginLeft: 20,
+        padding: 10,
+        paddingHorizontal: 10,
+        backgroundColor: '#75787B',
+        color: 'white',
+        marginBottom: 10 // Add margin bottom to create space
+    }
 });
 
 const dark = StyleSheet.create({
@@ -298,7 +298,7 @@ const dark = StyleSheet.create({
         // color: '#861F41'
     },
     bottomSheet: {
-      backgroundColor: '#861F41'
+        backgroundColor: '#861F41'
     },
     containerHeadline: {
         fontSize: 20,
@@ -345,34 +345,34 @@ const dark = StyleSheet.create({
         paddingLeft: 25
     },
     moreButtonText: {
-      color: '#E5751F',
-      fontSize: 16
+        color: '#E5751F',
+        fontSize: 16
     },
     whenInputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 10,
-      width: '90%',
-      marginLeft: 20,
-      padding: 10,
-      paddingHorizontal: 10,
-      backgroundColor: '#E5751F',
-      color: 'white',
-      marginBottom: 10 // Add margin bottom to create space
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 10,
+        width: '90%',
+        marginLeft: 20,
+        padding: 10,
+        paddingHorizontal: 10,
+        backgroundColor: '#E5751F',
+        color: 'white',
+        marginBottom: 10 // Add margin bottom to create space
     },
     priorityInputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 10,
-      width: '90%',
-      marginLeft: 20,
-      padding: 10,
-      paddingHorizontal: 10,
-      backgroundColor: '#E5751F',
-      color: 'white',
-      marginBottom: 10 // Add margin bottom to create space
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 10,
+        width: '90%',
+        marginLeft: 20,
+        padding: 10,
+        paddingHorizontal: 10,
+        backgroundColor: '#E5751F',
+        color: 'white',
+        marginBottom: 10 // Add margin bottom to create space
     }
-  });
+});
 
 // Memoize Navigate component
 // const MemoizedNavigate = React.memo(Navigate);
