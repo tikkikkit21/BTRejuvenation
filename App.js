@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { Ionicons, FontAwesome5, FontAwesome6, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import * as Location from 'expo-location';
 import { useSelector, useDispatch } from 'react-redux';
 
 import HomeTab from './components/home/HomeTab';
@@ -18,21 +18,28 @@ import { fetchRefreshFrequencySetting } from './store/refreshFrequencyReducer';
 import { fetchUsageTrackingSetting } from './store/usageTrackingReducer';
 
 const Tab = createBottomTabNavigator();
-const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37.22823553939222, long: -80.42348272720925 } };
 
 export default function App() {
     const dispatch = useDispatch();
 
     const darkMode = useSelector(state => state.darkMode.isEnabled);
 
-    // fetch suggestion
+    // suggested route alert
     useEffect(() => {
         async function fetchSuggestedRoute() {
-            const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
-            console.log("suggestedRoute:", suggestedRoute);
+            // figure out suggested route
+            const location = await Location.getCurrentPositionAsync({});
+            const data = {
+                time: new Date(),
+                coords: {
+                    lat: location.coords.latitude,
+                    long: location.coords.longitude
+                }
+            };
+            const suggestedRoute = await getSuggestedRoute(data);
 
+            // if there's a valid suggested route, alert on initial startup
             if (suggestedRoute) {
-                // do something in frontend
                 Alert.alert(
                     "Suggested Route",
                     suggestedRoute,
