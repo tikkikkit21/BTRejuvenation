@@ -9,7 +9,7 @@ import Map from './Map';
 import StopInfo from './StopInfo';
 import RouteInfo from '../routes/RouteInfo';
 import Alerts from './Alerts';
-import { getCurrentRoutes, routeColorMap } from '../../backend/routeController';
+import { getCurrentRoutes } from '../../backend/routeController';
 
 const Stack = createStackNavigator();
 

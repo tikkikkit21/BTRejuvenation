@@ -272,9 +272,6 @@ export async function getSuggestedRoute(data) {
         }
     }
 
-    console.log("maxCount:", maxCount);
-    console.log("maxRoute:", maxRoute);
-
     // if route is suggested by at least 20% of all records, we accept
     if ((maxCount * 1.0) / records.length >= 0.2) {
         return maxRoute;
