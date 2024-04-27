@@ -9,8 +9,7 @@ import Map from './Map';
 import StopInfo from './StopInfo';
 import RouteInfo from '../routes/RouteInfo';
 import Alerts from './Alerts';
-import { getBus } from '../../backend/busController';
-import { routeColorMap } from '../../backend/routeController';
+import { getCurrentRoutes, routeColorMap } from '../../backend/routeController';
 
 const Stack = createStackNavigator();
 
@@ -34,33 +33,36 @@ function HomeTab() {
 
             // if there's a valid suggested route, alert on initial startups
             if (suggestedRoute) {
-                const busInfo = await getBus(suggestedRoute);
-                Alert.alert(
-                    `Suggested Route: ${suggestedRoute}`,
-                    "Would you like to view this route?",
-                    [
-                        {
-                            text: "Sure",
-                            onPress: () => {
-                                navigation.navigate(
-                                    "RoutesTab",
-                                    {
-                                        screen: "RouteInfo",
-                                        params: {
-                                            routeShortName: suggestedRoute,
-                                            routeName: "fullName",
-                                            routeColor: routeColorMap[suggestedRoute]
-                                        },
-                                        initial: false
-                                    }
-                                );
+                const routes = await getCurrentRoutes();
+                const routeInfo = routes.find(route => route.RouteShortName === suggestedRoute);
+                if (routeInfo) {
+                    Alert.alert(
+                        `Suggested Route: ${suggestedRoute}`,
+                        "Would you like to view this route?",
+                        [
+                            {
+                                text: "Sure",
+                                onPress: () => {
+                                    navigation.navigate(
+                                        "RoutesTab",
+                                        {
+                                            screen: "RouteInfo",
+                                            params: {
+                                                routeShortName: suggestedRoute,
+                                                routeName: routeInfo.RouteName,
+                                                routeColor: routeInfo.RouteColor
+                                            },
+                                            initial: false
+                                        }
+                                    );
+                                }
+                            },
+                            {
+                                text: "No thanks"
                             }
-                        },
-                        {
-                            text: "No thanks"
-                        }
-                    ]
-                );
+                        ]
+                    );
+                }
             }
         }
         fetchSuggestedRoute();
