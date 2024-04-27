@@ -35,11 +35,9 @@ function HomeTab() {
             // if there's a valid suggested route, alert on initial startups
             if (suggestedRoute) {
                 const busInfo = await getBus(suggestedRoute);
-                console.log("businfo:", busInfo);
-                console.log("colorMap:", routeColorMap)
                 Alert.alert(
-                    "Suggested Route",
-                    suggestedRoute,
+                    `Suggested Route: ${suggestedRoute}`,
+                    "Would you like to view this route?",
                     [
                         {
                             text: "Sure",
