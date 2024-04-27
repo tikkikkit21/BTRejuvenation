@@ -4,7 +4,7 @@ import { formatTextProperty } from "./apiUtil";
 
 
 const ROOT = "http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx";
-const ROUTES = {};
+const STOP_ROUTES = {};
 
 export const routeColorMap = {};
 
@@ -16,7 +16,7 @@ export const routeColorMap = {};
  * 
  */
 export async function getScheduledRoutes(stopCode = "", popMap = true) {
-    if (ROUTES[stopCode]) return ROUTES[stopCode];
+    if (STOP_ROUTES[stopCode]) return STOP_ROUTES[stopCode];
     // leaving servicedate as blank because it auto-searches for today's date
     const { data } = await axios.get(`${ROOT}/GetScheduledRoutes?stopCode=${stopCode}&serviceDate=`);
     const json = xml2js(data, { compact: true });
@@ -33,7 +33,7 @@ export async function getScheduledRoutes(stopCode = "", popMap = true) {
         populateMap(scheduledStops);
     }
 
-    ROUTES[stopCode] = scheduledStops;
+    STOP_ROUTES[stopCode] = scheduledStops;
 
     //console.log(scheduledStops);
     return scheduledStops;
@@ -65,17 +65,17 @@ export async function getNextTrip(route) {
 
 }
 
+const ROUTES = [];
 export async function getCurrentRoutes() {
+    if (ROUTES.length > 1) return ROUTES;
     const { data } = await axios.get(`${ROOT}/GetCurrentRoutes`);
     const json = xml2js(data, { compact: true });
 
     let routes = json.DocumentElement.CurrentRoutes
-
     routes = routes.map(route => formatTextProperty(route));
+    ROUTES.push(...routes);
 
     return routes;
-
-
 }
 
 
