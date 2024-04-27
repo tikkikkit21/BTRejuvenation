@@ -7,7 +7,6 @@ import * as Location from 'expo-location';
 import { useSelector, useDispatch } from 'react-redux';
 
 import HomeTab from './components/home/HomeTab';
-import FavoritesTab from './components/favorites/FavoritesTab';
 import RoutesTab from './components/routes/RoutesTab';
 import NavigateTab from './components/navigate/NavigateTab';
 import SettingsTab from './components/settings/SettingsTab';
@@ -21,7 +20,6 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
     const dispatch = useDispatch();
-
     const darkMode = useSelector(state => state.darkMode.isEnabled);
 
     // suggested route alert
@@ -43,7 +41,7 @@ export default function App() {
                 Alert.alert(
                     "Suggested Route",
                     suggestedRoute,
-                )
+                );
             }
         }
         fetchSuggestedRoute();
@@ -69,9 +67,6 @@ export default function App() {
                                 break;
                             case "NavigateTab":
                                 icon = <FontAwesome5 name='map-marked-alt' size={size} color={color} />
-                                break;
-                            case "FavoritesTab":
-                                icon = <Foundation name='heart' size={size} color={color} />
                                 break;
                             case "RoutesTab":
                                 icon = <FontAwesome5 name='route' size={size} color={color} />
@@ -106,8 +101,6 @@ function getTabBarLabel(routeName) {
     switch (routeName) {
         case "HomeTab":
             return "Home";
-        case "FavoritesTab":
-            return "Favorites";
         case "NavigateTab":
             return "Navigate";
         case "RoutesTab":
