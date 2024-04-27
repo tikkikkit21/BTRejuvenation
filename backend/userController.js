@@ -244,7 +244,7 @@ export async function getSuggestedRoute(data) {
         : [];
 
     // not enough data to predict
-    if (records.length < 5) return false;
+    if (records.length < 5) return null;
 
     // find all similar records to provided data
     const similarRecords = records.filter(record => {
@@ -271,6 +271,9 @@ export async function getSuggestedRoute(data) {
             maxRoute = route;
         }
     }
+
+    console.log("maxCount:", maxCount);
+    console.log("maxRoute:", maxRoute);
 
     // if route is suggested by at least 20% of all records, we accept
     if ((maxCount * 1.0) / records.length >= 0.2) {

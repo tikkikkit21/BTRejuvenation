@@ -31,7 +31,7 @@ export default function App() {
             const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
             console.log("suggestedRoute:", suggestedRoute);
 
-            if (suggestedRoute !== null) {
+            if (suggestedRoute) {
                 // do something in frontend
                 Alert.alert(
                     "Suggested Route",
