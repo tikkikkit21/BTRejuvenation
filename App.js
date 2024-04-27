@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-
+import { Alert } from 'react-native';
 import { Ionicons, FontAwesome5, FontAwesome6, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -33,6 +33,10 @@ export default function App() {
 
             if (suggestedRoute !== null) {
                 // do something in frontend
+                Alert.alert(
+                    "Suggested Route",
+                    suggestedRoute,
+                )
             }
         }
         fetchSuggestedRoute();
@@ -75,7 +79,7 @@ export default function App() {
 
                         return icon;
                     },
-                    tabBarActiveTintColor: darkMode ? "#E5751F" : "#861F41" ,
+                    tabBarActiveTintColor: darkMode ? "#E5751F" : "#861F41",
                     tabBarInactiveTintColor: 'gray',
                     tabBarLabel: getTabBarLabel(route.name), // Custom tab label
                     headerShown: false
