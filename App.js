@@ -41,6 +41,17 @@ export default function App() {
                 Alert.alert(
                     "Suggested Route",
                     suggestedRoute,
+                    [
+                        {
+                            text: "Sure",
+                            onPress: () => {
+                                console.log("alskdjaslkdjaslkdjalksjdl");
+                            }
+                        },
+                        {
+                            text: "No thanks"
+                        }
+                    ]
                 );
             }
         }
