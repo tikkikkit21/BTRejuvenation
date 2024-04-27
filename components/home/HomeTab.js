@@ -35,7 +35,7 @@ function HomeTab() {
             if (suggestedRoute) {
                 const routes = await getCurrentRoutes();
                 const routeInfo = routes.find(route => route.RouteShortName === suggestedRoute);
-                if (routeInfo) {
+                if (routeInfo?.RouteName && routeInfo?.RouteColor) {
                     Alert.alert(
                         `Suggested Route: ${suggestedRoute}`,
                         "Would you like to view this route?",
