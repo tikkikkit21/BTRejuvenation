@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
-import { Alert } from 'react-native';
 import { Ionicons, FontAwesome5, FontAwesome6, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import * as Location from 'expo-location';
 import { useSelector, useDispatch } from 'react-redux';
 
 import HomeTab from './components/home/HomeTab';
@@ -11,7 +9,6 @@ import RoutesTab from './components/routes/RoutesTab';
 import NavigateTab from './components/navigate/NavigateTab';
 import SettingsTab from './components/settings/SettingsTab';
 
-import { getSuggestedRoute } from './backend/userController';
 import { fetchDarkModeSetting } from './store/darkModeReducer';
 import { fetchRefreshFrequencySetting } from './store/refreshFrequencyReducer';
 import { fetchUsageTrackingSetting } from './store/usageTrackingReducer';
@@ -21,42 +18,6 @@ const Tab = createBottomTabNavigator();
 export default function App() {
     const dispatch = useDispatch();
     const darkMode = useSelector(state => state.darkMode.isEnabled);
-
-    // suggested route alert
-    useEffect(() => {
-        async function fetchSuggestedRoute() {
-            // figure out suggested route
-            const location = await Location.getCurrentPositionAsync({});
-            const data = {
-                time: new Date(),
-                coords: {
-                    lat: location.coords.latitude,
-                    long: location.coords.longitude
-                }
-            };
-            const suggestedRoute = await getSuggestedRoute(data);
-
-            // if there's a valid suggested route, alert on initial startup
-            if (suggestedRoute) {
-                Alert.alert(
-                    "Suggested Route",
-                    suggestedRoute,
-                    [
-                        {
-                            text: "Sure",
-                            onPress: () => {
-                                console.log("alskdjaslkdjaslkdjalksjdl");
-                            }
-                        },
-                        {
-                            text: "No thanks"
-                        }
-                    ]
-                );
-            }
-        }
-        fetchSuggestedRoute();
-    }, []);
 
     // load user settings from backend into Redux
     useEffect(() => {
