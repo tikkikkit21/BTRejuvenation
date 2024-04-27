@@ -162,7 +162,7 @@ export default function Navigate() {
                 </TouchableOpacity>
             </View>
             {/* Displays End Destination input */}
-            <View style={styles.destinationContainer}>
+            <View style={styles.inputContainer}>
                 <Entypo name='location' size={15} color='white'/>
                 <View style={styles.textInputContainer}>
                     <BottomSheetTextInput
@@ -209,83 +209,6 @@ export default function Navigate() {
 
 // Memoized Map component to avoid unnecessary rerendering.
 const MapViewMemo = React.memo(Map);
-
-// const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    //     backgroundColor: 'white'
-    // },
-    // swapButtonContainer: {
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     backgroundColor: 'white',
-    //     padding: 15
-    // },
-    // swapButton: {
-    //     transform: [{ rotate: '90deg' }]
-    // },
-    // destinationContainer: {
-    //     flexDirection: 'row',
-    //     alignItems: 'center',
-    //     borderRadius: 10,
-    //     marginHorizontal: 20,
-    //     marginVertical: 10,
-    //     padding: 10,
-    //     backgroundColor: '#75787B',
-    //     color: 'white'
-    // },
-    // textInputContainer: {
-    //     flex: 1,
-    //     marginLeft: 5,
-    //     height: 30
-    // },
-    // textInput: {
-    //     flex: 1,
-    //     padding: 5,
-    //     fontSize: 16,
-    //     color: 'black',
-    //     backgroundColor: 'white',
-    //     borderRadius: 10
-    // },
-    // moreButtonContainer: {
-    //     backgroundColor: '#A40046', // Background color
-    //     paddingVertical: 10,
-    //     paddingHorizontal: 20, // Adjust padding as needed
-    //     borderRadius: 10,
-    //     marginHorizontal: 20,
-    //     marginVertical: 10,
-    // },
-    // moreButtonText: {
-    //     color: '#fff', // Font color
-    //     fontSize: 16,
-    // },
-    // moreOptionsContainer: {
-    //     flexDirection: 'row',
-    //     alignItems: 'center',
-    //     borderRadius: 10,
-    //     marginHorizontal: 20,
-    //     marginVertical: 10,
-    //     padding: 10,
-    //     backgroundColor: '#75787B',
-    //     color: 'white'
-    // },
-    // searchButton: {
-    //     marginHorizontal: 20,
-    //     marginVertical: 10,
-    //     padding: 10,
-    //     backgroundColor: '#A40046',
-    //     borderRadius: 10,
-    //     borderColor: '#fff'
-    // },
-    // searchText: {
-    //     color: '#fff',
-    //     textAlign: 'center',
-    //     fontSize: 16
-    // },
-    // routeOptionContainer: {
-    //     alignItems: 'center', // Center content horizontally
-    //     justifyContent: 'center', // Center content vertically
-    // },
 
 const light = StyleSheet.create({
   container: {
