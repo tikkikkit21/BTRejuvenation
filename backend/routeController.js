@@ -78,6 +78,18 @@ export async function getCurrentRoutes() {
     return routes;
 }
 
+export async function getBusColor(name) {
+    const routes = await getCurrentRoutes();
+    const route = routes.find(route => route.RouteName === name);
+
+    if (route) {
+        const { RouteColor, RouteTextColor } = route;
+        return { RouteColor, RouteTextColor };
+    } else {
+        console.log("Route not found");
+        return null;
+    }
+}
 
 function populateMap(routes) {
 

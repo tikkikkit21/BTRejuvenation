@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Navigate from './Navigate';
+import { RouteDirections } from './NavigateComponents';
 import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
@@ -17,6 +18,7 @@ export default function NavigateTab() {
             initialRouteName="Navigate"
         >
             <Stack.Screen name="Navigate" component={Navigate} />
+            <Stack.Screen name="RouteDirections" component={RouteDirections} />
         </Stack.Navigator>
     );
 }
