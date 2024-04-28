@@ -107,6 +107,7 @@ export default function Navigate() {
             const result = await getConnectedRoutes(startDestination, endDestination);
             setRouteData(result);
             const busColor = await getBusColor(result[0].mainBusLine);
+            console.log("HERE!");
             // If route is only Walking
             if (busColor === null) {
                 setRouteColor('white');
@@ -149,11 +150,31 @@ export default function Navigate() {
                 <View style={styles.inputContainer}>
                     <FontAwesome6 name='location-crosshairs' size={15} color='white' />
                     <View style={styles.textInputContainer}>
-                        <BottomSheetTextInput
-                            style={styles.textInput}
-                            placeholder='Start Destination'
+                        <GooglePlacesAutocomplete
+                            placeholder="Start Destination"
                             value={startDestination}
-                            onChangeText={setStartDestination} // Updates the startDestination
+                            textInputProps={{
+                                onChangeText: (text) => { setStartDestination(text) }
+                            }}
+                            styles={{
+                                container: {
+                                    flex: 0,
+                                },
+                                textInput: {
+                                    fontSize: 16,
+                                    borderBottomWidth: 1, // Add a bottom border
+                                    borderBottomColor: 'white', // Set the border color
+                                },
+                                powered: {
+                                    display: 'none', // Hide the "powered by Google" attribution
+                                },
+                            }}
+                            query={{
+                                key: APIKEY,
+                                language: "en",
+                            }}
+                            nearbyPlacesAPI="GooglePlacesSearch"
+                            debounce={200}
                         />
                     </View>
                 </View>
@@ -179,10 +200,8 @@ export default function Navigate() {
                                 },
                                 textInput: {
                                     fontSize: 16,
-                                    // backgroundColor: 'transparent', // Remove the background color
                                     borderBottomWidth: 1, // Add a bottom border
                                     borderBottomColor: 'white', // Set the border color
-                                    // color: 'white',
                                 },
                                 powered: {
                                     display: 'none', // Hide the "powered by Google" attribution
@@ -263,9 +282,10 @@ const light = StyleSheet.create({
         color: 'white'
     },
     textInputContainer: {
+        flexDirection: 'column',
         flex: 1,
         marginLeft: 5,
-        height: 30
+        // height: 30
     },
     textInput: {
         flex: 1,
