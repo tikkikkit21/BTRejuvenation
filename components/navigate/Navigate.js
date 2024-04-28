@@ -5,7 +5,6 @@ import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Map from '../home/Map';
 import { getConnectedRoutes } from '../../backend/navigationController';
-import { getBus } from '../../backend/busController';
 import { RouteOption } from './NavigateComponents';
 import { getBusColor } from '../../backend/routeController';
 import { useSelector } from 'react-redux';
