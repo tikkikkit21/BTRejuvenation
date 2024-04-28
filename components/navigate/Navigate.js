@@ -3,11 +3,14 @@ import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Map from '../home/Map';
 import { getConnectedRoutes } from '../../backend/navigationController';
 import { RouteOption } from './NavigateComponents';
 import { getBusColor } from '../../backend/routeController';
 import { useSelector } from 'react-redux';
+
+const APIKEY = process.env.GOOGLE_MAPS_API_KEY;
 
 export default function Navigate() {
 
@@ -164,12 +167,31 @@ export default function Navigate() {
                 <View style={styles.inputContainer}>
                     <Entypo name='location' size={15} color='white' />
                     <View style={styles.textInputContainer}>
-                        <BottomSheetTextInput
+                        <GooglePlacesAutocomplete
+                            placeholder="Where From?"
+                            value={endDestination}
+                            onChangeText={setEndDestination} // Updates the endDestination
+                            styles={{
+                                container: {
+                                flex: 0,
+                                },
+                                textInput: {
+                                fontSize: 16,
+                                },
+                            }}
+                            query={{
+                                key: APIKEY,
+                                language: "en",
+                            }}
+                            nearbyPlacesAPI="GooglePlacesSearch"
+                            debounce={200}
+                        />
+                        {/* <BottomSheetTextInput
                             style={styles.textInput}
                             placeholder='End Destination  '
                             value={endDestination}
                             onChangeText={setEndDestination} // Updates the endDestination
-                        />
+                        /> */}
                     </View>
                 </View>
                 {/* Displays the More Options button */}
