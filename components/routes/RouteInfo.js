@@ -23,9 +23,10 @@ import { useSelector } from 'react-redux';
  * maybe package information to send
  */
 
-import { getStops } from '../../backend/stopController';
+import { getRouteTrafficPattern, getStops } from '../../backend/stopController';
 import { getBus } from '../../backend/busController';
 import { getNextTrip } from '../../backend/routeController';
+import Toast from 'react-native-toast-message';
 
 //const MapViewMemo = React.memo(Map);
 //const MapViewMemo = React.memo(Map);
@@ -35,6 +36,8 @@ export default function RouteInfo({ route }) {
     const [stops, setStops] = useState([]);
     const [busses, setBusses] = useState([]);
     const [mapRoute, setMapRoute] = useState([]);
+
+    const [toastMessage, setToastMessage] = useState([]);
 
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const styles = darkMode ? dark : light;
@@ -63,6 +66,7 @@ export default function RouteInfo({ route }) {
             routeShortName = "HWD";
         }
 
+       
 
         async function fetchInfo(){
             const bussesInfo = await getBus(routeShortName);
@@ -77,6 +81,24 @@ export default function RouteInfo({ route }) {
             setMapRoute(createRoute(stops, routeColor));
         }
         fetchInfo();
+
+
+        const trafficDelay = getRouteTrafficPattern(routeShortName);
+        if(trafficDelay > 0){
+           
+            Toast.show({
+                type: "success",
+                text1: `Expect up to a ${trafficDelay} minute delay for ${routeShortName}.`,
+                position: "top"
+            })
+        }
+        else{   
+            Toast.show({
+                type: "success",
+                text1: `${routeShortName} is running on time.`,
+                position: "top"
+            })
+        }
 
     }, []);
 
@@ -120,6 +142,7 @@ export default function RouteInfo({ route }) {
                 {createStops(stops, routeColor)}
                 {mapRoute}
             </MapView>
+            <Toast/>
           <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={styles.bottomSheet}
