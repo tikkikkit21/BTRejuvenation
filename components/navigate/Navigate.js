@@ -168,15 +168,24 @@ export default function Navigate() {
                     <Entypo name='location' size={15} color='white' />
                     <View style={styles.textInputContainer}>
                         <GooglePlacesAutocomplete
-                            placeholder="Where From?"
+                            placeholder="End Destination"
                             value={endDestination}
-                            onChangeText={setEndDestination} // Updates the endDestination
+                            textInputProps={{
+                                onChangeText: (text) => { setEndDestination(text) }
+                            }}
                             styles={{
                                 container: {
-                                flex: 0,
+                                    flex: 0,
                                 },
                                 textInput: {
-                                fontSize: 16,
+                                    fontSize: 16,
+                                    // backgroundColor: 'transparent', // Remove the background color
+                                    borderBottomWidth: 1, // Add a bottom border
+                                    borderBottomColor: 'white', // Set the border color
+                                    // color: 'white',
+                                },
+                                powered: {
+                                    display: 'none', // Hide the "powered by Google" attribution
                                 },
                             }}
                             query={{
@@ -186,20 +195,8 @@ export default function Navigate() {
                             nearbyPlacesAPI="GooglePlacesSearch"
                             debounce={200}
                         />
-                        {/* <BottomSheetTextInput
-                            style={styles.textInput}
-                            placeholder='End Destination  '
-                            value={endDestination}
-                            onChangeText={setEndDestination} // Updates the endDestination
-                        /> */}
                     </View>
                 </View>
-                {/* Displays the More Options button */}
-                {/* <View style={styles.moreButtonContainer}>
-                <TouchableOpacity onPress={handleMoreOptions}>
-                    <Text style={styles.moreButtonText}>More Options</Text>
-                </TouchableOpacity>
-            </View> */}
                 {/* If destination fields are filled, show Search button */}
                 {startDestination && endDestination && (
                     <View>
@@ -395,7 +392,10 @@ const dark = StyleSheet.create({
     }
 });
 
-// Memoize Navigate component
-// const MemoizedNavigate = React.memo(Navigate);
 
-// export default MemoizedNavigate;
+{/* <BottomSheetTextInput
+                            style={styles.textInput}
+                            placeholder='End Destination  '
+                            value={endDestination}
+                            onChangeText={setEndDestination} // Updates the endDestination
+                        /> */}
