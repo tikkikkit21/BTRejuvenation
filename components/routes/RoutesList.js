@@ -8,10 +8,11 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { FontAwesome, FontAwesome6, MaterialIcons, Octicons, AntDesign } from '@expo/vector-icons';
 import { getAllStops, getCurrentRoutes, getScheduledRoutes, getRoutesByCode } from '../../backend/routeController';
 import Map from '../home/Map';
-import { addFavoriteRoute, deleteFavoriteRoute, getFavoriteRoutes, saveFavoriteRoutes } from '../../backend/userController';
+import { addFavoriteRoute, addFavoriteStop, deleteFavoriteRoute, deleteFavoriteStop, getFavoriteRoutes, getFavoriteStops, saveFavoriteRoutes, saveFavoriteStops } from '../../backend/userController';
 import { saveUsageDataRecord } from '../../backend/userController';
 import * as Location from 'expo-location';
 import { useSelector } from 'react-redux';
+import { favoriteStopsToRouteList } from '../../backend/stopController';
 
 export default function RoutesList() {
     const navigation = useNavigation();
@@ -23,6 +24,12 @@ export default function RoutesList() {
     const [selectedStop, selectStop] = useState("");
     const [placeHolder, setPlaceholder] = useState("Filter By Route");
     const [favorites, setFavorites] = useState([]);
+
+
+    const [favoriteStops, setFavoriteStops] = useState([]);
+
+
+    const [favStop, setFavStop] = useState("");
     // const [heartColor, setHeartColor] = useState('black');
 
     // redux variables
@@ -63,10 +70,21 @@ export default function RoutesList() {
             setFavorites(favs);
         }
 
+        async function fetchFavStops(){
+            const favStops = await getFavoriteStops();
+            //console.log("favorite stops");
+            //console.log(favStops);
+            setFavoriteStops(favStops);
+
+        }
+
+
+
         async function fetchAll() {
             await fetchStops();
             await fetchAllRoutes();
             await fetchFavorites();
+            await fetchFavStops();
         }
 
         fetchAll();
@@ -78,48 +96,84 @@ export default function RoutesList() {
         saveFavoriteRoutes(favorites);
     }, [favorites]);
 
+    // useEffect(() => {
+    //     setFavoriteStops(favoriteStops);
+    //     //saveFavoriteStops(favoriteStops);
+    // }, [favoriteStops]);
+
     // helper function to check if a route is favorited or not
     function isFavorite(route) {
-        // if (favorites.includes(route) > 0) {
-        //     setHeartColor('red');
-        //     return true;
-        // }
-        // return false;
-        return favorites.includes(route);
+        return (favorites.includes(route) || favoriteStops.includes(route));
     }
 
     // pressing heart favorites/unfavorites a route
     async function onHeartPress(route) {
         // remove favorite route
-        if (isFavorite(route)) {
-            await deleteFavoriteRoute(route);
-            const newFavorites = [...favorites];
-            const index = favorites.indexOf(route);
-            if (index !== -1) {
-                newFavorites.splice(favorites.indexOf(route), 1);
-                setFavorites(newFavorites);
+        if(favStop != "FAVSTOP"){
+            if (isFavorite(route)) {
+                await deleteFavoriteRoute(route);
+                const newFavorites = [...favorites];
+                const index = favorites.indexOf(route);
+                if (index !== -1) {
+                    newFavorites.splice(favorites.indexOf(route), 1);
+                    setFavorites(newFavorites);
+                    Toast.show({
+                        type: "success",
+                        text1: `${route} removed from favorites`,
+                        position: "top"
+                    });
+                }
+            }
+    
+            // add favorite route
+            else {
+                await addFavoriteRoute(route);
                 Toast.show({
                     type: "success",
-                    text1: `${route} removed from favorites`,
+                    text1: `${route} added to favorites`,
                     position: "top"
+    
                 });
+    
+                const newFavorites = [...favorites];
+                newFavorites.push(route);
+                setFavorites(newFavorites);
+            }
+
+        }
+        else{
+
+            if(isFavorite(route)){
+                await deleteFavoriteStop(route);
+                const newFavoriteStops = [...favoriteStops];
+                const index = favoriteStops.indexOf(route);
+                if(index !== -1){
+                    newFavoriteStops.splice(favoriteStops.indexOf(route), 1);
+                    setFavoriteStops(newFavoriteStops);
+                    Toast.show({
+                        type: "success",
+                        text1: `${route} removed from favorites`,
+                        position: "top"
+                    });
+
+                }
+            }
+            else{
+                await addFavoriteStop(route);
+
+                Toast.show({
+                    type: "success",
+                    text1: `${route} added to favorites`,
+                    position: "top"
+    
+                });
+    
+                const newFavorites = [...favoriteStops];
+                newFavorites.push(route);
+                setFavoriteStops(newFavorites);
             }
         }
-
-        // add favorite route
-        else {
-            await addFavoriteRoute(route);
-            Toast.show({
-                type: "success",
-                text1: `${route} added to favorites`,
-                position: "top"
-
-            });
-
-            const newFavorites = [...favorites];
-            newFavorites.push(route);
-            setFavorites(newFavorites);
-        }
+        
     }
 
     // handles selecting a stop from the filter
@@ -128,12 +182,35 @@ export default function RoutesList() {
         selectStop(itemValue);
         stopCode = itemValue.value
 
+        console.log(stopCode);
+
         if (stopCode == "FAVSTOP") {
+            setFavStop("FAVSTOP");
+            async function fetchStopsByCodes(){
+                let favorStops = await getFavoriteStops();
+                console.log(favorStops);
+                routeStops = await favoriteStopsToRouteList(stops, favorStops);
+                if(routeStops.length == 0){
+                    Toast.show({
+                        type: "success",
+                        text1: `No favorite stops`,
+                        position: "top"
+                    });
+                }
+                setRoutes(routeStops);
+
+            }
+            fetchStopsByCodes();
+
+            /**
+             * 
+             */
             //navigate to stop component
 
-            console.log("fav stop")
+            //console.log("fav stop")
         }
         else if (stopCode == "FAVROUTE") {
+            setFavStop("FAVROUTE")
             async function fetchRoutesByCode() {
                 const routesLocal = await getRoutesByCode(favorites);
                 if (routesLocal.length == 0) {
@@ -150,6 +227,7 @@ export default function RoutesList() {
             fetchRoutesByCode();
         }
         else {
+            setFavStop("ROUTES")
             async function fetchScheduledRoutes() {
                 try {
 
@@ -183,11 +261,23 @@ export default function RoutesList() {
             });
         }
 
-        navigation.navigate('RouteInfo', {
-            routeShortName: shortName,
-            routeName: fullName,
-            routeColor: color
-        });
+        if(favStop == "FAVSTOP"){
+            navigation.navigate('StopInfo', {
+                stopName: fullName,
+                stopCode: shortName,
+                fromFavorites: false
+            });
+
+        }
+        else{
+            navigation.navigate('RouteInfo', {
+                routeShortName: shortName,
+                routeName: fullName,
+                routeColor: color
+            });
+        }
+
+        
     };
 
 
@@ -224,7 +314,7 @@ export default function RoutesList() {
                             <TouchableOpacity onPress={() => handleRouteInfoClick(item.RouteShortName, item.RouteName, item.RouteColor)} >
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 10, marginRight: 10 }} >
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />
+                                    {favStop === "FAVSTOP" ? <FontAwesome6 name="location-dot" size={20} color={'#' + item.RouteColor} solid /> : <FontAwesome6 name="bus-simple" size={20} color={'#' + item.RouteColor} />}
                                         <View style={{ marginLeft: 10 }}>
                                             <Text style={{ fontSize: 20, color: '#' + item.RouteColor, textAlign: 'left' }}>{item.RouteShortName}</Text>
                                             <Text style={{ fontSize: 22, color: '#' + item.RouteColor, fontWeight: 'bold' }}>{item.RouteName}</Text>

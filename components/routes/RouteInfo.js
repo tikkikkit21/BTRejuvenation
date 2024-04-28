@@ -82,7 +82,7 @@ export default function RouteInfo({ route }) {
 
     useEffect(() => {
 
-        if (busses.length > 0) {
+        if (busses.length > 0 && busses.Longitude != undefined && busses.Latitude != undefined && busses != undefined) {
             setMapRegion({
                 latitude: busses.Latitude, 
                 longitude: busses.Longitude, 
@@ -131,8 +131,8 @@ export default function RouteInfo({ route }) {
                 so that the text is easier to read */}
                 <View style={[styles.busInfoContainer, { backgroundColor: `rgba(${parseInt(routeColor.slice(0,2), 16)},${parseInt(routeColor.slice(2,4), 16)},${parseInt(routeColor.slice(4,6), 16)}, 0.8)` }]}>
                     <Text style={{ fontSize: 22, color: '#000000', textAlign: 'center' }}>{`${routeShortName} Bus #${busses.AgencyVehicleName}`}</Text>
-                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Last Stop: ${busses.LastStopName} (#${busses.StopCode})`}</Text>
-                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>
+                    <Text style={{ fontSize: 15, color: '#000000', textAlign: 'center' }}>{`Last Stop: ${busses.LastStopName} (#${busses.StopCode})`}</Text>
+                    <Text style={{ fontSize: 15, color: '#000000', textAlign: 'center' }}>
                         {`Bus Capacity: ${busses.PercentOfCapacity !== undefined ? busses.PercentOfCapacity + '%' : busses.TotalCount + ' People'}`}
                     </Text>                    
 
