@@ -244,7 +244,7 @@ export async function getSuggestedRoute(data) {
         : [];
 
     // not enough data to predict
-    if (records.length < 5) return false;
+    if (records.length < 5) return null;
 
     // find all similar records to provided data
     const similarRecords = records.filter(record => {

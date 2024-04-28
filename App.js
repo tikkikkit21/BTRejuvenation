@@ -1,42 +1,23 @@
 import React, { useEffect } from 'react';
-
 import { Ionicons, FontAwesome5, FontAwesome6, Foundation } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import { useSelector, useDispatch } from 'react-redux';
 
 import HomeTab from './components/home/HomeTab';
-import FavoritesTab from './components/favorites/FavoritesTab';
 import RoutesTab from './components/routes/RoutesTab';
 import NavigateTab from './components/navigate/NavigateTab';
 import SettingsTab from './components/settings/SettingsTab';
 
-import { getSuggestedRoute } from './backend/userController';
 import { fetchDarkModeSetting } from './store/darkModeReducer';
 import { fetchRefreshFrequencySetting } from './store/refreshFrequencyReducer';
 import { fetchUsageTrackingSetting } from './store/usageTrackingReducer';
 
 const Tab = createBottomTabNavigator();
-const TEST_LOCATION = { time: new Date("2024-04-20T11:59:00"), coords: { lat: 37.22823553939222, long: -80.42348272720925 } };
 
 export default function App() {
     const dispatch = useDispatch();
-
     const darkMode = useSelector(state => state.darkMode.isEnabled);
-
-    // fetch suggestion
-    useEffect(() => {
-        async function fetchSuggestedRoute() {
-            const suggestedRoute = await getSuggestedRoute(TEST_LOCATION);
-            console.log("suggestedRoute:", suggestedRoute);
-
-            if (suggestedRoute !== null) {
-                // do something in frontend
-            }
-        }
-        fetchSuggestedRoute();
-    }, []);
 
     // load user settings from backend into Redux
     useEffect(() => {
@@ -59,9 +40,6 @@ export default function App() {
                             case "NavigateTab":
                                 icon = <FontAwesome5 name='map-marked-alt' size={size} color={color} />
                                 break;
-                            case "FavoritesTab":
-                                icon = <Foundation name='heart' size={size} color={color} />
-                                break;
                             case "RoutesTab":
                                 icon = <FontAwesome5 name='route' size={size} color={color} />
                                 break;
@@ -75,7 +53,7 @@ export default function App() {
 
                         return icon;
                     },
-                    tabBarActiveTintColor: darkMode ? "#E5751F" : "#861F41" ,
+                    tabBarActiveTintColor: darkMode ? "#E5751F" : "#861F41",
                     tabBarInactiveTintColor: 'gray',
                     tabBarLabel: getTabBarLabel(route.name), // Custom tab label
                     headerShown: false
@@ -95,8 +73,6 @@ function getTabBarLabel(routeName) {
     switch (routeName) {
         case "HomeTab":
             return "Home";
-        case "FavoritesTab":
-            return "Favorites";
         case "NavigateTab":
             return "Navigate";
         case "RoutesTab":
