@@ -35,22 +35,20 @@ export async function getNextDeparturesForStop(routeShortName, stopCode) {
 
 export async function favoriteStopsToRouteList(allStops, favoriteStops){
 
-    console.log("HERE HERE HERE");
-    console.log(favoriteStops);
     const stopRoutes = [];
     for (const stop of allStops){
-        //console.log(stop[0]);
+        
         if (favoriteStops.includes(stop[0])){
             const stopRoute = {
                 RouteColor: '000000',
                 RouteName: stop[1],
                 RouteShortName: stop[0]
             };
-            console.log(stopRoute);
+        
             stopRoutes.push(stopRoute);
         }
     }
-    console.log(stopRoutes);
+    
     return stopRoutes;
 }
 
