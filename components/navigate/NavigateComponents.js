@@ -4,16 +4,24 @@ import MapView, { MapCallout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Polyline } from 'react-native-maps';
-import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, AntDesign, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Displays a button with basic information about a route
 export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, onPress }) {
     const backgroundColor = routeColor === 'black' ? 'black' : `#${routeColor}`;
     return (
-        <TouchableOpacity style={[styles.container, { backgroundColor: backgroundColor }]} onPress={onPress}>
-            <Text style={styles.headerText}>{busLine}</Text>
-            <Text style={[styles.text, styles.textMargin]}>{tripDuration}</Text>
-            <Text style={styles.text}>{tripDistance}</Text>
+        <TouchableOpacity style={[styles.container, { backgroundColor: 'white' }]} onPress={onPress}>
+            <FontAwesome6 name="bus-simple" size={20} color={'#' + routeColor} style={{ marginLeft: 10 }} />
+            <View style={{ flex: 1, marginLeft: 10 }}>
+                <Text style={{ fontSize: 22, color: '#' + routeColor, textAlign: 'left', fontWeight: 'bold' }}>{busLine}</Text>
+                <Text style={{ fontSize: 20, color: '#' + routeColor }}>{`${tripDuration}`}</Text>
+                <Text style={{ fontSize: 20, color: '#' + routeColor }}>{`${tripDistance}`}</Text>
+            </View>
+            <View style={{ paddingRight: 10 }}>
+            <TouchableOpacity>
+                <AntDesign name="right" size={22} />
+            </TouchableOpacity>
+            </View>
         </TouchableOpacity>
     );
 }
@@ -219,20 +227,14 @@ export function createRouteCoords(route, color) {
 
 const styles = StyleSheet.create({
     container: {
+        flexDirection: 'row',
         backgroundColor: '#fff',
         margin: 10,
-        width: '80%',
-        height: 150,
+        width: '90%',
         borderRadius: 10,
         borderWidth: 1,
         borderColor: 'black',
-        elevation: 2,
-        shadowColor: 'black',
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 3,
         alignItems: 'center',
-        justifyContent: 'center',
     },
     headerText: {
         fontSize: 25,
