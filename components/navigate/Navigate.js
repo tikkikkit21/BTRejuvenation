@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Octicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Map from '../home/Map';
@@ -15,7 +15,7 @@ const APIKEY = process.env.GOOGLE_MAPS_API_KEY;
 export default function Navigate() {
 
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['30%', '60%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['32%', '60%', '70%', '95%'], []);
 
     // Checks if tab is focused on
     const isFocused = useIsFocused();
@@ -107,7 +107,6 @@ export default function Navigate() {
             const result = await getConnectedRoutes(startDestination, endDestination);
             setRouteData(result);
             const busColor = await getBusColor(result[0].mainBusLine);
-            console.log("HERE!");
             // If route is only Walking
             if (busColor === null) {
                 setRouteColor('white');
@@ -144,7 +143,6 @@ export default function Navigate() {
                 index={bottomSheetIndex}
                 snapPoints={snapPoints}
                 backgroundStyle={styles.bottomSheet}
-                // backgroundStyle={{backgroundColor: '#FFFFFF'}}
                 onChange={handleAnimateBottomSheet}
             >
                 <View style={styles.inputContainer}>
@@ -181,7 +179,7 @@ export default function Navigate() {
                 {/* Displays the Swap button */}
                 <View style={styles.swapButtonContainer}>
                     <TouchableOpacity onPress={handleSwapDestinations}>
-                        <Fontisto name="arrow-swap" size={22} style={styles.swapButton} />
+                        <Octicons name="arrow-switch" size={26} style={styles.swapButton} />
                     </TouchableOpacity>
                 </View>
                 {/* Displays End Destination input */}
@@ -255,17 +253,11 @@ const light = StyleSheet.create({
     bottomSheet: {
         backgroundColor: 'white'
     },
-    containerHeadline: {
-        fontSize: 20,
-        fontWeight: '600',
-        padding: 20,
-        color: 'white'
-    },
     swapButtonContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        padding: 15
+        padding: 10
     },
     swapButton: {
         transform: [{ rotate: '90deg' }]
@@ -337,12 +329,6 @@ const dark = StyleSheet.create({
     },
     bottomSheet: {
         backgroundColor: '#861F41'
-    },
-    containerHeadline: {
-        fontSize: 20,
-        fontWeight: '600',
-        padding: 20,
-        color: '#861F41'
     },
     swapButtonContainer: {
         alignItems: 'center',
