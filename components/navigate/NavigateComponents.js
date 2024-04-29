@@ -32,7 +32,7 @@ export function RouteDirections({ route }) {
     const bottomSheetRef = useRef(null);
 
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['30%', '50%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['35%', '50%', '70%', '95%'], []);
     
     // Calculate map region to fit all points
     useEffect(() => {
@@ -81,7 +81,7 @@ export function RouteDirections({ route }) {
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
                 <View alignItems={'center'} justifyContent={'center'}>
-                    <Text style={{ backgroundColor: routeColor === 'black' ? 'black' : `#${routeColor}`, fontSize: 20, fontWeight: 'bold'}}>Route Directions</Text>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Route Directions</Text>
                     <FlatList
                         data={[
                             { key: 'Start Destination', value: startDestination, icon: 'human-male' },
@@ -94,13 +94,13 @@ export function RouteDirections({ route }) {
                                 {item.key !== "Instructions" && (
                                     <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                                         {item.key === 'Start Destination' && (
-                                            <MaterialCommunityIcons name={item.icon} size={35} color="green" />
+                                            <Entypo name={"location"} size={30} color="green" />
                                         )}
                                         {item.key === 'End Destination' && (
-                                            <MaterialCommunityIcons name={item.icon} size={35} color="red" />
+                                            <Entypo name={"location"} size={30} color="red" />
                                         )}
                                         {item.key === 'Total Duration' && (
-                                            <MaterialCommunityIcons name={item.icon} size={35} color="black" />
+                                            <MaterialCommunityIcons name={item.icon} size={32} color="black" />
                                         )}
                                         <View style={{ marginLeft: 10 }}>
                                             <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>{item.key}</Text>
@@ -109,8 +109,13 @@ export function RouteDirections({ route }) {
                                     </View>
                                 )}
                                 <View style={{ marginLeft: 10 }}>
-                                    {item.key === 'Instructions' && routeData.map(data => (
+                                    {item.key === 'Instructions' && routeData.map((data, index) => (
                                         <View key={data.instructions} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            {/* Check if this is not the last instruction and if the next instruction is a bus */}
+                                            {index < routeData.length - 1 && routeData[index + 1].routeName !== null && (
+                                                <MaterialCommunityIcons name="transit-connection" size={30} color="black" />
+                                            )}
+                                            {/* Display the appropriate icon based on the route type */}
                                             {data.routeName !== null ? (
                                                 <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'black' ? 'black' : `#${routeColor}`} />
                                             ) : (
@@ -189,7 +194,7 @@ export function createRouteCoords(route, color) {
                     coordinate={{ latitude: firstPoint.latitude, longitude: firstPoint.longitude }}
                 >
                     <View>
-                        <MaterialCommunityIcons name="human-male" size={24} color="green" />
+                        <Entypo name="location" size={24} color="green" />
                     </View>
                 </Marker>
             );
@@ -201,7 +206,7 @@ export function createRouteCoords(route, color) {
                     coordinate={{ latitude: lastPoint.latitude, longitude: lastPoint.longitude }}
                 >
                     <View>
-                        <MaterialCommunityIcons name="human-male" size={30} color="red" />
+                        <Entypo name="location" size={24} color="red" />
                     </View>
                 </Marker>
             );

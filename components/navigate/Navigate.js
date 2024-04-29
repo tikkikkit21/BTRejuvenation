@@ -77,11 +77,9 @@ export default function Navigate() {
     // Handles when the arrow-swap button is clicked
     const handleSwapDestinations = () => {
         // Swap out the destination values
-        console.log("Before swapping - startDestination:", startDestination, "endDestination:", endDestination);
         const temp = startDestination;
         setStartDestination(endDestination);
         setEndDestination(temp);
-        console.log("After swapping - startDestination:", startDestination, "endDestination:", endDestination);
     }
 
     // Event handler for BottomSheet animation
