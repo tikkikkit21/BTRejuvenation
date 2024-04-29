@@ -73,7 +73,6 @@ export default function Navigate() {
         }
     }, [startDestination, endDestination]);
 
-
     // Handles when the arrow-swap button is clicked
     const handleSwapDestinations = () => {
         // Swap out the destination values
@@ -152,6 +151,9 @@ export default function Navigate() {
                                 textInputProps={{
                                     onChangeText: (text) => { setStartDestination(text) }
                                 }}
+                                onPress={(data, details = null) => {
+                                    setStartDestination(data.description); // Update endDestination with the selected address
+                                }}
                                 styles={{
                                     container: {
                                         flex: 0,
@@ -189,6 +191,9 @@ export default function Navigate() {
                                 value={endDestination}
                                 textInputProps={{
                                     onChangeText: (text) => { setEndDestination(text) }
+                                }}
+                                onPress={(data, details = null) => {
+                                    setEndDestination(data.description); // Update endDestination with the selected address
                                 }}
                                 styles={{
                                     container: {
