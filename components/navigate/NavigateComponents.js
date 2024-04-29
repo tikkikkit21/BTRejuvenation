@@ -7,10 +7,10 @@ import { Polyline } from 'react-native-maps';
 import { FontAwesome, AntDesign, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Displays a button with basic information about a route
-export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, onPress }) {
-    const backgroundColor = routeColor === 'black' ? 'black' : `#${routeColor}`;
+export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, darkMode, onPress }) {
+    const backgroundColor = darkMode ? 'grey' : `white`;
     return (
-        <TouchableOpacity style={[styles.container, { backgroundColor: 'white' }]} onPress={onPress}>
+        <TouchableOpacity style={[styles.container, { backgroundColor: backgroundColor }]} onPress={onPress}>
             <FontAwesome6 name="bus-simple" size={20} color={'#' + routeColor} style={{ marginLeft: 10 }} />
             <View style={{ flex: 1, marginLeft: 10 }}>
                 <Text style={{ fontSize: 22, color: '#' + routeColor, textAlign: 'left', fontWeight: 'bold' }}>{busLine}</Text>
@@ -84,57 +84,56 @@ export function RouteDirections({ route }) {
                 </MapView>
             )}
             <BottomSheet
-    ref={bottomSheetRef}
-    snapPoints={snapPoints}
-    backgroundStyle={{ backgroundColor: '#FFFFFF' }}
->
-    <View alignItems={'center'} justifyContent={'center'}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Route Directions</Text>
-        <FlatList
-            data={[
-                { key: 'Start Destination', value: startDestination, icon: 'human-male' },
-                { key: 'End Destination', value: endDestination, icon: 'human-male' },
-                { key: 'Total Duration', value: routeData[0].totalDuration, icon: 'clock' },
-                { key: 'Instructions', value: routeData, icon: 'directions' }
-            ]}
-            renderItem={({ item }) => (
-                <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                    {item.key !== "Instructions" && (
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                            {item.key === 'Start Destination' && (
-                                <Entypo name={"location"} size={30} color="green" />
-                            )}
-                            {item.key === 'End Destination' && (
-                                <Entypo name={"location"} size={30} color="red" />
-                            )}
-                            {item.key === 'Total Duration' && (
-                                <MaterialCommunityIcons name={item.icon} size={32} color="black" />
-                            )}
-                            <View style={{ marginLeft: 10 }}>
-                                <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>{item.key}</Text>
-                                <Text style={{ fontSize: 14 }}>{item.value}</Text>
-                            </View>
-                        </View>
-                    )}
-                    <View style={{ marginLeft: 10 }}>
-                        {item.key === 'Instructions' && item.value.map((data, index) => (
-                            <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                                {/* Display the appropriate icon based on the route type */}
-                                {data.routeName !== null ? (
-                                    <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'black' ? 'black' : `#${routeColor}`} />
-                                ) : (
-                                    <MaterialCommunityIcons name="walk" size={30} color="black" />
+                ref={bottomSheetRef}
+                snapPoints={snapPoints}
+                backgroundStyle={{ backgroundColor: '#FFFFFF' }}
+            >
+                <View alignItems={'center'} justifyContent={'center'}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Route Directions</Text>
+                    <FlatList
+                        data={[
+                            { key: 'Start Destination', value: startDestination, icon: 'human-male' },
+                            { key: 'End Destination', value: endDestination, icon: 'human-male' },
+                            { key: 'Total Duration', value: routeData[0].totalDuration, icon: 'clock' },
+                            { key: 'Instructions', value: routeData, icon: 'directions' }
+                        ]}
+                        renderItem={({ item }) => (
+                            <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+                                {item.key !== "Instructions" && (
+                                    <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                                        {item.key === 'Start Destination' && (
+                                            <Entypo name={"location"} size={30} color="green" />
+                                        )}
+                                        {item.key === 'End Destination' && (
+                                            <Entypo name={"location"} size={30} color="red" />
+                                        )}
+                                        {item.key === 'Total Duration' && (
+                                            <MaterialCommunityIcons name={item.icon} size={32} color="black" />
+                                        )}
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>{item.key}</Text>
+                                            <Text style={{ fontSize: 14 }}>{item.value}</Text>
+                                        </View>
+                                    </View>
                                 )}
-                                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{data.instructions}</Text>
+                                <View style={{ marginLeft: 10 }}>
+                                    {item.key === 'Instructions' && item.value.map((data, index) => (
+                                        <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                                            {/* Display the appropriate icon based on the route type */}
+                                            {data.routeName !== null ? (
+                                                <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'black' ? 'black' : `#${routeColor}`} />
+                                            ) : (
+                                                <MaterialCommunityIcons name="walk" size={30} color="black" />
+                                            )}
+                                            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{data.instructions}</Text>
+                                        </View>
+                                    ))}
+                                </View>
                             </View>
-                        ))}
-                    </View>
+                        )}
+                    />
                 </View>
-            )}
-        />
-    </View>
-</BottomSheet>
-
+            </BottomSheet>
         </View>
     );
 }

@@ -234,6 +234,7 @@ export default function Navigate() {
                                         tripDuration={routeData[0].totalDuration}
                                         tripDistance={routeData[0].totalDistance}
                                         routeColor={routeColor}
+                                        darkMode={darkMode}
                                         onPress={() => handleRouteInfoClick(routeData)}
                                     />
                                 </View>
