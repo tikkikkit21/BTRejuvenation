@@ -15,7 +15,7 @@ const APIKEY = process.env.GOOGLE_MAPS_API_KEY;
 export default function Navigate() {
 
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['32%', '60%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['40%', '60%', '70%', '95%'], []);
 
     // Checks if tab is focused on
     const isFocused = useIsFocused();
@@ -106,6 +106,16 @@ export default function Navigate() {
         try {
             const result = await getConnectedRoutes(startDestination, endDestination);
             setRouteData(result);
+
+            // Extend or reduce screen if Search is clicked
+            if ( (result !== null || result !== '') && bottomSheetIndex == 0) {
+                bottomSheetRef.current?.snapToIndex(1); // Extend
+                setBottomSheetIndex(1);
+            } else if ( (result === null || result === '') && bottomSheetIndex == 1) {
+                bottomSheetRef.current?.snapToIndex(0); // Reduce
+                setBottomSheetIndex(0);
+            }
+            
             const busColor = await getBusColor(result[0].mainBusLine);
             // If route is only Walking
             if (busColor === null) {
@@ -116,6 +126,7 @@ export default function Navigate() {
                 setRouteTextColor(busColor.RouteTextColor);
                 console.log("Check", busColor.RouteTextColor);
             }
+
         } catch (error) {
             console.log('Error Fetching Data:', error);
         }
@@ -319,7 +330,24 @@ const light = StyleSheet.create({
         backgroundColor: '#75787B',
         color: 'white',
         marginBottom: 10 // Add margin bottom to create space
-    }
+    },
+    searchButton: {
+        marginHorizontal: 20,
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#A40046',
+        borderRadius: 10,
+        borderColor: '#fff'
+    },
+    searchText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16
+    },
+    routeOptionContainer: {
+        alignItems: 'center', // Center content horizontally
+        justifyContent: 'center', // Center content vertically
+    },
 });
 
 const dark = StyleSheet.create({
@@ -397,11 +425,3 @@ const dark = StyleSheet.create({
         marginBottom: 10 // Add margin bottom to create space
     }
 });
-
-
-{/* <BottomSheetTextInput
-                            style={styles.textInput}
-                            placeholder='End Destination  '
-                            value={endDestination}
-                            onChangeText={setEndDestination} // Updates the endDestination
-                        /> */}
