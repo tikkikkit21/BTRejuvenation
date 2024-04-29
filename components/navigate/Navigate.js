@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Octicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import Map from '../home/Map';
 import { getConnectedRoutes } from '../../backend/navigationController';
 import { RouteOption } from './NavigateComponents';
@@ -76,23 +77,11 @@ export default function Navigate() {
     // Handles when the arrow-swap button is clicked
     const handleSwapDestinations = () => {
         // Swap out the destination values
-        temp_start = startDestination;
+        console.log("Before swapping - startDestination:", startDestination, "endDestination:", endDestination);
+        const temp = startDestination;
         setStartDestination(endDestination);
-        setEndDestination(temp_start);
-    }
-
-    // Handles when 'More Options' is clicked
-    const handleMoreOptions = () => {
-        setShowMoreOptions(!showMoreOptions);
-
-        // Extend or reduce screen if more options displayed
-        if (!showMoreOptions && bottomSheetIndex == 0) {
-            bottomSheetRef.current?.snapToIndex(1); // Extend
-            setBottomSheetIndex(1);
-        } else if (showMoreOptions && bottomSheetIndex == 1) {
-            bottomSheetRef.current?.snapToIndex(0); // Reduce
-            setBottomSheetIndex(0);
-        }
+        setEndDestination(temp);
+        console.log("After swapping - startDestination:", startDestination, "endDestination:", endDestination);
     }
 
     // Event handler for BottomSheet animation
@@ -145,112 +134,112 @@ export default function Navigate() {
         });
     };
 
-
-
     return (
-        <View style={styles.container}>
-            <MapViewMemo />
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={bottomSheetIndex}
-                snapPoints={snapPoints}
-                backgroundStyle={styles.bottomSheet}
-                onChange={handleAnimateBottomSheet}
-            >
-                <View style={styles.inputContainer}>
-                    <FontAwesome6 name='location-crosshairs' size={15} color='white' />
-                    <View style={styles.textInputContainer}>
-                        <GooglePlacesAutocomplete
-                            placeholder="Start Destination"
-                            value={startDestination}
-                            textInputProps={{
-                                onChangeText: (text) => { setStartDestination(text) }
-                            }}
-                            styles={{
-                                container: {
-                                    flex: 0,
-                                },
-                                textInput: {
-                                    fontSize: 16,
-                                    borderBottomWidth: 1, // Add a bottom border
-                                    borderBottomColor: 'white', // Set the border color
-                                },
-                                powered: {
-                                    display: 'none', // Hide the "powered by Google" attribution
-                                },
-                            }}
-                            query={{
-                                key: APIKEY,
-                                language: "en",
-                            }}
-                            nearbyPlacesAPI="GooglePlacesSearch"
-                            debounce={200}
-                        />
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={"padding"}>
+            <View style={styles.container}>
+                <MapViewMemo />
+                <BottomSheet
+                    ref={bottomSheetRef}
+                    index={bottomSheetIndex}
+                    snapPoints={snapPoints}
+                    backgroundStyle={styles.bottomSheet}
+                    onChange={handleAnimateBottomSheet}
+                >
+                    <View style={styles.inputContainer}>
+                        <FontAwesome6 name='location-crosshairs' size={15} color='white' />
+                        <View style={styles.textInputContainer}>
+                            <GooglePlacesAutocomplete
+                                placeholder="Start Destination"
+                                value={startDestination}
+                                textInputProps={{
+                                    onChangeText: (text) => { setStartDestination(text) }
+                                }}
+                                styles={{
+                                    container: {
+                                        flex: 0,
+                                    },
+                                    textInput: {
+                                        fontSize: 16,
+                                        borderBottomWidth: 1, // Add a bottom border
+                                        borderBottomColor: 'white', // Set the border color
+                                    },
+                                    powered: {
+                                        display: 'none', // Hide the "powered by Google" attribution
+                                    },
+                                }}
+                                query={{
+                                    key: APIKEY,
+                                    language: "en",
+                                }}
+                                nearbyPlacesAPI="GooglePlacesSearch"
+                                debounce={200}
+                            />
+                        </View>
                     </View>
-                </View>
-                {/* Displays the Swap button */}
-                <View style={styles.swapButtonContainer}>
-                    <TouchableOpacity onPress={handleSwapDestinations}>
-                        <Octicons name="arrow-switch" size={26} style={styles.swapButton} />
-                    </TouchableOpacity>
-                </View>
-                {/* Displays End Destination input */}
-                <View style={styles.inputContainer}>
-                    <Entypo name='location' size={15} color='white' />
-                    <View style={styles.textInputContainer}>
-                        <GooglePlacesAutocomplete
-                            placeholder="End Destination"
-                            value={endDestination}
-                            textInputProps={{
-                                onChangeText: (text) => { setEndDestination(text) }
-                            }}
-                            styles={{
-                                container: {
-                                    flex: 0,
-                                },
-                                textInput: {
-                                    fontSize: 16,
-                                    borderBottomWidth: 1, // Add a bottom border
-                                    borderBottomColor: 'white', // Set the border color
-                                },
-                                powered: {
-                                    display: 'none', // Hide the "powered by Google" attribution
-                                },
-                            }}
-                            query={{
-                                key: APIKEY,
-                                language: "en",
-                            }}
-                            nearbyPlacesAPI="GooglePlacesSearch"
-                            debounce={200}
-                        />
-                    </View>
-                </View>
-                {/* If destination fields are filled, show Search button */}
-                {startDestination && endDestination && (
-                    <View>
-                        <TouchableOpacity
-                            style={styles.searchButton}
-                            onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
-                            underlayColor='white'
-                        >
-                            <Text style={styles.searchText}>Search</Text>
+                    {/* Displays the Swap button */}
+                    <View style={styles.swapButtonContainer}>
+                        <TouchableOpacity onPress={handleSwapDestinations}>
+                            <Octicons name="arrow-switch" size={26} style={styles.swapButton} />
                         </TouchableOpacity>
-                        {routeData && (     // If routeData exists, display it
-                            <View style={styles.routeOptionContainer}>
-                                <RouteOption
-                                    busLine={routeData[0].mainBusLine === 'N/A' ? 'Walk' : routeData[0].mainBusLine}
-                                    tripDuration={routeData[0].totalDuration}
-                                    tripDistance={routeData[0].totalDistance}
-                                    routeColor={routeColor}
-                                    onPress={() => handleRouteInfoClick(routeData)}
-                                />
-                            </View>
-                        )}
                     </View>
-                )}
-            </BottomSheet>
-        </View>
+                    {/* Displays End Destination input */}
+                    <View style={styles.inputContainer}>
+                        <Entypo name='location' size={15} color='white' />
+                        <View style={styles.textInputContainer}>
+                            <GooglePlacesAutocomplete
+                                placeholder="End Destination"
+                                value={endDestination}
+                                textInputProps={{
+                                    onChangeText: (text) => { setEndDestination(text) }
+                                }}
+                                styles={{
+                                    container: {
+                                        flex: 0,
+                                    },
+                                    textInput: {
+                                        fontSize: 16,
+                                        borderBottomWidth: 1, // Add a bottom border
+                                        borderBottomColor: 'white', // Set the border color
+                                    },
+                                    powered: {
+                                        display: 'none', // Hide the "powered by Google" attribution
+                                    },
+                                }}
+                                query={{
+                                    key: APIKEY,
+                                    language: "en",
+                                }}
+                                nearbyPlacesAPI="GooglePlacesSearch"
+                                debounce={200}
+                            />
+                        </View>
+                    </View>
+                    {/* If destination fields are filled, show Search button */}
+                    {startDestination && endDestination && (
+                        <View>
+                            <TouchableOpacity
+                                style={styles.searchButton}
+                                onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
+                                underlayColor='white'
+                            >
+                                <Text style={styles.searchText}>Search</Text>
+                            </TouchableOpacity>
+                            {routeData && (     // If routeData exists, display it
+                                <View style={styles.routeOptionContainer}>
+                                    <RouteOption
+                                        busLine={routeData[0].mainBusLine === 'N/A' ? 'Walk' : routeData[0].mainBusLine}
+                                        tripDuration={routeData[0].totalDuration}
+                                        tripDistance={routeData[0].totalDistance}
+                                        routeColor={routeColor}
+                                        onPress={() => handleRouteInfoClick(routeData)}
+                                    />
+                                </View>
+                            )}
+                        </View>
+                    )}
+                </BottomSheet>
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
