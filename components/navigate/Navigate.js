@@ -276,7 +276,6 @@ const light = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         marginLeft: 5,
-        // height: 30
     },
     textInput: {
         flex: 1,
@@ -350,7 +349,7 @@ const dark = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#861F41',
-        padding: 15
+        padding: 10
     },
     swapButton: {
         transform: [{ rotate: '90deg' }],
@@ -366,9 +365,9 @@ const dark = StyleSheet.create({
         backgroundColor: '#E5751F'
     },
     textInputContainer: {
+        flexDirection: 'column',
         flex: 1,
         marginLeft: 5,
-        height: 30,
         backgroundColor: '#E5751F'
     },
     textInput: {
@@ -411,5 +410,22 @@ const dark = StyleSheet.create({
         backgroundColor: '#E5751F',
         color: 'white',
         marginBottom: 10 // Add margin bottom to create space
-    }
+    },
+    searchButton: {
+        marginHorizontal: 20,
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#E5751F',
+        borderRadius: 10,
+        borderColor: '#fff'
+    },
+    searchText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16
+    },
+    routeOptionContainer: {
+        alignItems: 'center', // Center content horizontally
+        justifyContent: 'center', // Center content vertically
+    },
 });
