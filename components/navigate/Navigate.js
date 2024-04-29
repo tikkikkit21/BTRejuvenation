@@ -111,8 +111,8 @@ export default function Navigate() {
             if ( (result !== null || result !== '') && bottomSheetIndex == 0) {
                 bottomSheetRef.current?.snapToIndex(1); // Extend
                 setBottomSheetIndex(1);
-            } else if ( (result === null || result === '') && bottomSheetIndex == 1) {
-                bottomSheetRef.current?.snapToIndex(0); // Reduce
+            } else if ( (result === null || result === '') && bottomSheetIndex == 1) {  // When result is empty
+                bottomSheetRef.current?.snapToIndex(0); // Reduce 
                 setBottomSheetIndex(0);
             }
             
@@ -129,6 +129,7 @@ export default function Navigate() {
 
         } catch (error) {
             console.log('Error Fetching Data:', error);
+            alert('No routes available');
         }
     };
 
