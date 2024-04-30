@@ -23,9 +23,10 @@ import { useSelector } from 'react-redux';
  * maybe package information to send
  */
 
-import { getStops } from '../../backend/stopController';
+import { getRouteTrafficPattern, getStops } from '../../backend/stopController';
 import { getBus } from '../../backend/busController';
 import { getNextTrip } from '../../backend/routeController';
+import Toast from 'react-native-toast-message';
 
 //const MapViewMemo = React.memo(Map);
 //const MapViewMemo = React.memo(Map);
@@ -35,6 +36,8 @@ export default function RouteInfo({ route }) {
     const [stops, setStops] = useState([]);
     const [busses, setBusses] = useState([]);
     const [mapRoute, setMapRoute] = useState([]);
+
+    const [toastMessage, setToastMessage] = useState([]);
 
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const styles = darkMode ? dark : light;
@@ -63,6 +66,7 @@ export default function RouteInfo({ route }) {
             routeShortName = "HWD";
         }
 
+       
 
         async function fetchInfo(){
             const bussesInfo = await getBus(routeShortName);
@@ -78,11 +82,29 @@ export default function RouteInfo({ route }) {
         }
         fetchInfo();
 
+
+        const trafficDelay = getRouteTrafficPattern(routeShortName);
+        if(trafficDelay > 0){
+           
+            Toast.show({
+                type: "success",
+                text1: `Expect up to a ${trafficDelay} minute delay for ${routeShortName}.`,
+                position: "top"
+            })
+        }
+        else{   
+            Toast.show({
+                type: "success",
+                text1: `${routeShortName} is running on time.`,
+                position: "top"
+            })
+        }
+
     }, []);
 
     useEffect(() => {
 
-        if (busses.length > 0) {
+        if (busses.length > 0 && busses.Longitude != undefined && busses.Latitude != undefined && busses != undefined) {
             setMapRegion({
                 latitude: busses.Latitude, 
                 longitude: busses.Longitude, 
@@ -120,6 +142,7 @@ export default function RouteInfo({ route }) {
                 {createStops(stops, routeColor)}
                 {mapRoute}
             </MapView>
+            <Toast/>
           <BottomSheet
                 snapPoints={snapPoints}
                 backgroundStyle={styles.bottomSheet}
@@ -131,8 +154,8 @@ export default function RouteInfo({ route }) {
                 so that the text is easier to read */}
                 <View style={[styles.busInfoContainer, { backgroundColor: `rgba(${parseInt(routeColor.slice(0,2), 16)},${parseInt(routeColor.slice(2,4), 16)},${parseInt(routeColor.slice(4,6), 16)}, 0.8)` }]}>
                     <Text style={{ fontSize: 22, color: '#000000', textAlign: 'center' }}>{`${routeShortName} Bus #${busses.AgencyVehicleName}`}</Text>
-                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>{`Last Stop: ${busses.LastStopName} (#${busses.StopCode})`}</Text>
-                    <Text style={{ fontSize: 17, color: '#000000', textAlign: 'center' }}>
+                    <Text style={{ fontSize: 15, color: '#000000', textAlign: 'center' }}>{`Last Stop: ${busses.LastStopName} (#${busses.StopCode})`}</Text>
+                    <Text style={{ fontSize: 15, color: '#000000', textAlign: 'center' }}>
                         {`Bus Capacity: ${busses.PercentOfCapacity !== undefined ? busses.PercentOfCapacity + '%' : busses.TotalCount + ' People'}`}
                     </Text>                    
 

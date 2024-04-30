@@ -7,7 +7,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 
 import { getNextDeparturesForStop } from '../../backend/stopController';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { getFavoriteStops, deleteFavoriteStop, addFavoriteStop } from '../../backend/userController';
+import { getFavoriteStops, deleteFavoriteStop, addFavoriteStop, saveFavoriteStops } from '../../backend/userController';
 
 
 export default function StopInfo({ route }){
@@ -19,12 +19,22 @@ export default function StopInfo({ route }){
     const snapPoints = useMemo(() => ['27%', '50%', '70%', '95%'], []);
 
     useEffect (() => {
+        //setFavorites(["hello"]);
         async function fetchData(){
+            //console.log(stopName);
 
-            const storeRoutes = await getScheduledRoutes(stopCode, false); 
+            const storeRoutes = await getScheduledRoutes(stopCode, false);
+            const favs = await getFavoriteStops();
+
+
+
+            //console.log(storeRoutes);
             setSingleRoutes(storeRoutes);
 
-            const favs = await getFavoriteStops();
+            //console.log(singleRoutes);
+
+            
+            //console.log(favs);
             setFavorites(favs);
 
             //routes has the informationL RouteName, RouteShortName, RouteColor
@@ -33,10 +43,8 @@ export default function StopInfo({ route }){
             //then we will have RouteShortName, StopName, format(AdjustedDepartureTime)
 
         }
+
         fetchData();
-
-
-       
 
     }, []);
 
@@ -55,16 +63,17 @@ export default function StopInfo({ route }){
 
     }, [favorites])
 
+    // useEffect(() => {
+    //     saveFavoriteStops(favorites);
+    // }, [favorites]);
+
 
 
     function isFavorite(stop) {
-        if(favorites == null){
+        if (!favorites || favorites.length === 0) {
             return false;
         }
-        if (favorites.includes(stop) > 0) {
-            return true;
-        }
-        return false;
+        return favorites.includes(stop);
     }
 
 
@@ -72,12 +81,19 @@ export default function StopInfo({ route }){
 
         if (isFavorite(stop)) {
             await deleteFavoriteStop(stop);
-            Toast.show({
-                type: "success",
-                text1: `${stop} removed from favorites`,
-                position: "top"
+                const newFavoriteStops = [...favorites];
+                const index = favorites.indexOf(stop);
+                if(index !== -1){
+                    newFavoriteStops.splice(favorites.indexOf(stop), 1);
+                    setFavorites(newFavoriteStops);
+                    Toast.show({
+                        type: "success",
+                        text1: `${stop} removed from favorites`,
+                        position: "top"
+                    });
 
-            });
+                }
+
         } else {
             await addFavoriteStop(stop);
             Toast.show({
@@ -87,10 +103,22 @@ export default function StopInfo({ route }){
 
             });
 
+            const newFavorites = [...favorites];
+            newFavorites.push(stop);
+            setFavorites(newFavorites);
+
            
         }
 
-        setFavorites(await getFavoriteStops());
+        let newfavs = await getFavoriteStops()
+
+        
+
+        saveFavoriteStops(newfavs);
+
+       // setFavorites(newfavs);
+
+        //console.log(favorites);
 
     }
 

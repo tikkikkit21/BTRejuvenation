@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RoutesList from './RoutesList';
 import RouteInfo from './RouteInfo';
+import StopInfo from '../home/StopInfo';
 import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
@@ -19,6 +20,7 @@ export default function RoutestTab() {
         >
             <Stack.Screen name="Routes" component={RoutesList} />
             <Stack.Screen name="RouteInfo" component={RouteInfo} />
+            <Stack.Screen name="StopInfo" component={StopInfo} />
         </Stack.Navigator>
     );
 }
