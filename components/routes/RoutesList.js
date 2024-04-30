@@ -182,13 +182,13 @@ export default function RoutesList() {
         selectStop(itemValue);
         stopCode = itemValue.value
 
-        console.log(stopCode);
+        //console.log(stopCode);
 
         if (stopCode == "FAVSTOP") {
             setFavStop("FAVSTOP");
             async function fetchStopsByCodes(){
                 let favorStops = await getFavoriteStops();
-                console.log(favorStops);
+                //console.log(favorStops);
                 routeStops = await favoriteStopsToRouteList(stops, favorStops);
                 if(routeStops.length == 0){
                     Toast.show({

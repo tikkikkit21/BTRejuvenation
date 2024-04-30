@@ -21,20 +21,20 @@ export default function StopInfo({ route }){
     useEffect (() => {
         //setFavorites(["hello"]);
         async function fetchData(){
-            console.log(stopName);
+            //console.log(stopName);
 
             const storeRoutes = await getScheduledRoutes(stopCode, false);
             const favs = await getFavoriteStops();
 
 
 
-            console.log(storeRoutes);
+            //console.log(storeRoutes);
             setSingleRoutes(storeRoutes);
 
-            console.log(singleRoutes);
+            //console.log(singleRoutes);
 
             
-            console.log(favs);
+            //console.log(favs);
             setFavorites(favs);
 
             //routes has the informationL RouteName, RouteShortName, RouteColor
