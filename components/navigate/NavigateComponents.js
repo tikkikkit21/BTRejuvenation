@@ -11,11 +11,11 @@ export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, d
     const backgroundColor = darkMode ? 'grey' : `white`;
     return (
         <TouchableOpacity style={[styles.container, { backgroundColor: backgroundColor }]} onPress={onPress}>
-            <FontAwesome6 name="bus-simple" size={20} color={'#' + routeColor} style={{ marginLeft: 10 }} />
+            <FontAwesome6 name="bus-simple" size={20} color={routeColor === 'white' ? 'white' : '#' + routeColor} style={{ marginLeft: 10 }} />
             <View style={{ flex: 1, marginLeft: 10 }}>
-                <Text style={{ fontSize: 22, color: '#' + routeColor, textAlign: 'left', fontWeight: 'bold' }}>{busLine}</Text>
-                <Text style={{ fontSize: 20, color: '#' + routeColor }}>{`${tripDuration}`}</Text>
-                <Text style={{ fontSize: 20, color: '#' + routeColor }}>{`${tripDistance}`}</Text>
+                <Text style={{ fontSize: 22, color: routeColor === 'white' ? 'white' : '#' + routeColor, textAlign: 'left', fontWeight: 'bold' }}>{busLine}</Text>
+                <Text style={{ fontSize: 20, color: routeColor === 'white' ? 'white' : '#' + routeColor }}>{`${tripDuration}`}</Text>
+                <Text style={{ fontSize: 20, color: routeColor === 'white' ? 'white' : '#' + routeColor }}>{`${tripDistance}`}</Text>
             </View>
             <View style={{ paddingRight: 10 }}>
             <TouchableOpacity>
