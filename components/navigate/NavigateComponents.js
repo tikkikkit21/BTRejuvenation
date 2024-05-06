@@ -21,7 +21,7 @@ export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, d
                 <Text style={{ fontSize: 20, color: textColor }}>{`${tripDistance}`}</Text>
             </View>
             <View style={{ paddingRight: 10 }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onPress}>
                     <AntDesign name="right" size={22} />
                 </TouchableOpacity>
             </View>
@@ -149,6 +149,7 @@ export function RouteDirections({ route }) {
                             {index !== routeInfo.length - 1 && (
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 1, marginTop: 7 }}>
                                     <MaterialCommunityIcons name="transit-connection" size={25} color="black" />
+                                    <Text>{data.duration}</Text>
                                 </View>
                             )}
                         </View>
