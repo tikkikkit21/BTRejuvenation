@@ -112,7 +112,7 @@ export function RouteDirections({ route }) {
                         </View>
                     </View>
                     {/* Total Duration */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
                         <MaterialCommunityIcons name="clock" size={32} color="black" />
                         <View style={{ marginLeft: 10 }}>
                             <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>Total Duration</Text>
@@ -121,13 +121,21 @@ export function RouteDirections({ route }) {
                     </View>
                     {/* Instructions */}
                     {Array.isArray(routeInfo) && routeInfo.map((data, index) => (
-                        <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                            {data.routeName !== null ? (
-                                <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'white' ? 'white' : `#${routeColor}`} />
-                            ) : (
-                                <MaterialCommunityIcons name="walk" size={30} color="black" />
+                        <View key={index} style={{ marginBottom: 10 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                {data.routeName !== null ? (
+                                    <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'white' ? 'white' : `#${routeColor}`} />
+                                ) : (
+                                    <MaterialCommunityIcons name="walk" size={30} color="black" />
+                                )}
+                                <Text style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 10 }}>{data.instructions}</Text>
+                            </View>
+                            {/* Check if it's not the last instruction to add the transit-connection icon */}
+                            {index !== routeInfo.length - 1 && (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 1, marginTop: 7 }}>
+                                    <MaterialCommunityIcons name="transit-connection" size={25} color="black" />
+                                </View>
                             )}
-                            <Text style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 10 }}>{data.instructions}</Text>
                         </View>
                     ))}
                 </View>
