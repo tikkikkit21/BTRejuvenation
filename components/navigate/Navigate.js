@@ -7,8 +7,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import Map from '../home/Map';
 import { getConnectedRoutes } from '../../backend/navigationController';
+import { getBusColors } from '../../backend/routeController';
 import { RouteOption } from './NavigateComponents';
-import { getBusColor } from '../../backend/routeController';
 import { useSelector } from 'react-redux';
 
 const APIKEY = process.env.GOOGLE_MAPS_API_KEY;
@@ -44,7 +44,6 @@ export default function Navigate() {
     const [routeColor, setRouteColor] = useState('white');
 
     // State to hold the route text color
-    const [routeTextColor, setRouteTextColor] = useState('white');
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const styles = darkMode ? dark : light;
 
@@ -102,15 +101,14 @@ export default function Navigate() {
                 setBottomSheetIndex(0);
             }
             
-            const busColor = await getBusColor(result.mainBusLine);
+            const busColor = await getBusColors(result.mainBusLine);
             console.log("Bus Color Check: ", busColor);
+            
             // If route is only Walking
             if (busColor === null) {
                 setRouteColor('white');
-                setRouteTextColor('white');
             } else { // if route contains a bus
-                setRouteColor(busColor.RouteColor);
-                setRouteTextColor(busColor.RouteTextColor);
+                setRouteColor(busColor);
             }
 
         } catch (error) {
@@ -125,7 +123,6 @@ export default function Navigate() {
         navigation.navigate('RouteDirections', {
             routeData: routeInfo,
             routeColor: routeColor,
-            routeTextColor: routeTextColor,
             startDestination: startDestination,
             endDestination: endDestination
         });
@@ -230,7 +227,7 @@ export default function Navigate() {
                             {routeData && (     // If routeData exists, display it
                                 <View style={styles.routeOptionContainer}>
                                     <RouteOption
-                                        busLine={routeData.mainBusLine === 'N/A' ? 'Walk' : routeData.mainBusLine}
+                                        busLine={Array.isArray(routeData.mainBusLine) ? routeData.mainBusLine.join(', ') || 'Walk' : routeData.mainBusLine || 'Walk'}
                                         tripDuration={routeData.totalDuration}
                                         tripDistance={routeData.totalDistance}
                                         routeColor={routeColor}

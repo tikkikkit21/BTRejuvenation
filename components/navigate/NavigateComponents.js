@@ -8,19 +8,23 @@ import { FontAwesome, AntDesign, FontAwesome6, Octicons, Entypo, MaterialCommuni
 
 // Displays a button with basic information about a route
 export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, darkMode, onPress }) {
-    const backgroundColor = darkMode ? 'grey' : `white`;
+    // Check if routeColor is an array and extract the color value
+    const textColor = routeColor[0].RouteColor ? '#' + routeColor[0].RouteColor : 'white'; // Use the first color or default to white
+
+    const backgroundColor = darkMode ? 'grey' : 'white';
+
     return (
-        <TouchableOpacity style={[styles.container, { backgroundColor: backgroundColor }]} onPress={onPress}>
-            <FontAwesome6 name="bus-simple" size={20} color={routeColor === 'white' ? 'white' : '#' + routeColor} style={{ marginLeft: 10 }} />
+        <TouchableOpacity style={[styles.container, { backgroundColor }]} onPress={onPress}>
+            <FontAwesome6 name="bus-simple" size={20} color={textColor} style={{ marginLeft: 10 }} />
             <View style={{ flex: 1, marginLeft: 10 }}>
-                <Text style={{ fontSize: 22, color: routeColor === 'white' ? 'white' : '#' + routeColor, textAlign: 'left', fontWeight: 'bold' }}>{busLine}</Text>
-                <Text style={{ fontSize: 20, color: routeColor === 'white' ? 'white' : '#' + routeColor }}>{`${tripDuration}`}</Text>
-                <Text style={{ fontSize: 20, color: routeColor === 'white' ? 'white' : '#' + routeColor }}>{`${tripDistance}`}</Text>
+                <Text style={{ fontSize: 22, color: textColor, textAlign: 'left', fontWeight: 'bold' }}>{busLine}</Text>
+                <Text style={{ fontSize: 20, color: textColor }}>{`${tripDuration}`}</Text>
+                <Text style={{ fontSize: 20, color: textColor }}>{`${tripDistance}`}</Text>
             </View>
             <View style={{ paddingRight: 10 }}>
-            <TouchableOpacity>
-                <AntDesign name="right" size={22} />
-            </TouchableOpacity>
+                <TouchableOpacity>
+                    <AntDesign name="right" size={22} />
+                </TouchableOpacity>
             </View>
         </TouchableOpacity>
     );
@@ -30,7 +34,7 @@ export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, d
 export function RouteDirections({ route }) {
 
     // Contains information of route
-    const { routeData, routeColor, routeTextColor, startDestination, endDestination } = route.params;
+    const { routeData, routeColor, startDestination, endDestination } = route.params;
     const routeInfo = routeData.routeSteps;
 
     // Map state variables, sets initial map region

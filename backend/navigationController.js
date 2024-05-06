@@ -31,7 +31,6 @@ export async function getConnectedRoutes(origin, destination) {
     const mainBusLine = getBusLine(tripSteps);
     const routeSteps = [];
     
-
     // Iterate over each step and append it to the array
     tripSteps.forEach(step => {
         const routeStep = {
@@ -84,10 +83,6 @@ function getBusLine(legs) {
             busTransit.push(leg.transit_details.line.name);
         }
     }
-    if (busTransit.length > 0) {
-        return busTransit;
-    } else {
-        return "N/A";
-    }
+    return busTransit;
 }
 
