@@ -1,18 +1,22 @@
-import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Fontisto, FontAwesome6, Entypo, Octicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import Map from '../home/Map';
 import { getConnectedRoutes } from '../../backend/navigationController';
+import { getBusColors } from '../../backend/routeController';
 import { RouteOption } from './NavigateComponents';
-import { getBusColor } from '../../backend/routeController';
 import { useSelector } from 'react-redux';
+
+const APIKEY = process.env.GOOGLE_MAPS_API_KEY;
 
 export default function Navigate() {
 
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['30%', '60%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['40%', '60%', '70%', '95%'], []);
 
     // Checks if tab is focused on
     const isFocused = useIsFocused();
@@ -40,7 +44,6 @@ export default function Navigate() {
     const [routeColor, setRouteColor] = useState('white');
 
     // State to hold the route text color
-    const [routeTextColor, setRouteTextColor] = useState('white');
     const darkMode = useSelector(state => state.darkMode.isEnabled);
     const styles = darkMode ? dark : light;
 
@@ -69,27 +72,12 @@ export default function Navigate() {
         }
     }, [startDestination, endDestination]);
 
-
     // Handles when the arrow-swap button is clicked
     const handleSwapDestinations = () => {
         // Swap out the destination values
-        temp_start = startDestination;
+        const temp = startDestination;
         setStartDestination(endDestination);
-        setEndDestination(temp_start);
-    }
-
-    // Handles when 'More Options' is clicked
-    const handleMoreOptions = () => {
-        setShowMoreOptions(!showMoreOptions);
-
-        // Extend or reduce screen if more options displayed
-        if (!showMoreOptions && bottomSheetIndex == 0) {
-            bottomSheetRef.current?.snapToIndex(1); // Extend
-            setBottomSheetIndex(1);
-        } else if (showMoreOptions && bottomSheetIndex == 1) {
-            bottomSheetRef.current?.snapToIndex(0); // Reduce
-            setBottomSheetIndex(0);
-        }
+        setEndDestination(temp);
     }
 
     // Event handler for BottomSheet animation
@@ -103,18 +91,27 @@ export default function Navigate() {
         try {
             const result = await getConnectedRoutes(startDestination, endDestination);
             setRouteData(result);
-            const busColor = await getBusColor(result[0].mainBusLine);
+
+            // Extend or reduce screen if Search is clicked
+            if ( (result !== null || result !== '') && bottomSheetIndex == 0) {
+                bottomSheetRef.current?.snapToIndex(1); // Extend
+                setBottomSheetIndex(1);
+            } else if ( (result === null || result === '') && bottomSheetIndex == 1) {  // When result is empty
+                bottomSheetRef.current?.snapToIndex(0); // Reduce 
+                setBottomSheetIndex(0);
+            }
+            
+            const busColor = result.busColors;
             // If route is only Walking
             if (busColor === null) {
                 setRouteColor('white');
-                setRouteTextColor('white');
             } else { // if route contains a bus
-                setRouteColor(busColor.RouteColor);
-                setRouteTextColor(busColor.RouteTextColor);
-                console.log("Check", busColor.RouteTextColor);
+                setRouteColor(busColor);
             }
+
         } catch (error) {
             console.log('Error Fetching Data:', error);
+            alert('No routes available');
         }
     };
 
@@ -124,85 +121,124 @@ export default function Navigate() {
         navigation.navigate('RouteDirections', {
             routeData: routeInfo,
             routeColor: routeColor,
-            routeTextColor: routeTextColor,
             startDestination: startDestination,
             endDestination: endDestination
         });
     };
 
-
-
     return (
-        <View style={styles.container}>
-            <MapViewMemo />
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={bottomSheetIndex}
-                snapPoints={snapPoints}
-                backgroundStyle={styles.bottomSheet}
-                // backgroundStyle={{backgroundColor: '#FFFFFF'}}
-                onChange={handleAnimateBottomSheet}
-            >
-                <View style={styles.inputContainer}>
-                    <FontAwesome6 name='location-crosshairs' size={15} color='white' />
-                    <View style={styles.textInputContainer}>
-                        <BottomSheetTextInput
-                            style={styles.textInput}
-                            placeholder='Start Destination'
-                            value={startDestination}
-                            onChangeText={setStartDestination} // Updates the startDestination
-                        />
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={"padding"}>
+            <View style={styles.container}>
+                <MapViewMemo />
+                <BottomSheet
+                    ref={bottomSheetRef}
+                    index={bottomSheetIndex}
+                    snapPoints={snapPoints}
+                    backgroundStyle={styles.bottomSheet}
+                    onChange={handleAnimateBottomSheet}
+                >
+                    <View style={styles.inputContainer}>
+                        <FontAwesome6 name='location-crosshairs' size={15} color='white' />
+                        <View style={styles.textInputContainer}>
+                            <GooglePlacesAutocomplete
+                                placeholder="Start Destination"
+                                value={startDestination}
+                                textInputProps={{
+                                    onChangeText: (text) => { setStartDestination(text) }
+                                }}
+                                onPress={(data, details = null) => {
+                                    setStartDestination(data.description); // Update endDestination with the selected address
+                                }}
+                                styles={{
+                                    container: {
+                                        flex: 0,
+                                    },
+                                    textInput: {
+                                        fontSize: 16,
+                                        borderBottomWidth: 1, // Add a bottom border
+                                        borderBottomColor: 'white', // Set the border color
+                                    },
+                                    powered: {
+                                        display: 'none', // Hide the "powered by Google" attribution
+                                    },
+                                }}
+                                query={{
+                                    key: APIKEY,
+                                    language: "en",
+                                }}
+                                nearbyPlacesAPI="GooglePlacesSearch"
+                                debounce={200}
+                            />
+                        </View>
                     </View>
-                </View>
-                {/* Displays the Swap button */}
-                <View style={styles.swapButtonContainer}>
-                    <TouchableOpacity onPress={handleSwapDestinations}>
-                        <Fontisto name="arrow-swap" size={22} style={styles.swapButton} />
-                    </TouchableOpacity>
-                </View>
-                {/* Displays End Destination input */}
-                <View style={styles.inputContainer}>
-                    <Entypo name='location' size={15} color='white' />
-                    <View style={styles.textInputContainer}>
-                        <BottomSheetTextInput
-                            style={styles.textInput}
-                            placeholder='End Destination  '
-                            value={endDestination}
-                            onChangeText={setEndDestination} // Updates the endDestination
-                        />
-                    </View>
-                </View>
-                {/* Displays the More Options button */}
-                {/* <View style={styles.moreButtonContainer}>
-                <TouchableOpacity onPress={handleMoreOptions}>
-                    <Text style={styles.moreButtonText}>More Options</Text>
-                </TouchableOpacity>
-            </View> */}
-                {/* If destination fields are filled, show Search button */}
-                {startDestination && endDestination && (
-                    <View>
-                        <TouchableOpacity
-                            style={styles.searchButton}
-                            onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
-                            underlayColor='white'
-                        >
-                            <Text style={styles.searchText}>Search</Text>
+                    {/* Displays the Swap button */}
+                    <View style={styles.swapButtonContainer}>
+                        <TouchableOpacity onPress={handleSwapDestinations}>
+                            <Octicons name="arrow-switch" size={26} style={styles.swapButton} />
                         </TouchableOpacity>
-                        {routeData && (     // If routeData exists, display it
-                            <View style={styles.routeOptionContainer}>
-                                <RouteOption
-                                    busLine={routeData[0].mainBusLine === 'N/A' ? 'Walk' : routeData[0].mainBusLine}
-                                    tripDuration={routeData[0].totalDuration}
-                                    tripDistance={routeData[0].totalDistance}
-                                    routeColor={routeColor}
-                                    onPress={() => handleRouteInfoClick(routeData)}
-                                />
-                            </View>
-                        )}
                     </View>
-                )}
-            </BottomSheet>
-        </View>
+                    {/* Displays End Destination input */}
+                    <View style={styles.inputContainer}>
+                        <Entypo name='location' size={15} color='white' />
+                        <View style={styles.textInputContainer}>
+                            <GooglePlacesAutocomplete
+                                placeholder="End Destination"
+                                value={endDestination}
+                                textInputProps={{
+                                    onChangeText: (text) => { setEndDestination(text) }
+                                }}
+                                onPress={(data, details = null) => {
+                                    setEndDestination(data.description); // Update endDestination with the selected address
+                                }}
+                                styles={{
+                                    container: {
+                                        flex: 0,
+                                    },
+                                    textInput: {
+                                        fontSize: 16,
+                                        borderBottomWidth: 1, // Add a bottom border
+                                        borderBottomColor: 'white', // Set the border color
+                                    },
+                                    powered: {
+                                        display: 'none', // Hide the "powered by Google" attribution
+                                    },
+                                }}
+                                query={{
+                                    key: APIKEY,
+                                    language: "en",
+                                }}
+                                nearbyPlacesAPI="GooglePlacesSearch"
+                                debounce={200}
+                            />
+                        </View>
+                    </View>
+                    {/* If destination fields are filled, show Search button */}
+                    {startDestination && endDestination && (
+                        <View>
+                            <TouchableOpacity
+                                style={styles.searchButton}
+                                onPress={handleRouteSearch} // When pressed, calls function to retrieve connecting route
+                                underlayColor='white'
+                            >
+                                <Text style={styles.searchText}>Search</Text>
+                            </TouchableOpacity>
+                            {routeData && (     // If routeData exists, display it
+                                <View style={styles.routeOptionContainer}>
+                                    <RouteOption
+                                        busLine={Array.isArray(routeData.mainBusLine) ? routeData.mainBusLine.join(', ') || 'Walk' : routeData.mainBusLine || 'Walk'}
+                                        tripDuration={routeData.totalDuration}
+                                        tripDistance={routeData.totalDistance}
+                                        routeColor={routeColor}
+                                        darkMode={darkMode}
+                                        onPress={() => handleRouteInfoClick(routeData)}
+                                    />
+                                </View>
+                            )}
+                        </View>
+                    )}
+                </BottomSheet>
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -217,17 +253,11 @@ const light = StyleSheet.create({
     bottomSheet: {
         backgroundColor: 'white'
     },
-    containerHeadline: {
-        fontSize: 20,
-        fontWeight: '600',
-        padding: 20,
-        color: 'white'
-    },
     swapButtonContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        padding: 15
+        padding: 10
     },
     swapButton: {
         transform: [{ rotate: '90deg' }]
@@ -244,9 +274,9 @@ const light = StyleSheet.create({
         color: 'white'
     },
     textInputContainer: {
+        flexDirection: 'column',
         flex: 1,
         marginLeft: 5,
-        height: 30
     },
     textInput: {
         flex: 1,
@@ -288,7 +318,24 @@ const light = StyleSheet.create({
         backgroundColor: '#75787B',
         color: 'white',
         marginBottom: 10 // Add margin bottom to create space
-    }
+    },
+    searchButton: {
+        marginHorizontal: 20,
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#A40046',
+        borderRadius: 10,
+        borderColor: '#fff'
+    },
+    searchText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16
+    },
+    routeOptionContainer: {
+        alignItems: 'center', // Center content horizontally
+        justifyContent: 'center', // Center content vertically
+    },
 });
 
 const dark = StyleSheet.create({
@@ -299,17 +346,11 @@ const dark = StyleSheet.create({
     bottomSheet: {
         backgroundColor: '#861F41'
     },
-    containerHeadline: {
-        fontSize: 20,
-        fontWeight: '600',
-        padding: 20,
-        color: '#861F41'
-    },
     swapButtonContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#861F41',
-        padding: 15
+        padding: 10
     },
     swapButton: {
         transform: [{ rotate: '90deg' }],
@@ -325,9 +366,9 @@ const dark = StyleSheet.create({
         backgroundColor: '#E5751F'
     },
     textInputContainer: {
+        flexDirection: 'column',
         flex: 1,
         marginLeft: 5,
-        height: 30,
         backgroundColor: '#E5751F'
     },
     textInput: {
@@ -370,10 +411,22 @@ const dark = StyleSheet.create({
         backgroundColor: '#E5751F',
         color: 'white',
         marginBottom: 10 // Add margin bottom to create space
-    }
+    },
+    searchButton: {
+        marginHorizontal: 20,
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#E5751F',
+        borderRadius: 10,
+        borderColor: '#fff'
+    },
+    searchText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16
+    },
+    routeOptionContainer: {
+        alignItems: 'center', // Center content horizontally
+        justifyContent: 'center', // Center content vertically
+    },
 });
-
-// Memoize Navigate component
-// const MemoizedNavigate = React.memo(Navigate);
-
-// export default MemoizedNavigate;

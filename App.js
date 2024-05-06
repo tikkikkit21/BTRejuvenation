@@ -56,7 +56,10 @@ export default function App() {
                     tabBarActiveTintColor: darkMode ? "#E5751F" : "#861F41",
                     tabBarInactiveTintColor: 'gray',
                     tabBarLabel: getTabBarLabel(route.name), // Custom tab label
-                    headerShown: false
+                    headerShown: false,
+                    tabBarStyle: {
+                        backgroundColor: darkMode ? '#861F41' : 'white'
+                    }
                 })}
             >
                 <Tab.Screen name="HomeTab" component={HomeTab} />

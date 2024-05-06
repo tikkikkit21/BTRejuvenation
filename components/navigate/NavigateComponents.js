@@ -4,25 +4,49 @@ import MapView, { MapCallout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Polyline } from 'react-native-maps';
-import { FontAwesome, FontAwesome5, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, AntDesign, FontAwesome6, Octicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Displays a button with basic information about a route
-export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, onPress }) {
-    const backgroundColor = routeColor === 'black' ? 'black' : `#${routeColor}`;
+export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, darkMode, onPress }) {
+    // Check if routeColor is an array and extract the color value
+    const textColor = routeColor[0].color ? routeColor[0].color : 'black'; // Use the first color or default to white
+    const backgroundColor = darkMode ? 'grey' : 'white';
+
     return (
-        <TouchableOpacity style={[styles.container, { backgroundColor: backgroundColor }]} onPress={onPress}>
-            <Text style={styles.headerText}>{busLine}</Text>
-            <Text style={[styles.text, styles.textMargin]}>{tripDuration}</Text>
-            <Text style={styles.text}>{tripDistance}</Text>
+        <TouchableOpacity style={[styles.container, { backgroundColor }]} onPress={onPress}>
+            <FontAwesome6 name="bus-simple" size={20} color={textColor} style={{ marginLeft: 10 }} />
+            <View style={{ flex: 1, marginLeft: 10 }}>
+                <Text style={{ fontSize: 22, color: textColor, textAlign: 'left', fontWeight: 'bold' }}>{busLine}</Text>
+                <Text style={{ fontSize: 20, color: textColor }}>{`${tripDuration}`}</Text>
+                <Text style={{ fontSize: 20, color: textColor }}>{`${tripDistance}`}</Text>
+            </View>
+            <View style={{ paddingRight: 10 }}>
+                <TouchableOpacity onPress={onPress}>
+                    <AntDesign name="right" size={22} />
+                </TouchableOpacity>
+            </View>
         </TouchableOpacity>
     );
+}
+
+function getColorByName(busColors, name) {
+    for (const busColor of busColors) {
+        if (busColor.name === name) {
+            return busColor.color; // Return the color if the name matches
+        }
+        if (name === 'PRG') {
+            return '#7156a5';
+        }
+    }
+    return null; // Return null if no match is found
 }
 
 // Displays the directions for a route
 export function RouteDirections({ route }) {
 
     // Contains information of route
-    const { routeData, routeColor, routeTextColor, startDestination, endDestination } = route.params;
+    const { routeData, routeColor, startDestination, endDestination } = route.params;
+    const routeInfo = routeData.routeSteps;
 
     // Map state variables, sets initial map region
     const [mapRegion, setMapRegion] = useState(null);
@@ -32,18 +56,18 @@ export function RouteDirections({ route }) {
     const bottomSheetRef = useRef(null);
 
     // Points of the screen where the bottom sheet extends to
-    const snapPoints = useMemo(() => ['30%', '50%', '70%', '95%'], []);
+    const snapPoints = useMemo(() => ['35%', '50%', '70%', '95%'], []);
     
     // Calculate map region to fit all points
     useEffect(() => {
-        if (routeData && routeData.length > 0) {
+        if (routeInfo && routeInfo.length > 0) {
             let minLat = Infinity;
             let maxLat = -Infinity;
             let minLng = Infinity;
             let maxLng = -Infinity;
 
             // Calculate the bounds of the map region based on route coords
-            routeData.forEach((element) => {
+            routeInfo.forEach((element) => {
                 element.points.forEach((point) => {
                     minLat = Math.min(minLat, point.latitude);
                     maxLat = Math.max(maxLat, point.latitude);
@@ -61,7 +85,7 @@ export function RouteDirections({ route }) {
             });
         }
     }, [routeData]); 
-    
+    // Creates the Map with the route directions with necessary icons and info
     return (
         <View style={{ flex: 1 }}>
             {mapRegion && ( // Render map only when mapRegion is available
@@ -72,7 +96,7 @@ export function RouteDirections({ route }) {
                     showsUserLocation={true}
                 >
                     {/* Create markers for route */}
-                    {createRouteCoords(routeData, routeColor)}
+                    {createRouteCoords(routeInfo, routeColor)}
                 </MapView>
             )}
             <BottomSheet
@@ -80,49 +104,56 @@ export function RouteDirections({ route }) {
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
-                <View alignItems={'center'} justifyContent={'center'}>
-                    <Text style={{ backgroundColor: routeColor === 'black' ? 'black' : `#${routeColor}`, fontSize: 20, fontWeight: 'bold'}}>Route Directions</Text>
-                    <FlatList
-                        data={[
-                            { key: 'Start Destination', value: startDestination, icon: 'human-male' },
-                            { key: 'End Destination', value: endDestination, icon: 'human-male' },
-                            { key: 'Total Duration', value: routeData[0].totalDuration, icon: 'clock' },
-                            { key: 'Instructions', value: routeData.map(data => data.instructions).join('\n'), icon: 'directions' }
-                        ]}
-                        renderItem={({ item }) => (
-                            <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                                {item.key !== "Instructions" && (
-                                    <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                                        {item.key === 'Start Destination' && (
-                                            <MaterialCommunityIcons name={item.icon} size={35} color="green" />
-                                        )}
-                                        {item.key === 'End Destination' && (
-                                            <MaterialCommunityIcons name={item.icon} size={35} color="red" />
-                                        )}
-                                        {item.key === 'Total Duration' && (
-                                            <MaterialCommunityIcons name={item.icon} size={35} color="black" />
-                                        )}
-                                        <View style={{ marginLeft: 10 }}>
-                                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>{item.key}</Text>
-                                            <Text style={{ fontSize: 14 }}>{item.value}</Text>
-                                        </View>
-                                    </View>
+                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                    <View alignItems="center" justifyContent="center" style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Route Directions</Text>
+                    </View>
+                    {/* Start Destination */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+                        <Entypo name={"location"} size={30} color="green" />
+                        <View style={{ marginLeft: 10 }}>
+                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>Start Destination</Text>
+                            <Text style={{ fontSize: 14 }}>{startDestination}</Text>
+                            <Text style={{ fontSize: 12 }}>Depart at {routeData.departureTime}</Text>
+                        </View>
+                    </View>
+                    {/* End Destination */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+                        <Entypo name={"location"} size={30} color="red" />
+                        <View style={{ marginLeft: 10 }}>
+                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>End Destination</Text>
+                            <Text style={{ fontSize: 14 }}>{endDestination}</Text>
+                            <Text style={{ fontSize: 12 }}>Arrive at {routeData.arrivalTime}</Text>
+                        </View>
+                    </View>
+                    {/* Total Duration */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
+                        <MaterialCommunityIcons name="clock" size={32} color="black" />
+                        <View style={{ marginLeft: 10 }}>
+                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>Total Duration</Text>
+                            <Text style={{ fontSize: 14 }}>{routeData ? routeData.totalDuration : null}</Text>
+                        </View>
+                    </View>
+                    {/* Instructions */}
+                    {Array.isArray(routeInfo) && routeInfo.map((data, index) => (
+                        <View key={index} style={{ marginBottom: 10 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                {data.routeName !== null ? (
+                                    <MaterialCommunityIcons name="bus" size={30} color={getColorByName(routeColor, data.routeName) || 'black'} />
+                                ) : (
+                                    <MaterialCommunityIcons name="walk" size={30} color="black" />
                                 )}
-                                <View style={{ marginLeft: 10 }}>
-                                    {item.key === 'Instructions' && routeData.map(data => (
-                                        <View key={data.instructions} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            {data.routeName !== null ? (
-                                                <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'black' ? 'black' : `#${routeColor}`} />
-                                            ) : (
-                                                <MaterialCommunityIcons name="walk" size={30} color="black" />
-                                            )}
-                                            <Text style={{ fontSize: 14, fontWeight:'bold' }}>{data.instructions}</Text>
-                                        </View>
-                                    ))}
-                                </View>
+                                <Text style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 10 }}>{data.routeName ? data.routeName + ' ' + data.instructions : data.instructions}</Text>
                             </View>
-                        )}
-                    />
+                            {/* Check if it's not the last instruction to add the transit-connection icon */}
+                            {index !== routeInfo.length - 1 && (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 1, marginTop: 7 }}>
+                                    <MaterialCommunityIcons name="transit-connection" size={25} color="black" />
+                                    <Text>{data.duration}</Text>
+                                </View>
+                            )}
+                        </View>
+                    ))}
                 </View>
             </BottomSheet>
         </View>
@@ -148,7 +179,7 @@ export function createRouteCoords(route, color) {
                     key={`polyline-${index}`}
                     coordinates={points}
                     strokeWidth={5}
-                    strokeColor={color === 'black' ? 'black' : `#${color}`}
+                    strokeColor={getColorByName(color, element.routeName) || 'black'}
                 />
             );
         } else {
@@ -189,7 +220,7 @@ export function createRouteCoords(route, color) {
                     coordinate={{ latitude: firstPoint.latitude, longitude: firstPoint.longitude }}
                 >
                     <View>
-                        <MaterialCommunityIcons name="human-male" size={24} color="green" />
+                        <Entypo name="location" size={24} color="green" />
                     </View>
                 </Marker>
             );
@@ -201,7 +232,7 @@ export function createRouteCoords(route, color) {
                     coordinate={{ latitude: lastPoint.latitude, longitude: lastPoint.longitude }}
                 >
                     <View>
-                        <MaterialCommunityIcons name="human-male" size={30} color="red" />
+                        <Entypo name="location" size={24} color="red" />
                     </View>
                 </Marker>
             );
@@ -214,20 +245,14 @@ export function createRouteCoords(route, color) {
 
 const styles = StyleSheet.create({
     container: {
+        flexDirection: 'row',
         backgroundColor: '#fff',
         margin: 10,
-        width: '80%',
-        height: 150,
+        width: '90%',
         borderRadius: 10,
         borderWidth: 1,
         borderColor: 'black',
-        elevation: 2,
-        shadowColor: 'black',
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 3,
         alignItems: 'center',
-        justifyContent: 'center',
     },
     headerText: {
         fontSize: 25,
