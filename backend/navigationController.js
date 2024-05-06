@@ -34,7 +34,6 @@ export async function getConnectedRoutes(origin, destination) {
     
     // Iterate over each step and append it to the array
     tripSteps.forEach(step => {
-        console.log("Step: ", step);
         const routeStep = {
             points: decodeCoords(step.polyline.points),
             routeName: step.transit_details && step.transit_details.line ? step.transit_details.line.short_name : null,
