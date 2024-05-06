@@ -104,7 +104,7 @@ export function RouteDirections({ route }) {
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
-                <View alignItems={'flex-start'} justifyContent={'center'} style={{ paddingHorizontal: 20 }}>
+                <View style={{ flex: 1, paddingHorizontal: 20 }}>
                     <View alignItems="center" justifyContent="center" style={{ paddingHorizontal: 20, marginBottom: 20 }}>
                         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Route Directions</Text>
                     </View>
