@@ -29,6 +29,7 @@ export async function getConnectedRoutes(origin, destination) {
     const arrivalTime = data.routes[0].legs[0].arrival_time.text;
     const departureTime = data.routes[0].legs[0].departure_time.text;
     const mainBusLine = getBusLine(tripSteps);
+    const busColors = getBusColors(tripSteps);
     const routeSteps = [];
     
     // Iterate over each step and append it to the array
@@ -43,7 +44,7 @@ export async function getConnectedRoutes(origin, destination) {
         routeSteps.push(routeStep);
     });
 
-    return { mainBusLine, totalDuration, totalDistance, arrivalTime, departureTime, routeSteps };
+    return { mainBusLine, busColors, totalDuration, totalDistance, arrivalTime, departureTime, routeSteps };
 }
 
 /**
@@ -70,9 +71,7 @@ function decodeCoords(t, e) {
 
 /**
  * Function to extract bus line to take from transit leg.
- * 
- * NOTE: Will need to modify for connecting bus lines. (more than 1 bus line for a trip)
- * 
+ *  
  * @param {*} leg Contains trip information from origin to end destination.
  * @returns The bus line for the trip.
  */
@@ -81,8 +80,24 @@ function getBusLine(legs) {
     for (const leg of legs) {
         if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
             busTransit.push(leg.transit_details.line.name);
+            console.log("Leg: ", leg);
         }
     }
     return busTransit;
 }
 
+/**
+ * Extracts the colors of the buses on the trip.
+ * 
+ * @param {*} legs Contains trip information from origin to end destination.
+ * @returns The bus colors of the trip.
+ */
+function getBusColors(legs) {
+    const busColors = [];
+    for (const leg of legs) {
+        if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
+            busColors.push(leg.transit_details.line.color);
+        }
+    }
+    return busColors;
+}
