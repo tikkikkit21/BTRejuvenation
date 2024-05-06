@@ -143,7 +143,7 @@ export function RouteDirections({ route }) {
                                 ) : (
                                     <MaterialCommunityIcons name="walk" size={30} color="black" />
                                 )}
-                                <Text style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 10 }}>{data.instructions}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 10 }}>{data.routeName ? data.routeName + ' ' + data.instructions : data.instructions}</Text>
                             </View>
                             {/* Check if it's not the last instruction to add the transit-connection icon */}
                             {index !== routeInfo.length - 1 && (
