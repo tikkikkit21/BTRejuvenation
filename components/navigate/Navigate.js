@@ -101,9 +101,7 @@ export default function Navigate() {
                 setBottomSheetIndex(0);
             }
             
-            const busColor = await getBusColors(result.mainBusLine);
-            console.log("Bus Color Check: ", busColor);
-            
+            const busColor = result.busColors;
             // If route is only Walking
             if (busColor === null) {
                 setRouteColor('white');

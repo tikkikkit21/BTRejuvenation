@@ -9,8 +9,7 @@ import { FontAwesome, AntDesign, FontAwesome6, Octicons, Entypo, MaterialCommuni
 // Displays a button with basic information about a route
 export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, darkMode, onPress }) {
     // Check if routeColor is an array and extract the color value
-    const textColor = routeColor[0].RouteColor ? '#' + routeColor[0].RouteColor : 'white'; // Use the first color or default to white
-
+    const textColor = routeColor[0].color ? routeColor[0].color : 'black'; // Use the first color or default to white
     const backgroundColor = darkMode ? 'grey' : 'white';
 
     return (
@@ -28,6 +27,18 @@ export function RouteOption({ busLine, tripDuration, tripDistance, routeColor, d
             </View>
         </TouchableOpacity>
     );
+}
+
+function getColorByName(busColors, name) {
+    for (const busColor of busColors) {
+        if (busColor.name === name) {
+            return busColor.color; // Return the color if the name matches
+        }
+        if (name === 'PRG') {
+            return '#7156a5';
+        }
+    }
+    return null; // Return null if no match is found
 }
 
 // Displays the directions for a route
@@ -128,7 +139,7 @@ export function RouteDirections({ route }) {
                         <View key={index} style={{ marginBottom: 10 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 {data.routeName !== null ? (
-                                    <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'white' ? 'white' : `#${routeColor}`} />
+                                    <MaterialCommunityIcons name="bus" size={30} color={getColorByName(routeColor, data.routeName) || 'black'} />
                                 ) : (
                                     <MaterialCommunityIcons name="walk" size={30} color="black" />
                                 )}
@@ -167,7 +178,7 @@ export function createRouteCoords(route, color) {
                     key={`polyline-${index}`}
                     coordinates={points}
                     strokeWidth={5}
-                    strokeColor={color === 'white' ? 'white' : `#${color}`}
+                    strokeColor={getColorByName(color, element.routeName) || 'black'}
                 />
             );
         } else {

@@ -80,7 +80,6 @@ function getBusLine(legs) {
     for (const leg of legs) {
         if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
             busTransit.push(leg.transit_details.line.name);
-            console.log("Leg: ", leg);
         }
     }
     return busTransit;
@@ -96,7 +95,9 @@ function getBusColors(legs) {
     const busColors = [];
     for (const leg of legs) {
         if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
-            busColors.push(leg.transit_details.line.color);
+            const lineColor = leg.transit_details.line.color;
+            const lineName = leg.transit_details.line.short_name;
+            busColors.push({ color: lineColor, name: lineName })
         }
     }
     return busColors;
