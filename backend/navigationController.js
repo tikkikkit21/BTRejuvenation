@@ -70,87 +70,6 @@ function decodeCoords(t, e) {
 }
 
 /**
- * Function to calculate total duration of a trip.
- * 
- * @param {*} legs Contains trip information from origin to end destination.
- * @returns Total duraiton of trip.
- */
-function getTotalDuration(legs) {
-    let totalDuration = {
-        minutes: 0,
-        hours: 0
-    };
-
-    if (legs && Array.isArray(legs)) {
-        legs.forEach(leg => {
-            if (leg.duration && leg.duration.text) {
-                const durationText = leg.duration.text;
-                // Extract numerical value of minutes
-                const durationMatch = durationText.match(/\b\d+\b/);
-                if (durationMatch && durationMatch.length > 0) {
-                    const durationInMinutes = parseInt(durationMatch[0]);
-                    totalDuration.minutes += durationInMinutes;
-                } else {
-                    console.error("Invalid duration format:", durationText);
-                }
-            } else {
-                console.error("Duration text not found in the leg object:", leg);
-            }
-        });
-
-        // Convert minutes to hours if necessary
-        if (totalDuration.minutes >= 60) {
-            totalDuration.hours = Math.floor(totalDuration.minutes / 60);
-            totalDuration.minutes = totalDuration.minutes % 60;
-        }
-    } else {
-        console.error("Invalid legs data:", legs);
-    }
-
-    let formattedDuration = '';
-    if (totalDuration.hours > 0) {
-        formattedDuration += totalDuration.hours + ' hours ';
-    }
-    if (totalDuration.minutes > 0) {
-        formattedDuration += totalDuration.minutes + ' minutes';
-    }
-
-    return formattedDuration.trim();
-}
-
-/**
- * Function to calculate total distance in trip.
- * 
- * @param {*} legs Contains trip information from origin to end destination.
- * @returns Total distance of trip.
- */
-function getTotalDistance(legs) {
-    let totalDistanceMiles = 0;
-
-    if (legs && Array.isArray(legs)) {
-        legs.forEach(leg => {
-            if (leg.distance && leg.distance.text) {
-                // Extract the numeric distance value from the text
-                const numericDistance = parseFloat(leg.distance.text.replace(/[^\d.]/g, ''));
-                // Determine the unit of the distance
-                const distanceUnit = leg.distance.text.includes('mi') ? 'miles' : 'feet';
-                // Convert feet to miles if necessary
-                const distanceInMiles = distanceUnit === 'miles' ? numericDistance : numericDistance / 5280;
-                // Add the distance in miles to the total
-                totalDistanceMiles += distanceInMiles;
-            } else {
-                console.error("Distance text not found in the leg object:", leg);
-            }
-        });
-    } else {
-        console.error("Invalid legs data:", legs);
-    }
-
-    // Return the total distance in miles
-    return totalDistanceMiles.toFixed(2) + ' miles';
-}
-
-/**
  * Function to extract bus line to take from transit leg.
  * 
  * NOTE: Will need to modify for connecting bus lines. (more than 1 bus line for a trip)
@@ -159,11 +78,16 @@ function getTotalDistance(legs) {
  * @returns The bus line for the trip.
  */
 function getBusLine(legs) {
+    const busTransit = [];
     for (const leg of legs) {
         if (leg.travel_mode === "TRANSIT" && leg.transit_details && leg.transit_details.line) {
-            return leg.transit_details.line.name;
+            busTransit.push(leg.transit_details.line.name);
         }
     }
-    return "N/A";
+    if (busTransit.length > 0) {
+        return busTransit;
+    } else {
+        return "N/A";
+    }
 }
 
