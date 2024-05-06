@@ -31,6 +31,7 @@ export function RouteDirections({ route }) {
 
     // Contains information of route
     const { routeData, routeColor, routeTextColor, startDestination, endDestination } = route.params;
+    const routeInfo = routeData.routeSteps;
 
     // Map state variables, sets initial map region
     const [mapRegion, setMapRegion] = useState(null);
@@ -44,14 +45,14 @@ export function RouteDirections({ route }) {
     
     // Calculate map region to fit all points
     useEffect(() => {
-        if (routeData && routeData.length > 0) {
+        if (routeInfo && routeInfo.length > 0) {
             let minLat = Infinity;
             let maxLat = -Infinity;
             let minLng = Infinity;
             let maxLng = -Infinity;
 
             // Calculate the bounds of the map region based on route coords
-            routeData.forEach((element) => {
+            routeInfo.forEach((element) => {
                 element.points.forEach((point) => {
                     minLat = Math.min(minLat, point.latitude);
                     maxLat = Math.max(maxLat, point.latitude);
@@ -80,7 +81,7 @@ export function RouteDirections({ route }) {
                     showsUserLocation={true}
                 >
                     {/* Create markers for route */}
-                    {createRouteCoords(routeData, routeColor)}
+                    {createRouteCoords(routeInfo, routeColor)}
                 </MapView>
             )}
             <BottomSheet
@@ -88,50 +89,47 @@ export function RouteDirections({ route }) {
                 snapPoints={snapPoints}
                 backgroundStyle={{ backgroundColor: '#FFFFFF' }}
             >
-                <View alignItems={'center'} justifyContent={'center'}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Route Directions</Text>
-                    <FlatList
-                        data={[
-                            { key: 'Start Destination', value: startDestination, icon: 'human-male' },
-                            { key: 'End Destination', value: endDestination, icon: 'human-male' },
-                            { key: 'Total Duration', value: routeData[0].totalDuration, icon: 'clock' },
-                            { key: 'Instructions', value: routeData, icon: 'directions' }
-                        ]}
-                        renderItem={({ item }) => (
-                            <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                                {item.key !== "Instructions" && (
-                                    <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                                        {item.key === 'Start Destination' && (
-                                            <Entypo name={"location"} size={30} color="green" />
-                                        )}
-                                        {item.key === 'End Destination' && (
-                                            <Entypo name={"location"} size={30} color="red" />
-                                        )}
-                                        {item.key === 'Total Duration' && (
-                                            <MaterialCommunityIcons name={item.icon} size={32} color="black" />
-                                        )}
-                                        <View style={{ marginLeft: 10 }}>
-                                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>{item.key}</Text>
-                                            <Text style={{ fontSize: 14 }}>{item.value}</Text>
-                                        </View>
-                                    </View>
-                                )}
-                                <View style={{ marginLeft: 10 }}>
-                                    {item.key === 'Instructions' && item.value.map((data, index) => (
-                                        <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                                            {/* Display the appropriate icon based on the route type */}
-                                            {data.routeName !== null ? (
-                                                <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'black' ? 'black' : `#${routeColor}`} />
-                                            ) : (
-                                                <MaterialCommunityIcons name="walk" size={30} color="black" />
-                                            )}
-                                            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{data.instructions}</Text>
-                                        </View>
-                                    ))}
-                                </View>
-                            </View>
-                        )}
-                    />
+                <View alignItems={'flex-start'} justifyContent={'center'} style={{ paddingHorizontal: 20 }}>
+                    <View alignItems="center" justifyContent="center" style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Route Directions</Text>
+                    </View>
+                    {/* Start Destination */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+                        <Entypo name={"location"} size={30} color="green" />
+                        <View style={{ marginLeft: 10 }}>
+                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>Start Destination</Text>
+                            <Text style={{ fontSize: 14 }}>{startDestination}</Text>
+                            <Text style={{ fontSize: 12 }}>Depart at {routeData.departureTime}</Text>
+                        </View>
+                    </View>
+                    {/* End Destination */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+                        <Entypo name={"location"} size={30} color="red" />
+                        <View style={{ marginLeft: 10 }}>
+                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>End Destination</Text>
+                            <Text style={{ fontSize: 14 }}>{endDestination}</Text>
+                            <Text style={{ fontSize: 12 }}>Arrive at {routeData.arrivalTime}</Text>
+                        </View>
+                    </View>
+                    {/* Total Duration */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                        <MaterialCommunityIcons name="clock" size={32} color="black" />
+                        <View style={{ marginLeft: 10 }}>
+                            <Text style={{ fontWeight: 'bold', marginBottom: 3, fontSize: 16 }}>Total Duration</Text>
+                            <Text style={{ fontSize: 14 }}>{routeData ? routeData.totalDuration : null}</Text>
+                        </View>
+                    </View>
+                    {/* Instructions */}
+                    {Array.isArray(routeInfo) && routeInfo.map((data, index) => (
+                        <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                            {data.routeName !== null ? (
+                                <MaterialCommunityIcons name="bus" size={30} color={routeColor === 'white' ? 'white' : `#${routeColor}`} />
+                            ) : (
+                                <MaterialCommunityIcons name="walk" size={30} color="black" />
+                            )}
+                            <Text style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 10 }}>{data.instructions}</Text>
+                        </View>
+                    ))}
                 </View>
             </BottomSheet>
         </View>
@@ -157,7 +155,7 @@ export function createRouteCoords(route, color) {
                     key={`polyline-${index}`}
                     coordinates={points}
                     strokeWidth={5}
-                    strokeColor={color === 'black' ? 'black' : `#${color}`}
+                    strokeColor={color === 'white' ? 'white' : `#${color}`}
                 />
             );
         } else {

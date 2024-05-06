@@ -102,7 +102,7 @@ export default function Navigate() {
                 setBottomSheetIndex(0);
             }
             
-            const busColor = await getBusColor(result[0].mainBusLine);
+            const busColor = await getBusColor(result.mainBusLine);
             // If route is only Walking
             if (busColor === null) {
                 setRouteColor('white');
@@ -110,7 +110,6 @@ export default function Navigate() {
             } else { // if route contains a bus
                 setRouteColor(busColor.RouteColor);
                 setRouteTextColor(busColor.RouteTextColor);
-                console.log("Check", busColor.RouteTextColor);
             }
 
         } catch (error) {
@@ -230,9 +229,9 @@ export default function Navigate() {
                             {routeData && (     // If routeData exists, display it
                                 <View style={styles.routeOptionContainer}>
                                     <RouteOption
-                                        busLine={routeData[0].mainBusLine === 'N/A' ? 'Walk' : routeData[0].mainBusLine}
-                                        tripDuration={routeData[0].totalDuration}
-                                        tripDistance={routeData[0].totalDistance}
+                                        busLine={routeData.mainBusLine === 'N/A' ? 'Walk' : routeData.mainBusLine}
+                                        tripDuration={routeData.totalDuration}
+                                        tripDistance={routeData.totalDistance}
                                         routeColor={routeColor}
                                         darkMode={darkMode}
                                         onPress={() => handleRouteInfoClick(routeData)}

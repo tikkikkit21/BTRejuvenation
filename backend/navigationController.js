@@ -24,25 +24,27 @@ export async function getConnectedRoutes(origin, destination) {
     const { data } = await axios.get(`${GMAPS_ROOT}/${query}`);
 
     const tripSteps = data.routes[0].legs[0].steps;
-
-    const totalDuration = getTotalDuration(tripSteps);
-    const totalDistance = getTotalDistance(tripSteps);
+    const totalDuration = data.routes[0].legs[0].duration.text;
+    const totalDistance = data.routes[0].legs[0].distance.text;
+    const arrivalTime = data.routes[0].legs[0].arrival_time.text;
+    const departureTime = data.routes[0].legs[0].departure_time.text;
     const mainBusLine = getBusLine(tripSteps);
+    const routeSteps = [];
     
-    return tripSteps.map(step => {
-        return {
+
+    // Iterate over each step and append it to the array
+    tripSteps.forEach(step => {
+        const routeStep = {
             points: decodeCoords(step.polyline.points),
-            // Check if step has transit_details and line properties before accessing them
             routeName: step.transit_details && step.transit_details.line ? step.transit_details.line.short_name : null,
             duration: step.duration ? step.duration.text : null,
             distance: step.distance,
-            instructions: step.html_instructions,
-            totalDuration: totalDuration,
-            totalDistance: totalDistance,
-            mainBusLine: mainBusLine
+            instructions: step.html_instructions
         };
+        routeSteps.push(routeStep);
     });
 
+    return { mainBusLine, totalDuration, totalDistance, arrivalTime, departureTime, routeSteps };
 }
 
 /**
